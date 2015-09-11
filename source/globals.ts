@@ -7,12 +7,12 @@
    This code references page numbers in the text book:
    Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 978-0-470-12872-5
    ------------ */
-
+// Hello TEST
 //
 // Global CONSTANTS (TypeScript 1.5 introduced const. Very cool.)
 //
-const APP_NAME: string    = "TSOS";   // 'cause Bob and I were at a loss for a better name.
-const APP_VERSION: string = "0.07";   // What did you expect?
+const APP_NAME: string    = "ASOS"; e  // 'cause Bob and I were at a loss for a better name.
+const APP_VERSION: string = "666";   // What did you expect?
 
 const CPU_CLOCK_INTERVAL: number = 100;   // This is in ms (milliseconds) so 1000 = 1 second.
 
