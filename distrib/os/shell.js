@@ -11,6 +11,7 @@
           serious injuries may occur when trying to write your own Operating System.
    ------------ */
 // TODO: Write a base class / prototype for system services and let Shell inherit from it.
+//Test3
 var TSOS;
 (function (TSOS) {
     var Shell = (function () {
@@ -26,7 +27,7 @@ var TSOS;
             //
             // Load the command list.
             // ver
-            sc = new TSOS.ShellCommand(this.shellVer, "ver", "- Displays the current version data.");
+            sc = new TSOS.ShellCommand(this.shellVer, "ver", "- Displays the current version data. Because versions are important.");
             this.commandList[this.commandList.length] = sc;
             // help
             sc = new TSOS.ShellCommand(this.shellHelp, "help", "- This is the help command. Seek help.");
@@ -48,6 +49,12 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
+            this.commandList[this.commandList.length] = sc;
+            // date
+            sc = new TSOS.ShellCommand(this.shellDate, "date", "Displays the current date and time.");
+            this.commandList[this.commandList.length] = sc;
+            // whereami
+            sc = new TSOS.ShellCommand(this.shellWhereami, "whereami", "Gives you your'e current coordinates.");
             this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
@@ -169,7 +176,9 @@ var TSOS;
             }
         };
         Shell.prototype.shellVer = function (args) {
-            _StdOut.putText(APP_NAME + " version " + APP_VERSION);
+            _StdOut.putText("Operating System: " + APP_NAME);
+            _StdOut.advanceLine();
+            _StdOut.putText("Version numero: " + APP_VERSION);
         };
         Shell.prototype.shellHelp = function (args) {
             _StdOut.putText("Commands:");
@@ -192,10 +201,45 @@ var TSOS;
             if (args.length > 0) {
                 var topic = args[0];
                 switch (topic) {
-                    case "help":
-                        _StdOut.putText("Help displays a list of (hopefully) valid commands.");
+                    case "ver":
+                        _StdOut.putText("[ver] tells those who dare know, the current version data.");
                         break;
-                    // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
+                    //help
+                    case "help":
+                        _StdOut.putText("[help] displays a list of (hopefully) valid commands.");
+                        break;
+                    //shutdown
+                    case "shutdown":
+                        _StdOut.putText("[shutdown] is there for those who have put up with enough of this crap.");
+                        break;
+                    //cls
+                    case "cls":
+                        _StdOut.putText("[cls] removes all console text, as well as, restaring the cursor.");
+                        break;
+                    //man
+                    case "man":
+                        _StdOut.putText("[man <topic>] gives adavance manual details for specified commands.");
+                        break;
+                    //trace
+                    case "trace":
+                        _StdOut.putText("[trace <on|off>] disables or enables shell _Trace");
+                        break;
+                    //rot13
+                    case "rot13":
+                        _StdOut.putText("[rot13 <string>] replaces each letter the letter 13 letters away.");
+                        break;
+                    //prompt
+                    case "prompt":
+                        _StdOut.putText("[prompt <string>] displays given text within prompt.");
+                        break;
+                    //date
+                    case "date":
+                        _StdOut.putText("[date] doesn't put you on a man-date, but it does gives you the date that ALOS decides.");
+                        break;
+                    //whereami
+                    case "whereami":
+                        _StdOut.putText("[whereami] refers to a multitude of geo-cordinates to give you an honest answer of where you are in your life.");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -245,6 +289,13 @@ var TSOS;
             else {
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
             }
+        };
+        Shell.prototype.shellDate = function (args) {
+            var date = new Date();
+            _StdOut.putText(date.toDateString());
+        };
+        Shell.prototype.shellWhereami = function (args) {
+            _StdOut.putText("HERE");
         };
         return Shell;
     })();
