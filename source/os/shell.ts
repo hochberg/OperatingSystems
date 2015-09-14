@@ -83,13 +83,19 @@ module TSOS {
             // date
             sc = new ShellCommand(this.shellDate,
                                   "date",
-                                  "Displays the current date and time.");
+                                  "- Displays the current date and time.");
             this.commandList[this.commandList.length] = sc;
 
             // whereami
             sc = new ShellCommand(this.shellWhereami,
                                   "whereami",
-                                  "Gives you your'e current coordinates.");
+                                  "- Gives you your'e current coordinates.");
+            this.commandList[this.commandList.length] = sc;
+
+            // hunger
+            sc = new ShellCommand(this.shellHunger,
+                                  "hunger",
+                                  "- Tells you what you feel like eating.");
             this.commandList[this.commandList.length] = sc;
 
             // ps  - list the running processes and their IDs
@@ -289,6 +295,10 @@ module TSOS {
                     case "whereami":
                         _StdOut.putText("[whereami] refers to a multitude of geo-cordinates to give you an honest answer of where you are in your life.");
                         break;
+                    //hunger
+                    case "hunger":
+                        _StdOut.putText("[hunger] scans your taste buds and outputs the perfect snack.");
+                        break;
                    
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -341,13 +351,41 @@ module TSOS {
 
         public shellDate(args) {
             var date = new Date();
-                _StdOut.putText(date.toDateString());
+            _StdOut.putText(date.toDateString());
+            _StdOut.advanceLine();
+
+            //Gives hours non-military time 
+            var hours = date.getHours() % 12; 
+            //changes hour 0 to hour 12
+            if (hours == 0) { hours = 12 };
+            //decides am or pm
+            var dayOrNight = "";
+            if (date.getHours() < 12){dayOrNight="pm"}
+                else { dayOrNight = "am" };
+            
+            var minutes = date.getMinutes();
+            //adds 0 to minutes less than 10
+            var possibleZero = "";
+            if (minutes < 10){possibleZero="0"}
+            _StdOut.putText(hours.toString()+":"+
+                possibleZero+minutes.toString()+" "+dayOrNight);
+
             
         }
 
         public shellWhereami(args) {
-                _StdOut.putText("HERE");
-            
+                _StdOut.putText("You are right there.");
+        }
+
+        public shellHunger(args) {
+            var foodOptions = ["Blue Doritos",
+                "Red Doritos",
+                "Spicy Doritios",
+                "Those weird Purple Doritos",
+                "999x cheese blasted Doritos",
+                "Beef Jerky Nuggets"];
+
+                _StdOut.putText(foodOptions[Math.random()]);
         }
 
     }
