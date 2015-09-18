@@ -28,43 +28,70 @@
    <script type="text/javascript" src="distrib/os/userCommand.js"></script>
    <script type="text/javascript" src="distrib/os/kernel.js"></script>
 
+ 
+  
+
    <!-- Other Routines -->
    <script type="text/javascript" src="distrib/utils.js"></script>
    <!-- Uncomment this line below to enable GLaDOS testing -->
    <script type="text/javascript" src="http://www.labouseur.com/courses/os/projects/glados.js"></script>
+   <!--Bootstrap -->
+   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
 
 <body onload="onDocumentLoad()">
 
 <div id="divMain" style="width:100%;">
 
-   <div id="divButtonBar" style="margin:4px;">
+
+
+
+   </div>
+
+<div class="navBar" style="margin:5px; width:900px; ">
+    <nav role="navigation" class="navbar navbar-default">
+        <div class="navbar-header">
+
+             <div id="divButtonBar" style="margin:4px;">
       <input type="button"
+             class="btn btn-default"
              id = "btnStartOS"
              name="brnStartOS"
-             class="normal_button"
              value="Start"
              tabindex="0"
              onclick="TSOS.Control.hostBtnStartOS_click(this);">
 
       <input type="button"
+             class="btn btn-default"
              id = "btnHaltOS"
              name="brnHaltOS"
-             class="normal_button"
              disabled="disabled"
              value="Halt"
              tabindex="1"
              onclick="TSOS.Control.hostBtnHaltOS_click(this);">
 
       <input type="button"
+             class="btn btn-default"
              id = "btnReset"
              name="brnReset"
-             class="normal_button"
              disabled="disabled"
              value="Reset"
              tabindex="2"
              onclick="TSOS.Control.hostBtnReset_click(this);">
-   </div>
+       <div>
+       <div style="float:left;  position: relative;"> Date: </div>
+             <div style="float:left;" id="kernalDateAndTime"> </div> 
+             </div>
+
+             <div style="float:left;  position: relative;"> Staus:</div>
+             <div style="float:left;" id="userStatus"> </div> 
+             </div>
+
+
+    
+    </nav>
+</div>
+
 
    <div id="divConsole" style="margin:4px; width:500px; height:500px; float:left;">
       <canvas id="display"

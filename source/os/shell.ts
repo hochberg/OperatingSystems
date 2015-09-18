@@ -98,6 +98,12 @@ module TSOS {
                                   "- Tells you what you feel like eating.");
             this.commandList[this.commandList.length] = sc;
 
+            // status
+            sc = new ShellCommand(this.shellStatus,
+                                  "status",
+                                  "- Displays status message as specified by user.");
+            this.commandList[this.commandList.length] = sc;
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -299,6 +305,10 @@ module TSOS {
                     case "hunger":
                         _StdOut.putText("[hunger] scans your taste buds and outputs the perfect snack.");
                         break;
+                    //status
+                    case "status":
+                        _StdOut.putText("[status <string>] displays the specified status on the host navigation bar.");
+                        break;
                    
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -369,8 +379,7 @@ module TSOS {
             if (minutes < 10){possibleZero="0"}
             _StdOut.putText(hours.toString()+":"+
                 possibleZero+minutes.toString()+" "+dayOrNight);
-
-            
+   
         }
 
         public shellWhereami(args) {
@@ -384,9 +393,13 @@ module TSOS {
                 "Those weird Purple Doritos",
                 "999x cheese blasted Doritos",
                 "Beef Jerky Nuggets"];
-
-                _StdOut.putText(foodOptions[Math.random()]);
+                _StdOut.putText(foodOptions[Math.floor(Math.random()*6)]);
         }
+
+        public shellStatus(args) {
+            document.getElementById("userStatus").innerHTML = args;
+        }
+
 
     }
 }

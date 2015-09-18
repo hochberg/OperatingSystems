@@ -1,3 +1,5 @@
+
+
 /* ----------------- *
  * CanvasText.ts   *
  *
@@ -145,7 +147,10 @@ module TSOS {
             return total;
         }
 
+      
+
         public static draw(ctx, font, size, x, y, str) {
+          
             var total = 0;
             var len = str.length;
             var mag = size / 25.0;

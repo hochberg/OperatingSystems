@@ -1,4 +1,5 @@
 ///<reference path="../globals.ts" />
+///<reference path="../os/canvastext.ts" />
 
 /* ------------
      Console.ts
@@ -17,12 +18,18 @@ module TSOS {
                     public currentFontSize = _DefaultFontSize,
                     public currentXPosition = 0,
                     public currentYPosition = _DefaultFontSize,
-                    public buffer = "") {
+                    public buffer = "",
+                    public lineHeight = _DefaultFontSize +
+                    _DrawingContext.fontDescent(currentFont, currentFontSize) +
+                    _FontHeightMargin) {
         }
+
+
 
         public init(): void {
             this.clearScreen();
             this.resetXY();
+
         }
 
         private clearScreen(): void {
@@ -35,6 +42,7 @@ module TSOS {
         }
 
         public handleInput(): void {
+            
             while (_KernelInputQueue.getSize() > 0) {
                 // Get the next character from the kernel input queue.
                 var chr = _KernelInputQueue.dequeue();
@@ -76,6 +84,20 @@ module TSOS {
 
         public advanceLine(): void {
             this.currentXPosition = 0;
+
+             //TODO fix when cursor goes off
+            //checks to see if cursor is below canvas
+            if (this.currentYPosition >= (_Canvas.height - _DefaultFontSize - _FontHeightMargin)) {
+                        //scrolling
+                        // create pre canvas
+                         var preCanvas = _DrawingContext.getImageData(0, this.lineHeight, 500, _Canvas.height-this.lineHeight);
+                         //resets canvas
+                         this.clearScreen();
+                         //draws previous canvas
+                         _DrawingContext.putImageData(preCanvas, 0, 0);
+                         //resets cursor
+                         this.currentXPosition = 0;
+            } else
             /*
              * Font size measures from the baseline to the highest point in the font.
              * Font descent measures from the baseline to the lowest point in the font.
@@ -85,7 +107,6 @@ module TSOS {
                                      _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                                      _FontHeightMargin;
 
-            // TODO: Handle scrolling. (iProject 1)
-        }
+                  }
     }
  }

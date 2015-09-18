@@ -11,21 +11,17 @@
 var TSOS;
 (function (TSOS) {
     var Console = (function () {
-        function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, buffer, lineHeight) {
+        function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, buffer) {
             if (currentFont === void 0) { currentFont = _DefaultFontFamily; }
             if (currentFontSize === void 0) { currentFontSize = _DefaultFontSize; }
             if (currentXPosition === void 0) { currentXPosition = 0; }
             if (currentYPosition === void 0) { currentYPosition = _DefaultFontSize; }
             if (buffer === void 0) { buffer = ""; }
-            if (lineHeight === void 0) { lineHeight = _DefaultFontSize +
-                _DrawingContext.fontDescent(currentFont, currentFontSize) +
-                _FontHeightMargin; }
             this.currentFont = currentFont;
             this.currentFontSize = currentFontSize;
             this.currentXPosition = currentXPosition;
             this.currentYPosition = currentYPosition;
             this.buffer = buffer;
-            this.lineHeight = lineHeight;
         }
         Console.prototype.init = function () {
             this.clearScreen();
@@ -80,15 +76,18 @@ var TSOS;
             this.currentXPosition = 0;
             //TODO fix when cursor goes off
             //checks to see if cursor is below canvas
-            if (this.currentYPosition >= (_Canvas.height - _DefaultFontSize - _FontHeightMargin)) {
-                //scrolling
-                // create pre canvas
-                var preCanvas = _DrawingContext.getImageData(0, this.lineHeight, 500, _Canvas.height - this.lineHeight);
-                //resets canvas
+            if (this.currentYPosition >= (504 - _DefaultFontSize - _FontHeightMargin)) {
+                // create backing canvas
+                var backCanvas = document.createElement('_Canvas');
+                backCanvas.width = _Canvas.width;
+                backCanvas.height = _Canvas.height;
+                var backCtx = backCanvas.getContext("2d");
+                // save main canvas contents
+                backCtx.drawImage(_Canvas, 0, 0);
                 this.clearScreen();
-                //draws previous canvas
-                _DrawingContext.putImageData(preCanvas, 0, 0);
-                //resets cursor
+                // restore main canvas
+                _DrawingContext.drawImage(backCanvas, 10, 0);
+                this.clearScreen();
                 this.currentXPosition = 0;
             }
             else
