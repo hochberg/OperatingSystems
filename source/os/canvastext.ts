@@ -147,7 +147,7 @@ module TSOS {
             return total;
         }
 
-      
+
 
         public static draw(ctx, font, size, x, y, str) {
           

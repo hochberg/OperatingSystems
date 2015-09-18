@@ -50,6 +50,25 @@ var TSOS;
                     // ... and reset our buffer.
                     this.buffer = "";
                 }
+                else 
+                // backspace fucntionality
+                if (chr == String.fromCharCode(8)) {
+                    //checks if cursor is off screen
+                    if (this.currentXPosition > 0) {
+                        //adds char to buffer
+                        this.buffer += chr;
+                        //records last char before enter is hit
+                        var lastChar = this.buffer.substring(this.buffer.length - 2, this.buffer.length - 1);
+                        //records that characters width
+                        var lastCharWidth = TSOS.CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, lastChar);
+                        //clears rectangle of that character
+                        _DrawingContext.clearRect(this.currentXPosition - lastCharWidth, this.currentYPosition + _FontHeightMargin - this.lineHeight, lastCharWidth, this.lineHeight);
+                        //resets x position
+                        this.currentXPosition = this.currentXPosition - lastCharWidth;
+                        //removes last letter and backspace key from buffer
+                        this.buffer = this.buffer.substring(0, this.buffer.length - 2);
+                    }
+                }
                 else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
@@ -78,8 +97,8 @@ var TSOS;
         };
         Console.prototype.advanceLine = function () {
             this.currentXPosition = 0;
-            //TODO fix when cursor goes off
             //checks to see if cursor is below canvas
+            //TODO measure
             if (this.currentYPosition >= (_Canvas.height - _DefaultFontSize - _FontHeightMargin)) {
                 //scrolling
                 // create pre canvas
