@@ -17,9 +17,7 @@ var TSOS;
             if (currentXPosition === void 0) { currentXPosition = 0; }
             if (currentYPosition === void 0) { currentYPosition = _DefaultFontSize; }
             if (buffer === void 0) { buffer = ""; }
-            if (lineHeight === void 0) { lineHeight = _DefaultFontSize +
-                _DrawingContext.fontDescent(currentFont, currentFontSize) +
-                _FontHeightMargin; }
+            if (lineHeight === void 0) { lineHeight = _DefaultFontSize + _DrawingContext.fontDescent(currentFont, currentFontSize) + _FontHeightMargin; }
             this.currentFont = currentFont;
             this.currentFontSize = currentFontSize;
             this.currentXPosition = currentXPosition;

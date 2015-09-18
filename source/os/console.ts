@@ -19,9 +19,7 @@ module TSOS {
                     public currentXPosition = 0,
                     public currentYPosition = _DefaultFontSize,
                     public buffer = "",
-                    public lineHeight = _DefaultFontSize +
-                    _DrawingContext.fontDescent(currentFont, currentFontSize) +
-                    _FontHeightMargin) {
+                    public lineHeight = _DefaultFontSize +_DrawingContext.fontDescent(currentFont, currentFontSize) +_FontHeightMargin) {
         }
 
 
