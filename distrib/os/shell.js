@@ -21,10 +21,11 @@ var TSOS;
             this.commandList = [];
             this.curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
             this.apologies = "[sorry]";
+            this.commandHistory = []; //yes sir
+            this.currentCommand = ""; //yes sir
         }
         Shell.prototype.init = function () {
             var sc;
-            //
             // Load the command list.
             // ver
             sc = new TSOS.ShellCommand(this.shellVer, "ver", "- Displays the current version data. Because versions are important.");
@@ -67,6 +68,7 @@ var TSOS;
             //
             // Display the initial prompt.
             this.putPrompt();
+            //console.log(this.commandList);
         };
         Shell.prototype.putPrompt = function () {
             _StdOut.putText(this.promptStr);
@@ -98,6 +100,7 @@ var TSOS;
                 }
             }
             if (found) {
+                this.currentCommand = this.commandList[index].command;
                 this.execute(fn, args);
             }
             else {
@@ -115,6 +118,10 @@ var TSOS;
         };
         // Note: args is an option parameter, ergo the ? which allows TypeScript to understand that.
         Shell.prototype.execute = function (fn, args) {
+            console.log(this.currentCommand);
+            this.commandHistory.push(this.currentCommand);
+            console.log(this.commandHistory);
+            //this.currentCommand = "";
             // We just got a command, so advance the line...
             _StdOut.advanceLine();
             // ... call the command function passing in the args with some über-cool functional programming ...

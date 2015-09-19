@@ -23,13 +23,15 @@ module TSOS {
         public commandList = [];
         public curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
         public apologies = "[sorry]";
+        public commandHistory = []; //yes sir
+        public currentCommand = ""; //yes sir
 
         constructor() {
         }
 
         public init() {
             var sc;
-            //
+            
             // Load the command list.
 
             // ver
@@ -110,6 +112,7 @@ module TSOS {
             //
             // Display the initial prompt.
             this.putPrompt();
+            //console.log(this.commandList);
         }
 
         public putPrompt() {
@@ -142,6 +145,7 @@ module TSOS {
                 }
             }
             if (found) {
+                this.currentCommand = this.commandList[index].command;
                 this.execute(fn, args);
             } else {
                 // It's not found, so check for curses and apologies before declaring the command invalid.
@@ -157,6 +161,10 @@ module TSOS {
 
         // Note: args is an option parameter, ergo the ? which allows TypeScript to understand that.
         public execute(fn, args?) {
+            console.log(this.currentCommand);
+            this.commandHistory.push(this.currentCommand);
+            console.log(this.commandHistory);
+            //this.currentCommand = "";
             // We just got a command, so advance the line...
             _StdOut.advanceLine();
             // ... call the command function passing in the args with some über-cool functional programming ...

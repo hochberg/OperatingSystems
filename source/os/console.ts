@@ -1,6 +1,8 @@
 ///<reference path="../globals.ts" />
 ///<reference path="../os/canvastext.ts" />
 
+
+
 /* ------------
      Console.ts
 
@@ -39,6 +41,7 @@ module TSOS {
             this.currentYPosition = this.currentFontSize;
         }
 
+
         public handleInput(): void {
 
             while (_KernelInputQueue.getSize() > 0) {
@@ -52,9 +55,78 @@ module TSOS {
                     // ... and reset our buffer.
                     this.buffer = "";
                 }else
+                 //up arrow functionality
+                if (chr == String.fromCharCode(38)) { //backspace key
+                        //TODO
+                    }else
+                 //down arrow functionality
+                if (chr == String.fromCharCode(40)) { //backspace key
+                        //TODO
+                    }else
+
                  // backspace fucntionality
                     if (chr == String.fromCharCode(8)) { //backspace key
-                        //checks if cursor is off screen
+                        this.backSpace(chr);
+                    }else
+                 // tab fucntionality
+                    if ((chr == String.fromCharCode(9))&&(this.buffer.length>0)) { //tab key hit and something in buffer
+                     
+                        console.log(_OsShell.commandList);
+                        var commands = _OsShell.commandList;
+                        //var firstChar = this.buffer.substring(0, 1);
+                        //console.log(firstChar);
+                        //console.log(commands[0].command);
+                        var numCommands = commands.length;
+                        var possibleCommands = [];
+
+                       // for (z = 0; (!(possibleCommands.length =0)); z++) {
+
+                           var bufferTargetChar = this.buffer.substring(0, 1);
+
+
+                            for (i = 0; numCommands > i; i++) {
+                               
+                                if (bufferTargetChar == (commands[i].command.substring(0, 1)) {
+                                    //  console.log(commands[i].command);
+                                    // console.log(commands[i].command.substring(0, 1));
+                                    possibleCommands.push(commands[i]);
+                                    console.log(possibleCommands);
+                                }
+
+                                possibleCommands = possibleCommands;
+
+
+                          //  };
+                        }
+                        console.log(possibleCommands);
+                        if (possibleCommands.length==1){
+                            var strCommand = possibleCommands[0].command;
+                            console.log(strCommand);
+
+                            console.log(possibleCommands[0].command);
+                            this.buffer = "";
+                            _DrawingContext.drawText(this.currentFont, this.currentFontSize, 
+                            CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, ">") , //TODO
+                                this.currentYPosition, strCommand);
+                            this.buffer = strCommand;
+                        }
+
+
+                    }
+                else {
+                    // This is a "normal" character, so ...
+                    // ... draw it on the screen...
+                    this.putText(chr);
+                    // ... and add it to our buffer.
+                    this.buffer += chr;             
+                    // TODO: Write a case for Ctrl-C.
+                }
+            }
+        }
+
+            public backSpace(chr): void {
+             
+               //checks if cursor is off screen
                         if(this.currentXPosition>0){
                         //adds char to buffer
                         this.buffer += chr;
@@ -73,16 +145,6 @@ module TSOS {
                        //removes last letter and backspace key from buffer
                         this.buffer=this.buffer.substring(0, this.buffer.length-2) ;
                         }
-                    }
-                else {
-                    // This is a "normal" character, so ...
-                    // ... draw it on the screen...
-                    this.putText(chr);
-                    // ... and add it to our buffer.
-                    this.buffer += chr;             
-                    // TODO: Write a case for Ctrl-C.
-                }
-            }
         }
 
         public putText(text): void {

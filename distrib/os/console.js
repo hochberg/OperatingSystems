@@ -49,22 +49,47 @@ var TSOS;
                     this.buffer = "";
                 }
                 else 
+                //up arrow functionality
+                if (chr == String.fromCharCode(38)) {
+                }
+                else 
+                //down arrow functionality
+                if (chr == String.fromCharCode(40)) {
+                }
+                else 
                 // backspace fucntionality
                 if (chr == String.fromCharCode(8)) {
-                    //checks if cursor is off screen
-                    if (this.currentXPosition > 0) {
-                        //adds char to buffer
-                        this.buffer += chr;
-                        //records last char before enter is hit
-                        var lastChar = this.buffer.substring(this.buffer.length - 2, this.buffer.length - 1);
-                        //records that characters width
-                        var lastCharWidth = TSOS.CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, lastChar);
-                        //clears rectangle of that character
-                        _DrawingContext.clearRect(this.currentXPosition - lastCharWidth, this.currentYPosition + _FontHeightMargin - this.lineHeight, lastCharWidth, this.lineHeight);
-                        //resets x position
-                        this.currentXPosition = this.currentXPosition - lastCharWidth;
-                        //removes last letter and backspace key from buffer
-                        this.buffer = this.buffer.substring(0, this.buffer.length - 2);
+                    this.backSpace(chr);
+                }
+                else 
+                // tab fucntionality
+                if ((chr == String.fromCharCode(9)) && (this.buffer.length > 0)) {
+                    console.log(_OsShell.commandList);
+                    var commands = _OsShell.commandList;
+                    //var firstChar = this.buffer.substring(0, 1);
+                    //console.log(firstChar);
+                    //console.log(commands[0].command);
+                    var numCommands = commands.length;
+                    var possibleCommands = [];
+                    // for (z = 0; (!(possibleCommands.length =0)); z++) {
+                    var bufferTargetChar = this.buffer.substring(0, 1);
+                    for (i = 0; numCommands > i; i++) {
+                        if (bufferTargetChar == (commands[i].command.substring(0, 1))) {
+                            //  console.log(commands[i].command);
+                            // console.log(commands[i].command.substring(0, 1));
+                            possibleCommands.push(commands[i]);
+                            console.log(possibleCommands);
+                        }
+                        possibleCommands = possibleCommands;
+                    }
+                    console.log(possibleCommands);
+                    if (possibleCommands.length == 1) {
+                        var strCommand = possibleCommands[0].command;
+                        console.log(strCommand);
+                        console.log(possibleCommands[0].command);
+                        this.buffer = "";
+                        _DrawingContext.drawText(this.currentFont, this.currentFontSize, TSOS.CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, ">"), this.currentYPosition, strCommand);
+                        this.buffer = strCommand;
                     }
                 }
                 else {
@@ -74,6 +99,23 @@ var TSOS;
                     // ... and add it to our buffer.
                     this.buffer += chr;
                 }
+            }
+        };
+        Console.prototype.backSpace = function (chr) {
+            //checks if cursor is off screen
+            if (this.currentXPosition > 0) {
+                //adds char to buffer
+                this.buffer += chr;
+                //records last char before enter is hit
+                var lastChar = this.buffer.substring(this.buffer.length - 2, this.buffer.length - 1);
+                //records that characters width
+                var lastCharWidth = TSOS.CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, lastChar);
+                //clears rectangle of that character
+                _DrawingContext.clearRect(this.currentXPosition - lastCharWidth, this.currentYPosition + _FontHeightMargin - this.lineHeight, lastCharWidth, this.lineHeight);
+                //resets x position
+                this.currentXPosition = this.currentXPosition - lastCharWidth;
+                //removes last letter and backspace key from buffer
+                this.buffer = this.buffer.substring(0, this.buffer.length - 2);
             }
         };
         Console.prototype.putText = function (text) {
