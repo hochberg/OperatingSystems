@@ -150,8 +150,9 @@ module TSOS {
 
 
   public upKey(chr): void {
+      console.log(_OsShell.commandHistoryIndex +" UP START");
       //checks to see if anything is in command histroy
-      if (_OsShell.commandHistoryIndex > 0) {
+      if (_OsShell.commandHistoryIndex >= 1) {
           //measures buffer's width
           var bufferLength = CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, this.buffer);
           //clears rectangle of buffer length
@@ -166,25 +167,29 @@ module TSOS {
           };
           //removes last letter and backspace key from buffer
           this.buffer = _OsShell.commandHistory[_OsShell.commandHistoryIndex - 1];
-          console.log(this.buffer);
+          console.log(_OsShell.commandHistoryIndex );
           _DrawingContext.drawText(this.currentFont, this.currentFontSize,
               this.currentXPosition,
               this.currentYPosition, this.buffer);
           _OsShell.commandHistoryIndex = _OsShell.commandHistoryIndex - 1;
           //sets x position after new buffer width
           this.currentXPosition = this.currentXPosition + CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, this.buffer);
-      }        
-        }
+            console.log(_OsShell.commandHistoryIndex +" UP FINISH");
+                }
+            }
 
-        public downKey(chr) : void {
-                //checks to see if we are on most current command in cammand history
-                //to empty user input spot
-             if (_OsShell.commandHistoryIndex == _OsShell.commandHistory.length-1) {
-                 //measures buffer width
+  public downKey(chr): void {
+             //measures buffer width
              var bufferLength = CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, this.buffer);
+             //First case- we are at end of command history and want to clear input space
+             //
+             //checks to see if we are on most current command in command history
+             //to empty user input spot
+             if (_OsShell.commandHistoryIndex == _OsShell.commandHistory.length-1) {
+             
              //makes sure we don't go out of range of canvas
             if (this.currentXPosition > 1 + CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, ">")) {
-                                         _DrawingContext.clearRect(
+                                        _DrawingContext.clearRect(
                                                 this.currentXPosition - bufferLength,
                                                 this.currentYPosition +  _FontHeightMargin -  this.lineHeight,
                                                 bufferLength,
@@ -194,10 +199,12 @@ module TSOS {
                                         };
                         //resets buffer
                         this.buffer = "";
-                        //if we are not on last or first command history command
-             } else if (_OsShell.commandHistoryIndex < _OsShell.commandHistory.length - 1) {                       
-                                var bufferLength = CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, this.buffer);
-
+                        //increases command history index
+                         _OsShell.commandHistoryIndex = _OsShell.commandHistoryIndex + 1;
+             //Second case - we are somewhere in the middle of the command histroy
+             //
+             } else if (_OsShell.commandHistoryIndex < _OsShell.commandHistory.length - 1) {  
+                                    //clears whatever is in user input space
                                     if (this.currentXPosition > 1 + CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, ">")) {
                                          _DrawingContext.clearRect(
                                                 this.currentXPosition - bufferLength,
@@ -207,60 +214,55 @@ module TSOS {
                                             //resets x position
                                             this.currentXPosition = this.currentXPosition - bufferLength;
                                         };
-                                        //removes last letter and backspace key from buffer
-                                        console.log(_OsShell.commandHistoryIndex);
+                                        //buffer becomes the next command in command history
                                         this.buffer = _OsShell.commandHistory[_OsShell.commandHistoryIndex + 1];
-                                        console.log(this.buffer);
+                                        //check if at bottom of command history
                                         if   (!(_OsShell.commandHistoryIndex == _OsShell.commandHistory.length)){
-                                            console.log("hey");
-                                        _DrawingContext.drawText(this.currentFont, this.currentFontSize,
-                                        this.currentXPosition,
-                                        this.currentYPosition, this.buffer);
+                                        //writes current buffer
+                                           _DrawingContext.drawText(this.currentFont,
+                                                                    this.currentFontSize,
+                                                                    this.currentXPosition,
+                                                                    this.currentYPosition, this.buffer);
+                                    //increments command history index
                                     _OsShell.commandHistoryIndex = _OsShell.commandHistoryIndex + 1;
+                                    //places x position after buffer length
                                     this.currentXPosition = this.currentXPosition + CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, this.buffer);
+                                    }
                                 }
-                                }
-        }
+                           }
 
-        public putText(text): void {
-            // My first inclination here was to write two functions: putChar() and putString().
-            // Then I remembered that JavaScript is (sadly) untyped and it won't differentiate
-            // between the two.  So rather than be like PHP and write two (or more) functions that
-            // do the same thing, thereby encouraging confusion and decreasing readability, I
-            // decided to write one function and use the term "text" to connote string or char.
-            //
-            // UPDATE: Even though we are now working in TypeScript, char and string remain undistinguished.
-            //         Consider fixing that.
-           
-           // var nextCharacter = "";
-           
-            if (text !== "") {
+            public putText(text): void {
+                // My first inclination here was to write two functions: putChar() and putString().
+                // Then I remembered that JavaScript is (sadly) untyped and it won't differentiate
+                // between the two.  So rather than be like PHP and write two (or more) functions that
+                // do the same thing, thereby encouraging confusion and decreasing readability, I
+                // decided to write one function and use the term "text" to connote string or char.
+                //
+                // UPDATE: Even though we are now working in TypeScript, char and string remain undistinguished.
+                //         Consider fixing that.
+                if (text !== "") {
+                     //line-wrapping functionality
+                     for (var i = 0; i < text.length; i++) {
+                         //cycles through each char within text
+                         var currentChar = text.charAt(i);
+                         //finds where the next x position  will land after char is drawn
+                         var nextX = this.currentXPosition + CanvasTextFunctions.measure(this.currentFont, this.currentFontSize, currentChar);
+                         //if it exceeds canavs width ->new line
+                         if (nextX > _Canvas.width) {
+                             this.advanceLine();
+                         }
+                         // Draw the text at the current X and Y coordinates.
+                         _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, currentChar);
+                         // Move the current X position.
+                         var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, currentChar);
+                         this.currentXPosition = this.currentXPosition + offset;
+                         }
+                    }
+                }
 
-
-               // for (var i = 0; i < text.length; i++) {
-//
-                   // nextCharacter = text.charAt(i) + "";
-                    //Check to make sure that the character is able to be drawn on the current linejuihu
-                   // var nextX = this.currentXPosition + CanvasTextFunctions.measure(this.currentFont, this.currentFontSize, text);
-
-                   // if (nextX > _Canvas.width) { // If not then 
-
-                     //   this.advanceLine();
-                  //  }
-
-                    // Draw the text at the current X and Y coordinates.
-                    _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text);
-                    // Move the current X position.
-                    var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
-                    this.currentXPosition = this.currentXPosition + offset;
-               // }
-            }
-         }
 
         public advanceLine(): void {
             this.currentXPosition = 0;
-            //checks to see if cursor is below canvas
-            //TODO measure
             if (this.currentYPosition >= (_Canvas.height - _DefaultFontSize - _FontHeightMargin)) {
                         //scrolling
                         // create pre canvas

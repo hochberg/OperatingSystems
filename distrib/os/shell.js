@@ -75,7 +75,6 @@ var TSOS;
             //
             // Display the initial prompt.
             this.putPrompt();
-            //console.log(this.commandList);
         };
         Shell.prototype.putPrompt = function () {
             _StdOut.putText(this.promptStr);
@@ -125,9 +124,7 @@ var TSOS;
         };
         // Note: args is an option parameter, ergo the ? which allows TypeScript to understand that.
         Shell.prototype.execute = function (fn, args) {
-            console.log(this.currentCommand);
             this.commandHistory.push(this.currentCommand); //pushes current command into command history
-            console.log(this.commandHistory);
             this.commandHistoryIndex = this.commandHistory.length;
             //this.currentCommand = "";
             // We just got a command, so advance the line...
@@ -408,7 +405,7 @@ var TSOS;
                     _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
                 }
                 //clears user text area
-                document.getElementById("taProgramInput").innerHTML = "";
+                document.getElementById("taProgramInput").value = "";
                 //resets
                 var isHex = true;
             }

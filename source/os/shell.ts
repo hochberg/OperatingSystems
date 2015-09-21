@@ -125,7 +125,8 @@ module TSOS {
             //
             // Display the initial prompt.
             this.putPrompt();
-            //console.log(this.commandList);
+         
+
         }
 
         public putPrompt() {
@@ -174,9 +175,7 @@ module TSOS {
 
         // Note: args is an option parameter, ergo the ? which allows TypeScript to understand that.
         public execute(fn, args?) {
-            console.log(this.currentCommand);
             this.commandHistory.push(this.currentCommand); //pushes current command into command history
-            console.log(this.commandHistory);
             this.commandHistoryIndex = this.commandHistory.length;
             //this.currentCommand = "";
             // We just got a command, so advance the line...
@@ -466,7 +465,7 @@ module TSOS {
               _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
           }
           //clears user text area
-            document.getElementById("taProgramInput").innerHTML = "";
+            document.getElementById("taProgramInput").value = "";
             //resets
             var isHex = true;
   } 
