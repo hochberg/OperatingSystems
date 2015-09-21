@@ -107,7 +107,7 @@ var TSOS;
                 case TIMER_IRQ:
                     this.krnTimerISR(); // Kernel built-in routine for timers (not the clock).
                     break;
-                case KEYBOARD_IRQ:
+                case KEYBOARD_IRQ:                
                     _krnKeyboardDriver.isr(params); // Kernel mode device driver
                     _StdIn.handleInput();
                     break;

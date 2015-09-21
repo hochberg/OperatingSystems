@@ -23,6 +23,7 @@ var TSOS;
             this.apologies = "[sorry]";
             this.commandHistory = []; //yes sir
             this.currentCommand = ""; //yes sir
+            this.commandHistoryIndex = 0; //yes sir
         }
         Shell.prototype.init = function () {
             var sc;
@@ -62,6 +63,12 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
             // status
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "- Displays status message as specified by user.");
+            this.commandList[this.commandList.length] = sc;
+            // bsod
+            sc = new TSOS.ShellCommand(this.shellBsod, "bsod", "- Tests the BSOD.");
+            this.commandList[this.commandList.length] = sc;
+            // load
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Validates user input code.");
             this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
@@ -119,8 +126,9 @@ var TSOS;
         // Note: args is an option parameter, ergo the ? which allows TypeScript to understand that.
         Shell.prototype.execute = function (fn, args) {
             console.log(this.currentCommand);
-            this.commandHistory.push(this.currentCommand);
+            this.commandHistory.push(this.currentCommand); //pushes current command into command history
             console.log(this.commandHistory);
+            this.commandHistoryIndex = this.commandHistory.length;
             //this.currentCommand = "";
             // We just got a command, so advance the line...
             _StdOut.advanceLine();
@@ -261,6 +269,14 @@ var TSOS;
                     case "status":
                         _StdOut.putText("[status <string>] displays the specified status on the host navigation bar.");
                         break;
+                    //bsod
+                    case "bsod":
+                        _StdOut.putText("[bsod] tests the BLUE SCREEN OF DEATH.");
+                        break;
+                    //load
+                    case "load":
+                        _StdOut.putText("[load] validates user code in User Program Input.");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -354,6 +370,48 @@ var TSOS;
         };
         Shell.prototype.shellStatus = function (args) {
             document.getElementById("userStatus").innerHTML = args;
+        };
+        Shell.prototype.shellBsod = function (args) {
+            TSOS.Control.bsodInterrupt();
+        };
+        Shell.prototype.shellLoad = function (args) {
+            //retrieves input form Program input
+            var userInput = document.getElementById("taProgramInput").value;
+            //array of all hex digitis
+            var hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', ' '];
+            //Default
+            var isHex = true;
+            //checks to make sure it is nonEmpty
+            if (userInput == "") {
+                _StdOut.putText("No user input.");
+            }
+            else {
+                //compares hex to user input    
+                for (var i = 0; userInput.length > i; i++) {
+                    //temp array to be filled if char isnt hex
+                    var hexMatch = [];
+                    for (var z = 0; hex.length > z; z++) {
+                        //if a char is hex
+                        if (hex[z] == userInput.substring(0 + i, 1 + i)) {
+                            hexMatch.push("Found");
+                        }
+                    }
+                    //if not hex char
+                    if (hexMatch.length == 0) {
+                        isHex = false;
+                    }
+                }
+                if (isHex) {
+                    _StdOut.putText("User input: [" + userInput + "] Valid Input");
+                }
+                else {
+                    _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
+                }
+                //clears user text area
+                document.getElementById("taProgramInput").innerHTML = "";
+                //resets
+                var isHex = true;
+            }
         };
         return Shell;
     })();

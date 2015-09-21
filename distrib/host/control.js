@@ -98,6 +98,10 @@ var TSOS;
             // be reloaded from the server. If it is false or not specified the browser may reload the
             // page from its cache, which is not what we want.
         };
+        //calls BSOD Interrupt
+        Control.bsodInterrupt = function () {
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(BSOD_IRQ, "BIG ERROR"));
+        };
         return Control;
     })();
     TSOS.Control = Control;

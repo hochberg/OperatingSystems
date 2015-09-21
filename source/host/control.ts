@@ -120,5 +120,10 @@ module TSOS {
             // be reloaded from the server. If it is false or not specified the browser may reload the
             // page from its cache, which is not what we want.
         }
+
+          //calls BSOD Interrupt
+         public static bsodInterrupt(): void {
+        _KernelInterruptQueue.enqueue(new Interrupt(BSOD_IRQ, "BIG ERROR"));
+        }
     }
 }

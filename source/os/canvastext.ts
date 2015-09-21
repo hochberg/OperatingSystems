@@ -149,6 +149,9 @@ module TSOS {
 
 
         public static draw(ctx, font, size, x, y, str) {
+            if (x > 50) {
+                console.log("hey");
+            }
           
             var total = 0;
             var len = str.length;

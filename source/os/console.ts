@@ -24,8 +24,6 @@ module TSOS {
                     public lineHeight = _DefaultFontSize +_DrawingContext.fontDescent(currentFont, currentFontSize) +_FontHeightMargin) {
         }
 
-
-
         public init(): void {
             this.clearScreen();
             this.resetXY();
@@ -43,7 +41,6 @@ module TSOS {
 
 
         public handleInput(): void {
-
             while (_KernelInputQueue.getSize() > 0) {
                 // Get the next character from the kernel input queue.
                 var chr = _KernelInputQueue.dequeue();
@@ -54,75 +51,71 @@ module TSOS {
                     _OsShell.handleInput(this.buffer);
                     // ... and reset our buffer.
                     this.buffer = "";
-                }else
-                 //up arrow functionality
-                if (chr == String.fromCharCode(38)) { //backspace key
-                        //TODO
-                    }else
-                 //down arrow functionality
-                if (chr == String.fromCharCode(40)) { //backspace key
-                        //TODO
-                    }else
-
-                 // backspace fucntionality
-                    if (chr == String.fromCharCode(8)) { //backspace key
-                        this.backSpace(chr);
-                    }else
-                 // tab fucntionality
-                    if ((chr == String.fromCharCode(9))&&(this.buffer.length>0)) { //tab key hit and something in buffer
-                     
-                        console.log(_OsShell.commandList);
-                        var commands = _OsShell.commandList;
-                        //var firstChar = this.buffer.substring(0, 1);
-                        //console.log(firstChar);
-                        //console.log(commands[0].command);
-                        var numCommands = commands.length;
-                        var possibleCommands = [];
-
-                       // for (z = 0; (!(possibleCommands.length =0)); z++) {
-
-                           var bufferTargetChar = this.buffer.substring(0, 1);
-
-
-                            for (i = 0; numCommands > i; i++) {
-                               
-                                if (bufferTargetChar == (commands[i].command.substring(0, 1)) {
-                                    //  console.log(commands[i].command);
-                                    // console.log(commands[i].command.substring(0, 1));
-                                    possibleCommands.push(commands[i]);
-                                    console.log(possibleCommands);
+                } else
+                    //up arrow functionality
+                    if (chr == String.fromCharCode(38)) { //up key
+                        console.log("up");
+                        this.upKey(chr);
+                    } else
+                        //down arrow functionality
+                        if (chr == String.fromCharCode(40)) { //down key
+                            console.log("down");
+                            this.downKey(chr);
+                        } else
+                            // backspace fucntionality
+                            if (chr == String.fromCharCode(8)) { //backspace key
+                                this.backSpace(chr);
+                            } else
+                                // tab fucntionality
+                                if ((chr == String.fromCharCode(9)) && (this.buffer.length > 0)) { //tab key hit and something in buffer                    
+                                   this.tabKey(chr);  
                                 }
 
-                                possibleCommands = possibleCommands;
-
-
-                          //  };
-                        }
-                        console.log(possibleCommands);
-                        if (possibleCommands.length==1){
-                            var strCommand = possibleCommands[0].command;
-                            console.log(strCommand);
-
-                            console.log(possibleCommands[0].command);
-                            this.buffer = "";
-                            _DrawingContext.drawText(this.currentFont, this.currentFontSize, 
-                            CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, ">") , //TODO
-                                this.currentYPosition, strCommand);
-                            this.buffer = strCommand;
-                        }
-
-
-                    }
-                else {
-                    // This is a "normal" character, so ...
-                    // ... draw it on the screen...
-                    this.putText(chr);
-                    // ... and add it to our buffer.
-                    this.buffer += chr;             
-                    // TODO: Write a case for Ctrl-C.
-                }
+                                else {
+                                    // This is a "normal" character, so ...
+                                    // ... draw it on the screen...
+                                    this.putText(chr);
+                                    // ... and add it to our buffer.
+                                    this.buffer += chr;             
+                                    // TODO: Write a case for Ctrl-C.
+                                }
             }
         }
+
+     public tabKey(chr): void {
+         var commands = _OsShell.commandList;
+         //var firstChar = this.buffer.substring(0, 1);
+         //console.log(firstChar);
+         //console.log(commands[0].command);
+         var numCommands = commands.length;
+         var possibleCommands = [];
+         // for (z = 0; (!(possibleCommands.length =0)); z++) {
+         var bufferTargetChar = this.buffer.substring(0, 1);
+         for (var i = 0; numCommands > i; i++) {
+
+             if (bufferTargetChar == (commands[i].command.substring(0, 1))) {
+                 //  console.log(commands[i].command);
+                 // console.log(commands[i].command.substring(0, 1));
+                 possibleCommands.push(commands[i]);
+                 console.log(possibleCommands);
+             }
+             possibleCommands = possibleCommands;
+              // };
+         }
+         console.log(possibleCommands);
+         if (possibleCommands.length == 1) {
+             var strCommand = possibleCommands[0].command;
+             console.log(strCommand);
+
+             console.log(possibleCommands[0].command);
+             this.buffer = "";
+             _DrawingContext.drawText(this.currentFont, this.currentFontSize,
+                 CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, ">"), //TODO
+                 this.currentYPosition, strCommand);
+             this.buffer = strCommand;
+         }
+        }
+        
 
             public backSpace(chr): void {
              
@@ -147,6 +140,80 @@ module TSOS {
                         }
         }
 
+
+  public upKey(chr): void {
+      //checks to see if anything is in command histroy
+      if (_OsShell.commandHistoryIndex > 0) {
+          //measures buffer's width
+          var bufferLength = CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, this.buffer);
+          //clears rectangle of buffer length
+          if (this.currentXPosition > 1 + CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, ">")) {
+              _DrawingContext.clearRect(
+                  this.currentXPosition - bufferLength,
+                  this.currentYPosition + _FontHeightMargin - this.lineHeight,
+                  bufferLength,
+                  this.lineHeight);
+              //resets x position
+              this.currentXPosition = this.currentXPosition - bufferLength;
+          };
+          //removes last letter and backspace key from buffer
+          this.buffer = _OsShell.commandHistory[_OsShell.commandHistoryIndex - 1];
+          console.log(this.buffer);
+          _DrawingContext.drawText(this.currentFont, this.currentFontSize,
+              this.currentXPosition,
+              this.currentYPosition, this.buffer);
+          _OsShell.commandHistoryIndex = _OsShell.commandHistoryIndex - 1;
+          //sets x position after new buffer width
+          this.currentXPosition = this.currentXPosition + CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, this.buffer);
+      }        
+        }
+
+        public downKey(chr) : void {
+                //checks to see if we are on most current command in cammand history
+                //to empty user input spot
+             if (_OsShell.commandHistoryIndex == _OsShell.commandHistory.length-1) {
+                 //measures buffer width
+             var bufferLength = CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, this.buffer);
+             //makes sure we don't go out of range of canvas
+            if (this.currentXPosition > 1 + CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, ">")) {
+                                         _DrawingContext.clearRect(
+                                                this.currentXPosition - bufferLength,
+                                                this.currentYPosition +  _FontHeightMargin -  this.lineHeight,
+                                                bufferLength,
+                                                this.lineHeight);
+                       //resets x position
+                       this.currentXPosition = this.currentXPosition - bufferLength;
+                                        };
+                        //resets buffer
+                        this.buffer = "";
+                        //if we are not on last or first command history command
+             } else if (_OsShell.commandHistoryIndex < _OsShell.commandHistory.length - 1) {                       
+                                var bufferLength = CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, this.buffer);
+
+                                    if (this.currentXPosition > 1 + CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, ">")) {
+                                         _DrawingContext.clearRect(
+                                                this.currentXPosition - bufferLength,
+                                                this.currentYPosition +  _FontHeightMargin -  this.lineHeight,
+                                                bufferLength,
+                                                this.lineHeight);
+                                            //resets x position
+                                            this.currentXPosition = this.currentXPosition - bufferLength;
+                                        };
+                                        //removes last letter and backspace key from buffer
+                                        console.log(_OsShell.commandHistoryIndex);
+                                        this.buffer = _OsShell.commandHistory[_OsShell.commandHistoryIndex + 1];
+                                        console.log(this.buffer);
+                                        if   (!(_OsShell.commandHistoryIndex == _OsShell.commandHistory.length)){
+                                            console.log("hey");
+                                        _DrawingContext.drawText(this.currentFont, this.currentFontSize,
+                                        this.currentXPosition,
+                                        this.currentYPosition, this.buffer);
+                                    _OsShell.commandHistoryIndex = _OsShell.commandHistoryIndex + 1;
+                                    this.currentXPosition = this.currentXPosition + CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, this.buffer);
+                                }
+                                }
+        }
+
         public putText(text): void {
             // My first inclination here was to write two functions: putChar() and putString().
             // Then I remembered that JavaScript is (sadly) untyped and it won't differentiate
@@ -156,6 +223,10 @@ module TSOS {
             //
             // UPDATE: Even though we are now working in TypeScript, char and string remain undistinguished.
             //         Consider fixing that.
+           
+            if (_StdOut){
+               console.log("yo");
+            }
             if (text !== "") {
                 // Draw the text at the current X and Y coordinates.
                 _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text);

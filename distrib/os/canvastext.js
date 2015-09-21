@@ -42,6 +42,9 @@ var TSOS;
             return total;
         };
         CanvasTextFunctions.draw = function (ctx, font, size, x, y, str) {
+            if (x > 50) {
+                console.log("hey");
+            }
             var total = 0;
             var len = str.length;
             var mag = size / 25.0;

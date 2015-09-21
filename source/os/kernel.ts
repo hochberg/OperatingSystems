@@ -58,6 +58,23 @@ module TSOS {
             if (_GLaDOS) {
                 _GLaDOS.afterStartup();
             }
+            //Formates updated date and times for NavBar
+            var date = new Date();
+            //Gives hours non-military time 
+            var hours = date.getHours() % 12; 
+            //changes hour 0 to hour 12
+            if (hours == 0) { hours = 12 };
+            //decides am or pm
+            var dayOrNight = "";
+            if (date.getHours() < 12){dayOrNight="pm"}
+                else { dayOrNight = "am" };
+            var minutes = date.getMinutes();
+            //adds 0 to minutes less than 10
+            var possibleZero = "";
+            if (minutes < 10){possibleZero="0"}
+            //Writes date and time on NavBar   
+            document.getElementById("kernalDateAndTime").innerHTML = hours.toString()+":"+ possibleZero+
+                                            minutes.toString()+" "+dayOrNight + " " + date.toDateString();
         }
 
         public krnShutdown() {
@@ -93,9 +110,6 @@ module TSOS {
             }
         }
 
-
-
-
         //
         // Interrupt Handling
         //
@@ -128,6 +142,9 @@ module TSOS {
                     _krnKeyboardDriver.isr(params);   // Kernel mode device driver
                     _StdIn.handleInput();
                     break;
+                case BSOD_IRQ:
+                    this.krnTrapError("BSOD");
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
@@ -158,45 +175,32 @@ module TSOS {
         // OS Utility Routines
         //
         public krnTrace(msg: string) {
-             // Check globals to see if trace is set ON.  If so, then (maybe) log the message.
-
-            var date = new Date();
-            //Gives hours non-military time 
-            var hours = date.getHours() % 12; 
-            //changes hour 0 to hour 12
-            if (hours == 0) { hours = 12 };
-            //decides am or pm
-            var dayOrNight = "";
-            if (date.getHours() < 12){dayOrNight="pm"}
-                else { dayOrNight = "am" };
-            var minutes = date.getMinutes();
-            //adds 0 to minutes less than 10
-            var possibleZero = "";
-            if (minutes < 10){possibleZero="0"}
-  
+           
+             // Check globals to see if trace is set ON.  If so, then (maybe) log the message
              if (_Trace) {
-                if (msg === "Idle") {
+                 if (msg === "Idle") {
                     // We can't log every idle clock pulse because it would lag the browser very quickly.
                     if (_OSclock % 10 == 0) {
                         // Check the CPU_CLOCK_INTERVAL in globals.ts for an
                         // idea of the tick rate and adjust this line accordingly.
                         Control.hostLog(msg, "OS");
-
-                      document.getElementById("kernalDateAndTime").innerHTML = hours.toString()+":"+ possibleZero+
-                                                                               minutes.toString()+" "+dayOrNight + " " + date.toDateString();
-
-
                     }
                 } else {
                     Control.hostLog(msg, "OS");
-                }
+                 }
              }
+             
         }
 
         public krnTrapError(msg) {
             Control.hostLog("OS ERROR - TRAP: " + msg);
-            // TODO: Display error on console, perhaps in some sort of colored screen. (Maybe blue?)
             this.krnShutdown();
+            _DrawingContext.fillStyle="blue";
+           _DrawingContext.fillRect(0, 0, _Canvas.width, _Canvas.height);
+            clearInterval(_hardwareClockID);
         }
+
+
+
     }
 }
