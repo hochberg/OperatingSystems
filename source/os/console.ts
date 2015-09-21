@@ -83,37 +83,45 @@ module TSOS {
         }
 
      public tabKey(chr): void {
+         //retrieves list of all commands
          var commands = _OsShell.commandList;
-         //var firstChar = this.buffer.substring(0, 1);
-         //console.log(firstChar);
-         //console.log(commands[0].command);
+         //measures amount of commands
          var numCommands = commands.length;
+         //initilizes empty array for possible commands
          var possibleCommands = [];
-         // for (z = 0; (!(possibleCommands.length =0)); z++) {
-         var bufferTargetChar = this.buffer.substring(0, 1);
+         //measures length of buffer
+         var bufferLength = this.buffer.length;
+         //compares buffer to the substring of same length of all commands
+         //and pushes into length of possible commands if matched
          for (var i = 0; numCommands > i; i++) {
-
-             if (bufferTargetChar == (commands[i].command.substring(0, 1))) {
-                 //  console.log(commands[i].command);
-                 // console.log(commands[i].command.substring(0, 1));
+             if (this.buffer == (commands[i].command.substring(0, bufferLength))) {
                  possibleCommands.push(commands[i]);
                  console.log(possibleCommands);
              }
-             possibleCommands = possibleCommands;
-              // };
          }
-         console.log(possibleCommands);
+         //if there is only one possbile command
          if (possibleCommands.length == 1) {
-             var strCommand = possibleCommands[0].command;
-             console.log(strCommand);
-
-             console.log(possibleCommands[0].command);
+             //retrieves that command
+            var strCommand = possibleCommands[0].command;
+            //measures width of buffer
+            var bufferWidth =CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, this.buffer);
+            //clears area that was taken up by buffer
+            _DrawingContext.clearRect(
+                            this.currentXPosition - bufferWidth,
+                            this.currentYPosition + _FontHeightMargin - this.lineHeight,
+                            bufferWidth,
+                            this.lineHeight);
+            //resets x
+             this.currentXPosition = this.currentXPosition - bufferWidth;
+             //clears buffer
              this.buffer = "";
+             //draws full command to canvas
              _DrawingContext.drawText(this.currentFont, this.currentFontSize,
-                 CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, ">"), //TODO
+                 this.currentXPosition,
                  this.currentYPosition, strCommand);
+             //puts commmand in buffer
              this.buffer = strCommand;
-         }
+         } 
         }
         
 
@@ -224,15 +232,28 @@ module TSOS {
             // UPDATE: Even though we are now working in TypeScript, char and string remain undistinguished.
             //         Consider fixing that.
            
-            if (_StdOut){
-               console.log("yo");
-            }
+           // var nextCharacter = "";
+           
             if (text !== "") {
-                // Draw the text at the current X and Y coordinates.
-                _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text);
-                // Move the current X position.
-                var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
-                this.currentXPosition = this.currentXPosition + offset;
+
+
+               // for (var i = 0; i < text.length; i++) {
+//
+                   // nextCharacter = text.charAt(i) + "";
+                    //Check to make sure that the character is able to be drawn on the current linejuihu
+                   // var nextX = this.currentXPosition + CanvasTextFunctions.measure(this.currentFont, this.currentFontSize, text);
+
+                   // if (nextX > _Canvas.width) { // If not then 
+
+                     //   this.advanceLine();
+                  //  }
+
+                    // Draw the text at the current X and Y coordinates.
+                    _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text);
+                    // Move the current X position.
+                    var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
+                    this.currentXPosition = this.currentXPosition + offset;
+               // }
             }
          }
 
