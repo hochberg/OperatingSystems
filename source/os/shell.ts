@@ -25,13 +25,16 @@ module TSOS {
         public commandHistory = []; //yes sir
         public currentCommand = ""; //yes sir
         public commandHistoryIndex  = 0; //yes sir
+        =
  
         constructor() {
         }
 
         public init() {
             var sc;
-            
+            var pcbArray = [];
+    
+
             // Load the command list.
 
             // ver
@@ -180,6 +183,7 @@ module TSOS {
 
         // Note: args is an option parameter, ergo the ? which allows TypeScript to understand that.
         public execute(fn, args?) {
+
             this.commandHistory.push(this.currentCommand); //pushes current command into command history
             this.commandHistoryIndex = this.commandHistory.length;
             //this.currentCommand = "";
@@ -265,6 +269,7 @@ module TSOS {
         }
 
         public shellHelp(args) {
+
             _StdOut.putText("Commands:");
             for (var i in _OsShell.commandList) {
                 _StdOut.advanceLine();
@@ -444,6 +449,7 @@ module TSOS {
         }
 
       public shellLoad(args) {
+
           //retrieves input form Program input
          var userInput = document.getElementById("taProgramInput").value);
          //array of all hex digitis
@@ -488,7 +494,8 @@ module TSOS {
                _ProcessControlBlock = new ProcessControlBlock();        
                _ProcessControlBlock.init();
                _ProcessControlBlock.printPCB(); //for now
-               _CPU.PIDArray.push(commandsCount);
+               _CPU.PIDArray.push(commandsCount); //
+               _pcbArray.push(_ProcessControlBlock);
 
 
              // _CPU.execute(userInput);
@@ -509,7 +516,7 @@ module TSOS {
 
   public shellRun(args) {
       console.log(_MemoryManager.memory);
-      _CPU.execute(_MemoryManager.memory, _ProcessControlBlock.pid );
+      _CPU.execute(_MemoryManager.memory, _ProcessControlBlock.pid, _pcbArray[_ProcessControlBlock.pid]);
       }
         
 

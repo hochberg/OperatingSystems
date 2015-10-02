@@ -49,7 +49,7 @@ module TSOS {
         
 //TODO this will take from memoryBlocks, not from user input
 //also will probably be in a different location
-        public execute(instr, pid) {
+        public execute(instr, pid, pcb) {
                 var instr = instr.memoryBlocks;
                 console.log(instr.length);
                 var currentCode = instr[0];
@@ -64,21 +64,14 @@ module TSOS {
    
                 switch (currentCode) {
                     case "A9":
-                        this.loadAccWithConstant();
+                        this.loadAccWithConstant(instr,pcb);
                         instr.splice(0, 2);
                         counter = counter - 1;
-                       // currentCode = instr[0];
-                        console.log(instr);
-                        //var constant = tailInstr.substring(0, 2);
-                        //this.Acc = constant;
-                       // console.log(this.Acc);
-                       // tailInstr = tailInstr.substring(3, instr.length);
                         break;
                     case 'AD':
                         this.loadAccFromMemory();
                         instr.splice(0, 3);
                         counter = counter - 2;
-                       
                         break;
                     case '8D':
                         this.storeAccInMemory();
@@ -149,7 +142,9 @@ module TSOS {
 
         }
         //A9
-        public loadAccWithConstant() {
+        public loadAccWithConstant(instr,pcb) {
+            pcb.acc = instr[1];
+            pcb.printPCB();
             _StdOut.putText("Load acc with constant");
             _StdOut.advanceLine();
 

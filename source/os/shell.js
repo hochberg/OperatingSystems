@@ -11,7 +11,6 @@
           serious injuries may occur when trying to write your own Operating System.
    ------------ */
 // TODO: Write a base class / prototype for system services and let Shell inherit from it.
-//Test3
 var TSOS;
 (function (TSOS) {
     var Shell = (function () {
@@ -21,10 +20,15 @@ var TSOS;
             this.commandList = [];
             this.curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
             this.apologies = "[sorry]";
+            this.commandHistory = []; //yes sir
+            this.currentCommand = ""; //yes sir
+            this.commandHistoryIndex = 0; //yes sir
+            this.pcbArray = []; //messy but maybe
         }
         Shell.prototype.init = function () {
             var sc;
-            //
+            this.pcbArray.push("1");
+            console.log(this.pcbArray);
             // Load the command list.
             // ver
             sc = new TSOS.ShellCommand(this.shellVer, "ver", "- Displays the current version data. Because versions are important.");
@@ -62,6 +66,15 @@ var TSOS;
             // status
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "- Displays status message as specified by user.");
             this.commandList[this.commandList.length] = sc;
+            // bsod
+            sc = new TSOS.ShellCommand(this.shellBsod, "bsod", "- Tests the BSOD.");
+            this.commandList[this.commandList.length] = sc;
+            // load
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Validates user input code.");
+            this.commandList[this.commandList.length] = sc;
+            // run
+            sc = new TSOS.ShellCommand(this.shellRun, "run", "<pid> - Runs code from memory.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -98,6 +111,7 @@ var TSOS;
                 }
             }
             if (found) {
+                this.currentCommand = this.commandList[index].command;
                 this.execute(fn, args);
             }
             else {
@@ -115,6 +129,9 @@ var TSOS;
         };
         // Note: args is an option parameter, ergo the ? which allows TypeScript to understand that.
         Shell.prototype.execute = function (fn, args) {
+            this.commandHistory.push(this.currentCommand); //pushes current command into command history
+            this.commandHistoryIndex = this.commandHistory.length;
+            //this.currentCommand = "";
             // We just got a command, so advance the line...
             _StdOut.advanceLine();
             // ... call the command function passing in the args with some über-cool functional programming ...
@@ -254,6 +271,18 @@ var TSOS;
                     case "status":
                         _StdOut.putText("[status <string>] displays the specified status on the host navigation bar.");
                         break;
+                    //bsod
+                    case "bsod":
+                        _StdOut.putText("[bsod] tests the BLUE SCREEN OF DEATH.");
+                        break;
+                    //load
+                    case "load":
+                        _StdOut.putText("[load] validates user code in User Program Input.");
+                        break;
+                    //run
+                    case "run":
+                        _StdOut.putText("[run <pid>] runs program in memory, specifed by the given PID");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -347,6 +376,74 @@ var TSOS;
         };
         Shell.prototype.shellStatus = function (args) {
             document.getElementById("userStatus").innerHTML = args;
+        };
+        Shell.prototype.shellBsod = function (args) {
+            TSOS.Control.bsodInterrupt();
+        };
+        Shell.prototype.shellLoad = function (args) {
+            //retrieves input form Program input
+            var userInput = document.getElementById("taProgramInput").value;
+            //array of all hex digitis
+            var hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', ' '];
+            //Default
+            var isHex = true;
+            var commands = userInput.split(" ");
+            var commandsCount = commands.length;
+            console.log(commandsCount);
+            //checks to make sure it is nonEmpty
+            if (userInput == "") {
+                _StdOut.putText("No user input.");
+            }
+            else {
+                //compares hex to user input    
+                for (var i = 0; userInput.length > i; i++) {
+                    //temp array to be filled if char isnt hex
+                    var hexMatch = [];
+                    for (var z = 0; hex.length > z; z++) {
+                        //if a char is hex
+                        if (hex[z] == userInput.substring(0 + i, 1 + i)) {
+                            hexMatch.push("Found");
+                        }
+                    }
+                    //if not hex char 
+                    if (hexMatch.length == 0) {
+                        isHex = false;
+                    }
+                }
+                if (isHex) {
+                    //makes array of hex code split by spaces
+                    var inputArray = userInput.split(" ");
+                    //inputs user code into memory manager memory
+                    for (var i = 0; inputArray.length > i; i++) {
+                        _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
+                    }
+                    //TODO shouldnt print here
+                    _MemoryManager.printMemory();
+                    //TODO fix
+                    // Initialize the processControlBlock
+                    _ProcessControlBlock = new ProcessControlBlock();
+                    _ProcessControlBlock.init();
+                    _ProcessControlBlock.printPCB(); //for now
+                    _CPU.PIDArray.push(commandsCount); //
+                    //this.pcbArray.push(_ProcessControlBlock);
+                    this.commandHistory.push(this.currentCommand);
+                    // _CPU.execute(userInput);
+                    _StdOut.putText("User input: [" + userInput + "] Valid Input");
+                    _StdOut.advanceLine();
+                    _StdOut.putText("Process ID: " + _ProcessControlBlock.pid);
+                }
+                else {
+                    _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
+                }
+                //clears user text area
+                document.getElementById("taProgramInput").value = "";
+                //resets
+                var isHex = true;
+            }
+        };
+        Shell.prototype.shellRun = function (args) {
+            console.log(_MemoryManager.memory);
+            _CPU.execute(_MemoryManager.memory, _ProcessControlBlock.pid, _pidArray[_ProcessControlBlock.pid]);
         };
         return Shell;
     })();

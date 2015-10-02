@@ -26,6 +26,7 @@ var TSOS;
         }
         Shell.prototype.init = function () {
             var sc;
+            var pcbArray = [];
             // Load the command list.
             // ver
             sc = new TSOS.ShellCommand(this.shellVer, "ver", "- Displays the current version data. Because versions are important.");
@@ -421,7 +422,8 @@ var TSOS;
                     _ProcessControlBlock = new TSOS.ProcessControlBlock();
                     _ProcessControlBlock.init();
                     _ProcessControlBlock.printPCB(); //for now
-                    _CPU.PIDArray.push(commandsCount);
+                    _CPU.PIDArray.push(commandsCount); //
+                    _pcbArray.push(_ProcessControlBlock);
                     // _CPU.execute(userInput);
                     _StdOut.putText("User input: [" + userInput + "] Valid Input");
                     _StdOut.advanceLine();
@@ -438,7 +440,7 @@ var TSOS;
         };
         Shell.prototype.shellRun = function (args) {
             console.log(_MemoryManager.memory);
-            _CPU.execute(_MemoryManager.memory, _ProcessControlBlock.pid);
+            _CPU.execute(_MemoryManager.memory, _ProcessControlBlock.pid, _pcbArray[_ProcessControlBlock.pid]);
         };
         return Shell;
     })();

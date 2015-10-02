@@ -1,6 +1,7 @@
 ///<reference path="../globals.ts" />
 ///<reference path="../os/canvastext.ts" />
 ///<reference path="../host/memoryManager.ts" />
+///<reference path="../host/shell.ts" />
 /* ------------
      Control.ts
 
@@ -41,6 +42,8 @@ var TSOS;
             // Set focus on the start button.
             // Use the TypeScript cast to HTMLInputElement
             document.getElementById("btnStartOS").focus();
+            //Creates array to hold all instnces of PCB
+            _pcbArray = [];
             // Check for our testing and enrichment core, which
             // may be referenced here (from index.html) as function Glados().
             if (typeof Glados === "function") {

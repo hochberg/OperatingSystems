@@ -121,7 +121,6 @@ var TSOS;
         //A9
         Cpu.prototype.loadAccWithConstant = function (instr, pcb) {
             pcb.acc = instr[1];
-            pcb.printPCB();
             _StdOut.putText("Load acc with constant");
             _StdOut.advanceLine();
         };

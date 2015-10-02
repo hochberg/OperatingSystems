@@ -1,6 +1,7 @@
 ///<reference path="../globals.ts" />
 ///<reference path="../os/canvastext.ts" />
 ///<reference path="../host/memoryManager.ts" />
+
 /* ------------
      Control.ts
 
@@ -49,6 +50,7 @@ var TSOS;
                 _GLaDOS = new Glados();
                 _GLaDOS.init();
             }
+
         };
         Control.hostLog = function (msg, source) {
             if (source === void 0) { source = "?"; }
