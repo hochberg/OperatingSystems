@@ -400,9 +400,9 @@ var TSOS;
                 if (isHex) {
                     var inputArray = userInput.split(" ");
                     for (var i = 0; inputArray.length > i; i++) {
-                        _Memory.memoryBlocks[i] = inputArray[i];
+                        _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
                     }
-                    _Memory.printMemory();
+                    _MemoryManager.printMemory();
                     // _CPU.execute(userInput);
                     _StdOut.putText("User input: [" + userInput + "] Valid Input");
                 }

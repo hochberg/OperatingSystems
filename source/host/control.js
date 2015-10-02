@@ -75,15 +75,15 @@ var TSOS;
             // .. set focus on the OS console display ...
             document.getElementById("display").focus();
             // ... Create and initialize the CPU (because it's part of the hardware)  ...
-            _CPU = new TSOS.Cpu(); // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
+            _CPU = new Cpu(); // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
             _CPU.init(); //       There's more to do, like dealing with scheduling and such, but this would be a start. Pretty cool.
             //create and initalize a protoype of Memory 
-            _Memory = new TSOS.coreMemory();
+            _Memory = new coreMemory();
             _Memory.init();
             // ... then set the host clock pulse ...
-            _hardwareClockID = setInterval(TSOS.Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
+            _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.
-            _Kernel = new TSOS.Kernel();
+            _Kernel = new Kernel();
             _Kernel.krnBootstrap(); // _GLaDOS.afterStartup() will get called in there, if configured.
         };
         Control.hostBtnHaltOS_click = function (btn) {
@@ -104,7 +104,7 @@ var TSOS;
         };
         //calls BSOD Interrupt
         Control.bsodInterrupt = function () {
-            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(BSOD_IRQ, "BIG ERROR"));
+            _KernelInterruptQueue.enqueue(new Interrupt(BSOD_IRQ, "BIG ERROR"));
         };
         return Control;
     })();
