@@ -36,9 +36,9 @@ module TSOS {
             _MemoryManager.init();
 
             // Initialize the processControlBlock
-            _ProcessControlBlock = new ProcessControlBlock();        
-            _ProcessControlBlock.init();
-            _ProcessControlBlock.printPCB(); //for now
+           // _ProcessControlBlock = new ProcessControlBlock();        
+           // _ProcessControlBlock.init();
+           // _ProcessControlBlock.printPCB(); //for now
 
 
             // Initialize standard input and output to the _Console.

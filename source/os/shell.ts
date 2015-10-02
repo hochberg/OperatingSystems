@@ -118,6 +118,12 @@ module TSOS {
                                   "- Validates user input code.");
             this.commandList[this.commandList.length] = sc;
 
+            // run
+            sc = new ShellCommand(this.shellRun,
+                                  "run",
+                                  "<pid> - Runs code from memory.");
+            this.commandList[this.commandList.length] = sc;
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -338,6 +344,10 @@ module TSOS {
                     case "load":
                         _StdOut.putText("[load] validates user code in User Program Input.");
                         break;
+                    //run
+                    case "run":
+                        _StdOut.putText("[run <pid>] runs program in memory, specifed by the given PID");
+                        break;
 
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -440,6 +450,11 @@ module TSOS {
          var hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', ' '];
          //Default
          var isHex = true;
+
+         var commands = userInput.split(" ");
+         var commandsCount = commands.length;
+         console.log(commandsCount);
+
           //checks to make sure it is nonEmpty
           if (userInput == "") {
               _StdOut.putText("No user input.");
@@ -459,15 +474,28 @@ module TSOS {
                          isHex = false;}
             }
           if (isHex) {
+              //makes array of hex code split by spaces
              var inputArray = userInput.split(" ");
+             //inputs user code into memory manager memory
              for (var i = 0; inputArray.length > i; i++) {
                  _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
              }
+                 //TODO shouldnt print here
                _MemoryManager.printMemory();
+
+               //TODO fix
+               // Initialize the processControlBlock
+               _ProcessControlBlock = new ProcessControlBlock();        
+               _ProcessControlBlock.init();
+               _ProcessControlBlock.printPCB(); //for now
+               _CPU.PIDArray.push(commandsCount);
 
 
              // _CPU.execute(userInput);
               _StdOut.putText("User input: [" + userInput + "] Valid Input");
+              _StdOut.advanceLine();
+              _StdOut.putText("Process ID: " + _ProcessControlBlock.pid );
+
           } else {
               _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
           }
@@ -478,6 +506,11 @@ module TSOS {
   } 
 
         }
+
+  public shellRun(args) {
+      console.log(_MemoryManager.memory);
+      _CPU.execute(_MemoryManager.memory, _ProcessControlBlock.pid );
+      }
         
 
 

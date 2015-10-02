@@ -32,9 +32,9 @@ var TSOS;
             _MemoryManager = new TSOS.MemoryManager();
             _MemoryManager.init();
             // Initialize the processControlBlock
-            _ProcessControlBlock = new TSOS.ProcessControlBlock();
-            _ProcessControlBlock.init();
-            _ProcessControlBlock.printPCB(); //for now
+            // _ProcessControlBlock = new ProcessControlBlock();        
+            // _ProcessControlBlock.init();
+            // _ProcessControlBlock.printPCB(); //for now
             // Initialize standard input and output to the _Console.
             _StdIn = _Console;
             _StdOut = _Console;

@@ -24,7 +24,8 @@ module TSOS {
                     public Xreg: number = 0,
                     public Yreg: number = 0,
                     public Zflag: number = 0,
-                    public isExecuting: boolean = false) {
+                    public isExecuting: boolean = false,
+                    public PIDArray: any = []) {
 
         }
 
@@ -35,6 +36,7 @@ module TSOS {
             this.Yreg = 0;
             this.Zflag = 0;
             this.isExecuting = false;
+            this.PIDArray = [];
         }
 
         public cycle(): void {
@@ -47,48 +49,190 @@ module TSOS {
         
 //TODO this will take from memoryBlocks, not from user input
 //also will probably be in a different location
-        // public execute(instr) {
-        //     instr = String(instr);
+        public execute(instr, pid) {
+                var instr = instr.memoryBlocks;
+                console.log(instr.length);
+                var currentCode = instr[0];
+                console.log(currentCode);
+                var counter = _CPU.PIDArray[pid];
 
-        //     while (instr.length > 0) {
-        //         console.log(instr.length);
+           // while (!(currentCode=="00"))
+            for  (var i = 0; counter > i; i++) {    
+                //var currentCode = instr[0];
+               //var tailInstr = instr.substring(3, instr.length);
+               // console.log(firstTwoBits);
+   
+                switch (currentCode) {
+                    case "A9":
+                        this.loadAccWithConstant();
+                        instr.splice(0, 2);
+                        counter = counter - 1;
+                       // currentCode = instr[0];
+                        console.log(instr);
+                        //var constant = tailInstr.substring(0, 2);
+                        //this.Acc = constant;
+                       // console.log(this.Acc);
+                       // tailInstr = tailInstr.substring(3, instr.length);
+                        break;
+                    case 'AD':
+                        this.loadAccFromMemory();
+                        instr.splice(0, 3);
+                        counter = counter - 2;
+                       
+                        break;
+                    case '8D':
+                        this.storeAccInMemory();
+                    
+                        break;
+                    case '6D':
+                        this.addsWithCarry();
+                    
+                        break;
+                    case 'A2':
+                        this.loadXWithConstant();
+                        
+                       
+                        break;
+                    case 'AE':
+                        this.loadXFromMemory();
+                    
+                        break;
+                    case 'A0':
+                        this.loadYWithConstant();
+                    
+                        break;
+                    case 'AC':
+                        this.loadYFromMemory();
+                       
+                        break;
+                    case 'AE':
+                        this.noOperation();
+                    
+                        break;
+                    case '00':
+                        this.break();
+                    
+                        break;
+                    case 'EC':
+                        this.compareMemoryToX();
+                    
+                        break;
+                    case 'AC':
+                        this.loadYFromMemory();
+                      
+                       
+                        break;
+                    case 'D0':
+                        this.branchNBytes();
+                    
+                        break;
+                    case 'EE':
+                        this.incrementByte();
+                    
+                        break;
+                    case 'FF':
+                        this.systemCall();
+                    
+                        break;
+                    default:
+                        _StdOut.putText("INVALID");
+                        _StdOut.advanceLine();
+                        break;
 
-        //         var firstTwoBits = instr.substring(0, 2);
-        //         var tailInstr = instr.substring(3, instr.length);
-        //        // console.log(firstTwoBits);
-        //        // console.log(tailInstr);
+
+                }
+                 currentCode = instr[0];
+
+                
+            }
 
 
-        //         switch (firstTwoBits) {
-        //             case "A9":
-        //                 var constant = tailInstr.substring(0, 2);
-        //                 this.Acc = constant;
-        //                 _StdOut.putText("Load acc with constant");
-        //                 _StdOut.advanceLine();
-        //                // console.log(this.Acc);
-        //                 tailInstr = tailInstr.substring(3, instr.length);
-        //                 break;
-        //             case 'AD':
-        //                 _StdOut.putText("Load acc from memory");
-        //                 _StdOut.advanceLine();
-        //                 break;
-        //             case '8D':
-        //                 _StdOut.putText("Store acc in memory");
-        //                 _StdOut.advanceLine();
-        //                 break;
-        //             default:
-        //                 _StdOut.putText("INVALID");
-        //                 _StdOut.advanceLine();
-        //                 break;
+        }
+        //A9
+        public loadAccWithConstant() {
+            _StdOut.putText("Load acc with constant");
+            _StdOut.advanceLine();
 
+        }
+        //AD
+        public loadAccFromMemory() {
+            _StdOut.putText("Load acc from memory");
+            _StdOut.advanceLine();
 
-        //         }
+        }
+        //8D
+        public storeAccInMemory() {
+            _StdOut.putText("Store acc in memory");
+            _StdOut.advanceLine();
 
-        //         instr = tailInstr;
-        //     }
+        }
+        //6D
+        public addsWithCarry() {
+            _StdOut.putText("Adds with carry");
+            _StdOut.advanceLine();
 
+        }
+        //A2
+        public loadXWithConstant() {
+            _StdOut.putText("Loads X register with constant");
+            _StdOut.advanceLine();
 
-        // }
+        }
+        //AE
+        public loadXFromMemory() {
+            _StdOut.putText("Load X register from memory");
+            _StdOut.advanceLine();
+
+        }
+        //A0
+        public loadYWithConstant() {
+            _StdOut.putText("Loads Y register with constant");
+            _StdOut.advanceLine();
+
+        }
+        //AC
+        public loadYFromMemory() {
+            _StdOut.putText("Load Y register from memory");
+            _StdOut.advanceLine();
+
+        }
+        //EA
+        public noOperation() {
+            _StdOut.putText("No Operation");
+            _StdOut.advanceLine();
+
+        }
+        //00
+        public break() {
+            _StdOut.putText("Break/System Call");
+            _StdOut.advanceLine();
+
+        }
+        //EC
+        public compareMemoryToX() {
+            _StdOut.putText("Compares Memory to X");
+            _StdOut.advanceLine();
+
+        }
+        //D0
+        public branchNBytes() {
+            _StdOut.putText("Branches N bytes if Z flag = 0");
+            _StdOut.advanceLine();
+
+        }
+        //EE
+        public incrementByte() {
+            _StdOut.putText("Increment Byte");
+            _StdOut.advanceLine();
+
+        }
+        //FF
+        public systemCall() {
+            _StdOut.putText("System Call");
+            _StdOut.advanceLine();
+
+        }
+
 
 
 

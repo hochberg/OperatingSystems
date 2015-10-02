@@ -1,6 +1,7 @@
 ///<reference path="../globals.ts" />
 ///<reference path="../utils.ts" />
 ///<reference path="../host/control.ts" />
+///<reference path="shell.ts" />
 /* ------------
    processControlBlock.ts
 
@@ -24,13 +25,12 @@ var TSOS;
             this.zflag = zflag;
         }
         ProcessControlBlock.prototype.init = function () {
-            this.pid = 0;
+            this.pid = _CPU.PIDArray.length;
             this.pc = _CPU.PC;
             this.acc = _CPU.Acc;
             this.xreg = _CPU.Xreg;
             this.yreg = _CPU.Yreg;
             this.zflag = _CPU.Zflag;
-            console.log(this.pc);
         };
         ;
         ProcessControlBlock.prototype.printPCB = function () {
