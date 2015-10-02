@@ -11,7 +11,6 @@
           serious injuries may occur when trying to write your own Operating System.
    ------------ */
 // TODO: Write a base class / prototype for system services and let Shell inherit from it.
-//Test3
 var TSOS;
 (function (TSOS) {
     var Shell = (function () {
@@ -399,6 +398,11 @@ var TSOS;
                     }
                 }
                 if (isHex) {
+                    var inputArray = userInput.split(" ");
+                    for (var i = 0; inputArray.length > i; i++) {
+                        _Memory.memoryBlocks[i] = inputArray[i];
+                    }
+                    _Memory.printMemory();
                     // _CPU.execute(userInput);
                     _StdOut.putText("User input: [" + userInput + "] Valid Input");
                 }

@@ -30,6 +30,12 @@ h3 {
   font-style: normal;
 }
 
+table, th, td {
+  background-color:#FFFFFF;
+
+}
+
+
 #display {
   background-color:#DFDBC3;
   border: 2px solid red;
@@ -47,4 +53,13 @@ h3 {
   text-align: center;
 }
 
+.memoryBlockContainer {
+  color: black;
+  font-family: Arial;
+  font-size: 13pt;
+  background-color:#FFFFFF;
+  display: inline-block;
+  height: 300px;
+  overflow: scroll;
+}
 

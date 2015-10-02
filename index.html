@@ -45,10 +45,6 @@
 <body onload="onDocumentLoad()">
 
 <div id="divMain" style="width:100%;">
-
-
-
-
    </div>
 
 <div class="navBar" style="margin:5px; width:900px; ">
@@ -94,17 +90,21 @@
     
     </nav>
 </div>
+</div>
 
 
-   <div id="divConsole" style="margin:4px; width:500px; height:500px; float:left;">
+   <div id="divConsole" style="margin:4px; width:500px; height:500px; float:left; ">
+    <label>
+      Console
       <canvas id="display"
               width="500px"
               height="500px"
               tabindex="3">
       </canvas>
+    </label>
    </div>
 
-   <div id="divLog" style="margin-left:520px;">
+   <div id="divLog" style="margin-left:520px;" >
       <label>
          Host Log
          <br>
@@ -116,7 +116,7 @@
       </label>
    </div>
 
-   <div id="divUserProgramInput" style="margin-left:520px;">
+   <div id="divUserProgramInput" style="margin-left:520px;" >
       <label>
          User Program Input
          <br>
@@ -127,12 +127,38 @@
          ></textarea>
       </label>
    </div>
+
+
+
+
+<div class="memoryBlockWrapper" style="margin-left:520px;" ><label>Memory</label><br>
+   <div class="memoryBlockContainer" id="memoryDisplay" >
+   </div>
 </div>
 
+<div class="cpuStatusWrapper" style="margin-left:520px;" ><label>CPU Status</label><br>
+              <table class="table" id = "cpuStatusTable" style="width:300px;">
+                  <tr>
+                    <th>PC</th>
+                    <th>IR</th>
+                    <th>ACC</th>
+                    <th>X</th>
+                    <th>Y</th>
+                    <th>Z</th>
+                  </tr>
+                  <tr>
+                    <td id="pcStatusDisplay">&nbsp;</td>
+                    <td id="irStatusDisplay">&nbsp;</td>
+                    <td id="accStatusDisplay">&nbsp;</td>
+                    <td id="xrStatusDisplayy">&nbsp;</td>
+                    <td id="yrStatusDisplay">&nbsp;</td>
+                    <td id="zfStatusDisplay">&nbsp;</td>
+                </tr>
+              </table>
+    </div>
 
-<div class="container" id="memoryDisplay">
-  
-  </div>
+
+
 </div>
 <p class="footerText" style="clear:both;">
    <br>

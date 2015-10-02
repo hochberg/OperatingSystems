@@ -14,7 +14,6 @@
    ------------ */
 
 // TODO: Write a base class / prototype for system services and let Shell inherit from it.
-//Test3
 
 module TSOS {
     export class Shell {
@@ -460,6 +459,14 @@ module TSOS {
                          isHex = false;}
             }
           if (isHex) {
+             var inputArray = userInput.split(" ");
+             for (var i = 0; inputArray.length > i; i++) {
+                 _Memory.memoryBlocks[i] = inputArray[i];
+
+             }
+               _Memory.printMemory();
+
+
              // _CPU.execute(userInput);
               _StdOut.putText("User input: [" + userInput + "] Valid Input");
           } else {
