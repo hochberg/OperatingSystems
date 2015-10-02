@@ -22,7 +22,8 @@ var BSOD_IRQ = 2; //bsod interrupt
 // Global Variables
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.
 //
-var _CPU; // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class. TEST
+var _CPU; // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class. 
+var _Memory; // _Memory is a prototype of coreMemory 
 var _OSclock = 0; // Page 23.
 var _Mode = 0; // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.
 var _Canvas; // Initialized in Control.hostInit().

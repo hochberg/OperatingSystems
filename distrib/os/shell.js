@@ -393,12 +393,13 @@ var TSOS;
                             hexMatch.push("Found");
                         }
                     }
-                    //if not hex char
+                    //if not hex char 
                     if (hexMatch.length == 0) {
                         isHex = false;
                     }
                 }
                 if (isHex) {
+                    // _CPU.execute(userInput);
                     _StdOut.putText("User input: [" + userInput + "] Valid Input");
                 }
                 else {

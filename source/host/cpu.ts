@@ -42,5 +42,54 @@ module TSOS {
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
         }
+
+        
+//TODO this will take from memoryBlocks, not from user input
+//also will probably be in a different location
+        // public execute(instr) {
+        //     instr = String(instr);
+
+        //     while (instr.length > 0) {
+        //         console.log(instr.length);
+
+        //         var firstTwoBits = instr.substring(0, 2);
+        //         var tailInstr = instr.substring(3, instr.length);
+        //        // console.log(firstTwoBits);
+        //        // console.log(tailInstr);
+
+
+        //         switch (firstTwoBits) {
+        //             case "A9":
+        //                 var constant = tailInstr.substring(0, 2);
+        //                 this.Acc = constant;
+        //                 _StdOut.putText("Load acc with constant");
+        //                 _StdOut.advanceLine();
+        //                // console.log(this.Acc);
+        //                 tailInstr = tailInstr.substring(3, instr.length);
+        //                 break;
+        //             case 'AD':
+        //                 _StdOut.putText("Load acc from memory");
+        //                 _StdOut.advanceLine();
+        //                 break;
+        //             case '8D':
+        //                 _StdOut.putText("Store acc in memory");
+        //                 _StdOut.advanceLine();
+        //                 break;
+        //             default:
+        //                 _StdOut.putText("INVALID");
+        //                 _StdOut.advanceLine();
+        //                 break;
+
+
+        //         }
+
+        //         instr = tailInstr;
+        //     }
+
+
+        // }
+
+
+
     }
 }

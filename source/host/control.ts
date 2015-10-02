@@ -30,6 +30,9 @@ module TSOS {
         public static hostInit(): void {
             // This is called from index.html's onLoad event via the onDocumentLoad function pointer.
 
+            //core memory prototype
+            //_CoreMemoryPrototype = [255];
+
             // Get a global reference to the canvas.  TODO: Should we move this stuff into a Display Device Driver?
             _Canvas = <HTMLCanvasElement>document.getElementById('display');
 
@@ -95,6 +98,13 @@ module TSOS {
             // ... Create and initialize the CPU (because it's part of the hardware)  ...
             _CPU = new Cpu();  // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
             _CPU.init();       //       There's more to do, like dealing with scheduling and such, but this would be a start. Pretty cool.
+
+            //create and initalize a protoype of Memory
+            _Memory = new coreMemory();
+            _Memory.init();
+
+            console.log("yo");
+            console.log(_Memory.memoryBlocks);
 
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);

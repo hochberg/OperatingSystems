@@ -29,7 +29,8 @@ const BSOD_IRQ: number = 2; //bsod interrupt
 // Global Variables
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.
 //
-var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class. TEST
+var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class. 
+var _Memory: TSOS.coreMemory;  // _Memory is a prototype of coreMemory 
 
 var _OSclock: number = 0;  // Page 23.
 
@@ -42,6 +43,8 @@ var _DefaultFontSize: number = 13;
 var _FontHeightMargin: number = 4;              // Additional space added to font size when advancing a line.
 
 var _Trace: boolean = true;  // Default the OS trace to be on.
+
+
 
 // The OS Kernel and its queues.
 var _Kernel: TSOS.Kernel;

@@ -41,6 +41,7 @@ module TSOS {
 
 
         public handleInput(): void {
+            
             while (_KernelInputQueue.getSize() > 0) {
                 // Get the next character from the kernel input queue.
                 var chr = _KernelInputQueue.dequeue();
@@ -53,12 +54,12 @@ module TSOS {
                     this.buffer = "";
                 } else
                     //up arrow functionality
-                    if (chr == String.fromCharCode(38)) { //up key
+                    if (chr == String.fromCharCode(998)) { //up key
                         console.log("up");
                         this.upKey(chr);
                     } else
                         //down arrow functionality
-                        if (chr == String.fromCharCode(40)) { //down key
+                        if (chr == String.fromCharCode(999)) { //down key
                             console.log("down");
                             this.downKey(chr);
                         } else
@@ -178,7 +179,8 @@ module TSOS {
                 }
             }
 
-  public downKey(chr): void {
+  public downKey(chr): void {
+
              //measures buffer width
              var bufferLength = CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, this.buffer);
              //First case- we are at end of command history and want to clear input space

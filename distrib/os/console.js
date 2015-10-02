@@ -50,13 +50,13 @@ var TSOS;
                 }
                 else 
                 //up arrow functionality
-                if (chr == String.fromCharCode(38)) {
+                if (chr == String.fromCharCode(998)) {
                     console.log("up");
                     this.upKey(chr);
                 }
                 else 
                 //down arrow functionality
-                if (chr == String.fromCharCode(40)) {
+                if (chr == String.fromCharCode(999)) {
                     console.log("down");
                     this.downKey(chr);
                 }
