@@ -18,6 +18,7 @@ module TSOS {
         }
         public init(): void {
 			this.memory = _Memory;
+            //********* not do this everytime or change coreMemory everytime also
  			//initial print of memory
             this.printMemory();
 		    }
@@ -48,8 +49,7 @@ public printMemory(): void {
                 printMemoryDisplay.innerHTML = printMemoryDisplay.innerHTML + "  " + this.memory.memoryBlocks[i];
             }
 
-
-
+            console.log(this.memory.memoryBlocks);
 
         }
     }

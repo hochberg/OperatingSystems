@@ -29,8 +29,8 @@ var TSOS;
             _Console = new TSOS.Console(); // The command line interface / console I/O device.
             _Console.init();
             // Initialize the memory manager
-            _MemoryManager = new TSOS.MemoryManager();
-            _MemoryManager.init();
+            // _MemoryManager = new MemoryManager();        
+            // _MemoryManager.init();
             // Initialize the processControlBlock
             // _ProcessControlBlock = new ProcessControlBlock();        
             // _ProcessControlBlock.init();

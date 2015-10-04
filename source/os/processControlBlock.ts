@@ -43,7 +43,7 @@ public printPCB(): void {
 	var printZf = document.getElementById("zfStatusDisplay");
 
 
-	printPc.innerHTML = this.pc;
+   printPc.innerHTML = this.pc;
    //printIr.innerHTML = this.ir;
    printAcc.innerHTML = this.acc;
    printXr.innerHTML = this.xreg;

@@ -32,8 +32,8 @@ module TSOS {
             _Console.init();
 
             // Initialize the memory manager
-            _MemoryManager = new MemoryManager();        
-            _MemoryManager.init();
+           // _MemoryManager = new MemoryManager();        
+           // _MemoryManager.init();
 
             // Initialize the processControlBlock
            // _ProcessControlBlock = new ProcessControlBlock();        

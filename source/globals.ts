@@ -32,6 +32,7 @@ const BSOD_IRQ: number = 2; //bsod interrupt
 var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class. 
 var _MemoryManager: TSOS.memoryManager;  //
 var _Memory: TSOS.coreMemory;  //
+var _pcbArray: any; //
 
 
 var _OSclock: number = 0;  // Page 23.

@@ -18,7 +18,7 @@ module TSOS {
 
     export class coreMemory {
 
-        constructor(public memoryBlocks: any = [],
+        constructor(public memoryBlocks: any = []
         ) {
 
         }

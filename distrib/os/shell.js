@@ -440,7 +440,7 @@ var TSOS;
         };
         Shell.prototype.shellRun = function (args) {
             console.log(_MemoryManager.memory);
-            _CPU.execute(_MemoryManager.memory, _ProcessControlBlock.pid, _pcbArray[_ProcessControlBlock.pid]);
+            _CPU.execute(_MemoryManager.memory.memoryBlocks, _ProcessControlBlock.pid, _pcbArray[_ProcessControlBlock.pid]);
         };
         return Shell;
     })();

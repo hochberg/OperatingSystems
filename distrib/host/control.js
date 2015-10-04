@@ -83,6 +83,9 @@ var TSOS;
             //create and initalize a protoype of Memory 
             _Memory = new TSOS.coreMemory();
             _Memory.init();
+            // Initialize the memory manager
+            _MemoryManager = new TSOS.MemoryManager();
+            _MemoryManager.init();
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(TSOS.Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.

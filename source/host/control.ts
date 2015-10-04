@@ -49,6 +49,8 @@ module TSOS {
             // Use the TypeScript cast to HTMLInputElement
             (<HTMLInputElement> document.getElementById("btnStartOS")).focus();
             
+
+
             //Creates array to hold all instnces of PCB
              _pcbArray = [];
 
@@ -106,6 +108,10 @@ module TSOS {
             //create and initalize a protoype of Memory 
             _Memory = new coreMemory();
             _Memory.init();
+
+              // Initialize the memory manager
+            _MemoryManager = new MemoryManager();        
+            _MemoryManager.init();
 
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);

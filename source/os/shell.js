@@ -23,12 +23,10 @@ var TSOS;
             this.commandHistory = []; //yes sir
             this.currentCommand = ""; //yes sir
             this.commandHistoryIndex = 0; //yes sir
-            this.pcbArray = []; //messy but maybe
         }
         Shell.prototype.init = function () {
             var sc;
-            this.pcbArray.push("1");
-            console.log(this.pcbArray);
+            var pcbArray = [];
             // Load the command list.
             // ver
             sc = new TSOS.ShellCommand(this.shellVer, "ver", "- Displays the current version data. Because versions are important.");
@@ -425,8 +423,7 @@ var TSOS;
                     _ProcessControlBlock.init();
                     _ProcessControlBlock.printPCB(); //for now
                     _CPU.PIDArray.push(commandsCount); //
-                    //this.pcbArray.push(_ProcessControlBlock);
-                    this.commandHistory.push(this.currentCommand);
+                    _pcbArray.push(_ProcessControlBlock);
                     // _CPU.execute(userInput);
                     _StdOut.putText("User input: [" + userInput + "] Valid Input");
                     _StdOut.advanceLine();
@@ -443,7 +440,7 @@ var TSOS;
         };
         Shell.prototype.shellRun = function (args) {
             console.log(_MemoryManager.memory);
-            _CPU.execute(_MemoryManager.memory, _ProcessControlBlock.pid, _pidArray[_ProcessControlBlock.pid]);
+            _CPU.execute(_MemoryManager.memory, _ProcessControlBlock.pid, _pcbArray[_ProcessControlBlock.pid]);
         };
         return Shell;
     })();

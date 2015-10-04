@@ -14,6 +14,7 @@ var TSOS;
         }
         MemoryManager.prototype.init = function () {
             this.memory = _Memory;
+            //********* not do this everytime or change coreMemory everytime also
             //initial print of memory
             this.printMemory();
         };
@@ -42,6 +43,7 @@ var TSOS;
                 //prints memory blocks 1 by 1
                 printMemoryDisplay.innerHTML = printMemoryDisplay.innerHTML + "  " + this.memory.memoryBlocks[i];
             }
+            console.log(this.memory.memoryBlocks);
         };
         return MemoryManager;
     })();

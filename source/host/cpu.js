@@ -50,6 +50,7 @@ var TSOS;
         //TODO this will take from memoryBlocks, not from user input
         //also will probably be in a different location
         Cpu.prototype.execute = function (instr, pid, pcb) {
+            //  var savedInstr = instr.memoryBlocks;
             var instr = instr.memoryBlocks;
             console.log(instr.length);
             var currentCode = instr[0];
@@ -67,27 +68,39 @@ var TSOS;
                         counter = counter - 1;
                         break;
                     case 'AD':
-                        this.loadAccFromMemory();
+                        this.loadAccFromMemory(instr, pcb);
                         instr.splice(0, 3);
                         counter = counter - 2;
                         break;
                     case '8D':
-                        this.storeAccInMemory();
+                        this.storeAccInMemory(instr, pcb);
+                        instr.splice(0, 3);
+                        counter = counter - 2;
                         break;
                     case '6D':
-                        this.addsWithCarry();
+                        this.addsWithCarry(instr, pcb);
+                        instr.splice(0, 3);
+                        counter = counter - 2;
                         break;
                     case 'A2':
-                        this.loadXWithConstant();
+                        this.loadXWithConstant(instr, pcb);
+                        instr.splice(0, 2);
+                        counter = counter - 1;
                         break;
                     case 'AE':
-                        this.loadXFromMemory();
+                        this.loadXFromMemory(instr, pcb);
+                        instr.splice(0, 3);
+                        counter = counter - 2;
                         break;
                     case 'A0':
-                        this.loadYWithConstant();
+                        this.loadYWithConstant(instr, pcb);
+                        instr.splice(0, 2);
+                        counter = counter - 1;
                         break;
                     case 'AC':
-                        this.loadYFromMemory();
+                        this.loadYFromMemory(instr, pcb);
+                        instr.splice(0, 3);
+                        counter = counter - 2;
                         break;
                     case 'AE':
                         this.noOperation();
@@ -99,7 +112,7 @@ var TSOS;
                         this.compareMemoryToX();
                         break;
                     case 'AC':
-                        this.loadYFromMemory();
+                        this.loadYFromMemory(instr, pcb);
                         break;
                     case 'D0':
                         this.branchNBytes();
@@ -113,49 +126,86 @@ var TSOS;
                     default:
                         _StdOut.putText("INVALID");
                         _StdOut.advanceLine();
+                        instr.splice(0, 1);
                         break;
                 }
                 currentCode = instr[0];
+                pcb.printPCB();
+                // _MemoryManager.memory.memoryBlocks = savedInstr;
+                _MemoryManager.printMemory();
             }
+        };
+        //converts a num in hex to decimal equivalent
+        Cpu.prototype.hexToDec = function (hex) {
+            parseInt(hex, 16);
+        };
+        //converts a num in decimal to hex equivalent
+        Cpu.prototype.decToHex = function (dec) {
+            parseInt(dec.toString(16));
         };
         //A9
         Cpu.prototype.loadAccWithConstant = function (instr, pcb) {
+            //loads acc with the next element in instruction arry
             pcb.acc = instr[1];
+            // pcb.printPCB(); ///TODO FIX
             _StdOut.putText("Load acc with constant");
             _StdOut.advanceLine();
         };
         //AD
-        Cpu.prototype.loadAccFromMemory = function () {
+        Cpu.prototype.loadAccFromMemory = function (instr, pcb) {
+            pcb.acc = _MemoryManager.memory.memoryBlocks[this.hexToDec(instr[1])];
             _StdOut.putText("Load acc from memory");
             _StdOut.advanceLine();
         };
         //8D
-        Cpu.prototype.storeAccInMemory = function () {
+        Cpu.prototype.storeAccInMemory = function (instr, pcb) {
+            //  console.log(_MemoryManager.memory.memoryBlocks[22]);
+            _MemoryManager.memory.memoryBlocks[this.hexToDec(instr[1])] = pcb.acc;
             _StdOut.putText("Store acc in memory");
             _StdOut.advanceLine();
         };
         //6D
-        Cpu.prototype.addsWithCarry = function () {
+        Cpu.prototype.addsWithCarry = function (instr, pcb) {
+            //retrieves the contents at the given address (in hex)
+            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(instr[1])];
+            console.log(instr[1]);
+            console.log(this.hexToDec(instr[1]));
+            console.log(_MemoryManager.memory.memoryBlocks[this.hexToDec(instr[1])]);
+            //retrievs content of accumulater (in hex)
+            var acc = pcb.acc;
+            //converts the two num to dec and adds them
+            console.log(acc);
+            console.log(content);
+            content.log(this.hexToDec(content));
+            var result = this.hexToDec(content) + this.hexToDec(acc);
+            //loads results back into accumulater
+            pcb.acc = this.decToHex(result);
             _StdOut.putText("Adds with carry");
             _StdOut.advanceLine();
         };
         //A2
-        Cpu.prototype.loadXWithConstant = function () {
+        Cpu.prototype.loadXWithConstant = function (instr, pcb) {
+            pcb.xreg = instr[1];
+            pcb.printPCB();
             _StdOut.putText("Loads X register with constant");
             _StdOut.advanceLine();
         };
         //AE
-        Cpu.prototype.loadXFromMemory = function () {
+        Cpu.prototype.loadXFromMemory = function (instr, pcb) {
+            pcb.xreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(instr[1])];
             _StdOut.putText("Load X register from memory");
             _StdOut.advanceLine();
         };
         //A0
-        Cpu.prototype.loadYWithConstant = function () {
+        Cpu.prototype.loadYWithConstant = function (instr, pcb) {
+            pcb.yreg = instr[1];
+            pcb.printPCB();
             _StdOut.putText("Loads Y register with constant");
             _StdOut.advanceLine();
         };
         //AC
-        Cpu.prototype.loadYFromMemory = function () {
+        Cpu.prototype.loadYFromMemory = function (instr, pcb) {
+            pcb.yreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(instr[1])];
             _StdOut.putText("Load Y register from memory");
             _StdOut.advanceLine();
         };

@@ -515,8 +515,8 @@ module TSOS {
         }
 
   public shellRun(args) {
-      console.log(_MemoryManager.memory);
-      _CPU.execute(_MemoryManager.memory, _ProcessControlBlock.pid, _pcbArray[_ProcessControlBlock.pid]);
+       console.log(_MemoryManager.memory);
+      _CPU.execute(_MemoryManager.memory.memoryBlocks, _ProcessControlBlock.pid, _pcbArray[_ProcessControlBlock.pid]);
       }
         
 
