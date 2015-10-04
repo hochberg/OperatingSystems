@@ -109,6 +109,8 @@ var TSOS;
                         break;
                     case 'AE':
                         this.noOperation();
+                        currentCodeCounter = currentCodeCounter + 1;
+                        currentCode = instr[currentCodeCounter];
                         break;
                     case '00':
                         this.break();
@@ -116,14 +118,14 @@ var TSOS;
                     case 'EC':
                         this.compareMemoryToX();
                         break;
-                    case 'AC':
-                        this.loadYFromMemory(instr, pcb, currentCode);
-                        break;
                     case 'D0':
                         this.branchNBytes();
                         break;
                     case 'EE':
-                        this.incrementByte();
+                        this.incrementByte(instr, pcb, currentCodeCounter);
+                        currentCodeCounter = currentCodeCounter + 3;
+                        currentCode = instr[currentCodeCounter];
+                        counter = counter - 2;
                         break;
                     case 'FF':
                         this.systemCall();
@@ -233,7 +235,17 @@ var TSOS;
             _StdOut.advanceLine();
         };
         //EE
-        Cpu.prototype.incrementByte = function () {
+        Cpu.prototype.incrementByte = function (instr, pcb, currentCodeCounter) {
+            //retrieves the contents at the given address (in hex)
+            console.log(1 + currentCodeCounter);
+            console.log((instr[1 + currentCodeCounter]));
+            console.log(this.hexToDec(instr[1 + currentCodeCounter]));
+            console.log(_MemoryManager.memory.memoryBlocks[this.hexToDec(instr[1 + currentCodeCounter])]);
+            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(instr[1 + currentCodeCounter])];
+            //change content to decimal and add one
+            var incremented = this.hexToDec(content) + 1;
+            //convert back to hex and load back into register
+            _MemoryManager.memory.memoryBlocks[this.hexToDec(instr[1 + currentCodeCounter])] = this.decToHex(incremented);
             _StdOut.putText("Increment Byte");
             _StdOut.advanceLine();
         };
