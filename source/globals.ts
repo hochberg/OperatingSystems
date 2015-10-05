@@ -30,9 +30,9 @@ const BSOD_IRQ: number = 2; //bsod interrupt
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.
 //
 var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class. 
-var _MemoryManager: TSOS.memoryManager;  //
-var _Memory: TSOS.coreMemory;  //
-var _pcbArray: any; //
+var _MemoryManager: TSOS.memoryManager;  // creates instance of Memory Manger
+var _Memory: TSOS.coreMemory;  //creates instance of core memory
+var _pcbArray: any; // creates global PCB array to conatin all instances of PCB (may reorganize in future)
 
 
 var _OSclock: number = 0;  // Page 23.

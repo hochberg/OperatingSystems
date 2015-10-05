@@ -51,7 +51,9 @@ module TSOS {
             
 
 
-            //Creates array to hold all instnces of PCB
+            //Creates array to hold all instances of PCB
+            // new PCBs are created and are pushed into array when load is executed
+            //TODO may need to reorganize this
              _pcbArray = [];
 
             // Check for our testing and enrichment core, which
