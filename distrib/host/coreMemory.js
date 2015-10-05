@@ -23,8 +23,6 @@ var TSOS;
             for (var i = 0; i < 256; i++) {
                 this.memoryBlocks[i] = '00';
             }
-            //initial print of memory
-            //   this.printMemory();
         };
         return coreMemory;
     })();

@@ -25,6 +25,7 @@ var TSOS;
             this.zflag = zflag;
         }
         ProcessControlBlock.prototype.init = function () {
+            //initializes instance of PCB with CPU values
             this.pid = _CPU.PIDArray.length;
             this.pc = _CPU.PC;
             this.acc = _CPU.Acc;
@@ -34,6 +35,7 @@ var TSOS;
         };
         ;
         ProcessControlBlock.prototype.printPCB = function () {
+            //prints pcb properties to diplay
             var printPc = document.getElementById("pcStatusDisplay");
             //var printIr = document.getElementById("irStatusDisplay");
             var printAcc = document.getElementById("accStatusDisplay");

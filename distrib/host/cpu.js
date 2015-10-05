@@ -151,7 +151,12 @@ var TSOS;
                 //TODO change this to clock pulses
                 pcb.printPCB();
                 _MemoryManager.printMemory();
+                //TODO is this what Program counter is (??)
+                pcb.pc = currentCodeCounter;
             }
+            //TODO and then maybe back to zero after (??)
+            pcb.pc = 0;
+            pcb.printPCB();
         };
         //converts a num in hex to decimal equivalent
         Cpu.prototype.hexToDec = function (hex) {
