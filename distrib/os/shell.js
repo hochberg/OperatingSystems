@@ -416,18 +416,22 @@ var TSOS;
                         _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
                     }
                     //TODO shouldnt print here
-                    _MemoryManager.printMemory();
-                    //TODO fix
+                    //_MemoryManager.printMemory();
+                    //TODO CHANGE TO IS EXECUTING TRUE
                     // Initialize the processControlBlock
-                    _ProcessControlBlock = new TSOS.ProcessControlBlock();
-                    _ProcessControlBlock.init();
-                    _ProcessControlBlock.printPCB(); //for now
-                    _CPU.PIDArray.push(commandsCount); //
-                    _pcbArray.push(_ProcessControlBlock);
+                    // _ProcessControlBlock = new ProcessControlBlock();        
+                    //_ProcessControlBlock.init();
+                    // _ProcessControlBlock.printPCB(); //for now
+                    // _CPU.PIDArray.push(commandsCount); //
+                    //////////////////
+                    //********* make new pcb for each
+                    _pcbArray.push(new TSOS.ProcessControlBlock());
+                    _pcbArray[_pcbArray.length - 1].init();
+                    console.log(_pcbArray[0]);
                     // _CPU.execute(userInput);
                     _StdOut.putText("User input: [" + userInput + "] Valid Input");
                     _StdOut.advanceLine();
-                    _StdOut.putText("Process ID: " + _ProcessControlBlock.pid);
+                    _StdOut.putText("Process ID: " + (_pcbArray.length - 1));
                 }
                 else {
                     _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
@@ -439,8 +443,16 @@ var TSOS;
             }
         };
         Shell.prototype.shellRun = function (args) {
-            console.log(_MemoryManager.memory);
-            _CPU.execute(_MemoryManager.memory.memoryBlocks, _ProcessControlBlock.pid, _pcbArray[_ProcessControlBlock.pid]);
+            if (!args) {
+                _StdOut.putText("Please specifiy a PID");
+            }
+            else {
+                //cdepending on user input, changes currentPCB
+                _currentPcb = _pcbArray[args];
+                //starts executing cycle
+                _CPU.isExecuting = true;
+                _StdOut.putText("Running...");
+            }
         };
         return Shell;
     })();

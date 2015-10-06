@@ -111,6 +111,7 @@ var TSOS;
             }
             else if (_CPU.isExecuting) {
                 _CPU.cycle();
+                console.log("cycle");
             }
             else {
                 this.krnTrace("Idle");

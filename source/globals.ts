@@ -33,6 +33,8 @@ var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure th
 var _MemoryManager: TSOS.memoryManager;  // creates instance of Memory Manger
 var _Memory: TSOS.coreMemory;  //creates instance of core memory
 var _pcbArray: any; // creates global PCB array to conatin all instances of PCB (may reorganize in future)
+var _currentPcb: any; //keeps track of currently running pcb
+
 
 
 var _OSclock: number = 0;  // Page 23.

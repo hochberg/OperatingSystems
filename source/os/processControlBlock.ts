@@ -26,7 +26,7 @@ module TSOS {
 
 public init(): void {
 	//initializes instance of PCB with CPU values
-	    this.pid = _CPU.PIDArray.length;
+	    this.pid = _pcbArray.length - 1;
 		this.pc = _CPU.PC;
 		this.acc = _CPU.Acc;
 		this.xreg = _CPU.Xreg;

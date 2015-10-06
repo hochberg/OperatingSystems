@@ -24,7 +24,7 @@ module TSOS {
         public apologies = "[sorry]";
         public commandHistory = []; //yes sir
         public currentCommand = ""; //yes sir
-        public commandHistoryIndex  = 0; //yes sir
+        public commandHistoryIndex = 0; //yes sir
         =
  
         constructor() {
@@ -39,92 +39,92 @@ module TSOS {
 
             // ver
             sc = new ShellCommand(this.shellVer,
-                                  "ver",
-                                  "- Displays the current version data. Because versions are important.");
+                "ver",
+                "- Displays the current version data. Because versions are important.");
             this.commandList[this.commandList.length] = sc;
 
             // help
             sc = new ShellCommand(this.shellHelp,
-                                  "help",
-                                  "- This is the help command. Seek help.");
+                "help",
+                "- This is the help command. Seek help.");
             this.commandList[this.commandList.length] = sc;
 
             // shutdown
             sc = new ShellCommand(this.shellShutdown,
-                                  "shutdown",
-                                  "- Shuts down the virtual OS but leaves the underlying host / hardware simulation running.");
+                "shutdown",
+                "- Shuts down the virtual OS but leaves the underlying host / hardware simulation running.");
             this.commandList[this.commandList.length] = sc;
 
             // cls
             sc = new ShellCommand(this.shellCls,
-                                  "cls",
-                                  "- Clears the screen and resets the cursor position.");
+                "cls",
+                "- Clears the screen and resets the cursor position.");
             this.commandList[this.commandList.length] = sc;
 
             // man <topic>
             sc = new ShellCommand(this.shellMan,
-                                  "man",
-                                  "<topic> - Displays the MANual page for <topic>.");
+                "man",
+                "<topic> - Displays the MANual page for <topic>.");
             this.commandList[this.commandList.length] = sc;
 
             // trace <on | off>
             sc = new ShellCommand(this.shellTrace,
-                                  "trace",
-                                  "<on | off> - Turns the OS trace on or off.");
+                "trace",
+                "<on | off> - Turns the OS trace on or off.");
             this.commandList[this.commandList.length] = sc;
 
             // rot13 <string>
             sc = new ShellCommand(this.shellRot13,
-                                  "rot13",
-                                  "<string> - Does rot13 obfuscation on <string>.");
+                "rot13",
+                "<string> - Does rot13 obfuscation on <string>.");
             this.commandList[this.commandList.length] = sc;
 
             // prompt <string>
             sc = new ShellCommand(this.shellPrompt,
-                                  "prompt",
-                                  "<string> - Sets the prompt.");
+                "prompt",
+                "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
 
             // date
             sc = new ShellCommand(this.shellDate,
-                                  "date",
-                                  "- Displays the current date and time.");
+                "date",
+                "- Displays the current date and time.");
             this.commandList[this.commandList.length] = sc;
 
             // whereami
             sc = new ShellCommand(this.shellWhereami,
-                                  "whereami",
-                                  "- Gives you your'e current coordinates.");
+                "whereami",
+                "- Gives you your'e current coordinates.");
             this.commandList[this.commandList.length] = sc;
 
             // hunger
             sc = new ShellCommand(this.shellHunger,
-                                  "hunger",
-                                  "- Tells you what you feel like eating.");
+                "hunger",
+                "- Tells you what you feel like eating.");
             this.commandList[this.commandList.length] = sc;
 
             // status
             sc = new ShellCommand(this.shellStatus,
-                                  "status",
-                                  "- Displays status message as specified by user.");
+                "status",
+                "- Displays status message as specified by user.");
             this.commandList[this.commandList.length] = sc;
 
             // bsod
             sc = new ShellCommand(this.shellBsod,
-                                  "bsod",
-                                  "- Tests the BSOD.");
+                "bsod",
+                "- Tests the BSOD.");
             this.commandList[this.commandList.length] = sc;
 
             // load
             sc = new ShellCommand(this.shellLoad,
-                                  "load",
-                                  "- Validates user input code.");
+                "load",
+                "- Validates user input code.");
             this.commandList[this.commandList.length] = sc;
 
             // run
             sc = new ShellCommand(this.shellRun,
-                                  "run",
-                                  "<pid> - Runs code from memory.");
+                "run",
+                "<pid> - Runs code from memory.");
             this.commandList[this.commandList.length] = sc;
 
             // ps  - list the running processes and their IDs
@@ -133,7 +133,7 @@ module TSOS {
             //
             // Display the initial prompt.
             this.putPrompt();
-         
+
 
         }
 
@@ -251,20 +251,20 @@ module TSOS {
         }
 
         public shellApology() {
-           if (_SarcasticMode) {
-              _StdOut.putText("I think we can put our differences behind us.");
-              _StdOut.advanceLine();
-              _StdOut.putText("For science . . . You monster.");
-              _SarcasticMode = false;
-           } else {
-              _StdOut.putText("For what?");
-           }
+            if (_SarcasticMode) {
+                _StdOut.putText("I think we can put our differences behind us.");
+                _StdOut.advanceLine();
+                _StdOut.putText("For science . . . You monster.");
+                _SarcasticMode = false;
+            } else {
+                _StdOut.putText("For what?");
+            }
         }
 
         public shellVer(args) {
             _StdOut.putText("Operating System: " + APP_NAME);
             _StdOut.advanceLine();
-            _StdOut.putText("Version numero: " + APP_VERSION );
+            _StdOut.putText("Version numero: " + APP_VERSION);
 
         }
 
@@ -278,8 +278,8 @@ module TSOS {
         }
 
         public shellShutdown(args) {
-             _StdOut.putText("Shutting down...");
-             // Call Kernel shutdown routine.
+            _StdOut.putText("Shutting down...");
+            // Call Kernel shutdown routine.
             _Kernel.krnShutdown();
             // TODO: Stop the final prompt from being displayed.  If possible.  Not a high priority.  (Damn OCD!)
         }
@@ -389,7 +389,7 @@ module TSOS {
         public shellRot13(args) {
             if (args.length > 0) {
                 // Requires Utils.ts for rot13() function.
-                _StdOut.putText(args.join(' ') + " = '" + Utils.rot13(args.join(' ')) +"'");
+                _StdOut.putText(args.join(' ') + " = '" + Utils.rot13(args.join(' ')) + "'");
             } else {
                 _StdOut.putText("Usage: rot13 <string>  Please supply a string.");
             }
@@ -414,20 +414,20 @@ module TSOS {
             if (hours == 0) { hours = 12 };
             //decides am or pm
             var dayOrNight = "";
-            if (date.getHours() < 12){dayOrNight="pm"}
-                else { dayOrNight = "am" };
-            
+            if (date.getHours() < 12) { dayOrNight = "pm" }
+            else { dayOrNight = "am" };
+
             var minutes = date.getMinutes();
             //adds 0 to minutes less than 10
             var possibleZero = "";
-            if (minutes < 10){possibleZero="0"}
-            _StdOut.putText(hours.toString()+":"+
-                possibleZero+minutes.toString()+" "+dayOrNight);
-   
+            if (minutes < 10) { possibleZero = "0" }
+            _StdOut.putText(hours.toString() + ":" +
+                possibleZero + minutes.toString() + " " + dayOrNight);
+
         }
 
         public shellWhereami(args) {
-                _StdOut.putText("You are right there.");
+            _StdOut.putText("You are right there.");
         }
 
         public shellHunger(args) {
@@ -437,7 +437,7 @@ module TSOS {
                 "Those weird Purple Doritos",
                 "999x cheese blasted Doritos",
                 "Beef Jerky Nuggets"];
-                _StdOut.putText(foodOptions[Math.floor(Math.random()*6)]);
+            _StdOut.putText(foodOptions[Math.floor(Math.random() * 6)]);
         }
 
         public shellStatus(args) {
@@ -445,80 +445,101 @@ module TSOS {
         }
 
         public shellBsod(args) {
-          TSOS.Control.bsodInterrupt();
+            TSOS.Control.bsodInterrupt();
         }
 
-      public shellLoad(args) {
+        public shellLoad(args) {
 
-          //retrieves input form Program input
-         var userInput = document.getElementById("taProgramInput").value);
-         //array of all hex digitis
-         var hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', ' '];
-         //Default
-         var isHex = true;
-
-         var commands = userInput.split(" ");
-         var commandsCount = commands.length;
-         console.log(commandsCount);
-
-          //checks to make sure it is nonEmpty
-          if (userInput == "") {
-              _StdOut.putText("No user input.");
-          }else{
-          //compares hex to user input    
-         for (var i = 0; userInput.length > i; i++) {
-             //temp array to be filled if char isnt hex
-             var hexMatch = [];
-             for (var z = 0; hex.length > z; z++) {
-                 //if a char is hex
-                 if (hex[z] == userInput.substring(0 + i, 1 + i)) {
-                     hexMatch.push("Found");
-                  }
-                 }
-                 //if not hex char 
-                 if (hexMatch.length==0) {
-                         isHex = false;}
-            }
-          if (isHex) {
-              //makes array of hex code split by spaces
-             var inputArray = userInput.split(" ");
-             //inputs user code into memory manager memory
-             for (var i = 0; inputArray.length > i; i++) {
-                 _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
-             }
-                 //TODO shouldnt print here
-               _MemoryManager.printMemory();
-
-               //TODO fix
-               // Initialize the processControlBlock
-               _ProcessControlBlock = new ProcessControlBlock();        
-               _ProcessControlBlock.init();
-               _ProcessControlBlock.printPCB(); //for now
-               _CPU.PIDArray.push(commandsCount); //
-               _pcbArray.push(_ProcessControlBlock);
-
-
-             // _CPU.execute(userInput);
-              _StdOut.putText("User input: [" + userInput + "] Valid Input");
-              _StdOut.advanceLine();
-              _StdOut.putText("Process ID: " + _ProcessControlBlock.pid );
-
-          } else {
-              _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
-          }
-          //clears user text area
-            document.getElementById("taProgramInput").value = "";
-            //resets
+            //retrieves input form Program input
+            var userInput = document.getElementById("taProgramInput").value);
+            //array of all hex digitis
+            var hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', ' '];
+            //Default
             var isHex = true;
-  } 
+
+            var commands = userInput.split(" ");
+            var commandsCount = commands.length;
+            console.log(commandsCount);
+
+            //checks to make sure it is nonEmpty
+            if (userInput == "") {
+                _StdOut.putText("No user input.");
+            } else {
+                //compares hex to user input    
+                for (var i = 0; userInput.length > i; i++) {
+                    //temp array to be filled if char isnt hex
+                    var hexMatch = [];
+                    for (var z = 0; hex.length > z; z++) {
+                        //if a char is hex
+                        if (hex[z] == userInput.substring(0 + i, 1 + i)) {
+                            hexMatch.push("Found");
+                        }
+                    }
+                    //if not hex char 
+                    if (hexMatch.length == 0) {
+                        isHex = false;
+                    }
+                }
+                if (isHex) {
+
+                    //makes array of hex code split by spaces
+                    var inputArray = userInput.split(" ");
+                    //inputs user code into memory manager memory
+                    for (var i = 0; inputArray.length > i; i++) {
+                        _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
+                    }
+
+              
+             
+                    //TODO shouldnt print here
+                    //_MemoryManager.printMemory();
+
+                    //TODO CHANGE TO IS EXECUTING TRUE
+                    // Initialize the processControlBlock
+                    // _ProcessControlBlock = new ProcessControlBlock();        
+                    //_ProcessControlBlock.init();
+                    // _ProcessControlBlock.printPCB(); //for now
+                    // _CPU.PIDArray.push(commandsCount); //
+
+                    //////////////////
+                    //********* make new pcb for each
+                    _pcbArray.push(new ProcessControlBlock());
+                    _pcbArray[_pcbArray.length - 1].init();
+                    console.log(_pcbArray[0]);
+
+                    // _CPU.execute(userInput);
+                    _StdOut.putText("User input: [" + userInput + "] Valid Input");
+                    _StdOut.advanceLine();
+                    _StdOut.putText("Process ID: " + (_pcbArray.length - 1));
+
+                } else {
+                    _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
+                }
+                //clears user text area
+                document.getElementById("taProgramInput").value = "";
+                //resets
+                var isHex = true;
+            }
 
         }
 
-  public shellRun(args) {
-       console.log(_MemoryManager.memory);
-      _CPU.execute(_MemoryManager.memory.memoryBlocks, _ProcessControlBlock.pid, _pcbArray[_ProcessControlBlock.pid]);
-      }
-        
+        public shellRun(args) {
+            if (! args) {
+                _StdOut.putText("Please specifiy a PID");
+                //_StdOut.advanceLine()
+
+            } else {
+                //cdepending on user input, changes currentPCB
+                _currentPcb = _pcbArray[args]
+                //starts executing cycle
+                _CPU.isExecuting = true;
+                _StdOut.putText("Running...");
+                //_StdOut.advanceLine();
+                //console.log(_MemoryManager.memory);
+                //_CPU.execute(_MemoryManager.memory.memoryBlocks, _ProcessControlBlock.pid, _pcbArray[_ProcessControlBlock.pid]);
+            }
+        }
+
 
 
 
