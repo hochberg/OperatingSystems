@@ -38,20 +38,37 @@ var TSOS;
             this.Zflag = 0;
             this.isExecuting = false;
         };
+        Cpu.prototype.printCPU = function () {
+            //retrieve ids of pcb display
+            var printPc = document.getElementById("pcCPUDisplay");
+            //var printIr = document.getElementById("irStatusDisplay");
+            var printAcc = document.getElementById("accCPUDisplay");
+            var printXr = document.getElementById("xrCPUDisplay");
+            var printYr = document.getElementById("yrCPUDisplay");
+            var printZf = document.getElementById("zfCPUDisplay");
+            //print cpu values to string
+            printPc.innerHTML = this.PC.toString();
+            //printIr.innerHTML = this.ir;
+            printAcc.innerHTML = this.Acc.toString();
+            printXr.innerHTML = this.Xreg.toString();
+            printYr.innerHTML = this.Yreg.toString();
+            printZf.innerHTML = this.Zflag.toString();
+        };
+        ;
         Cpu.prototype.cycle = function () {
             _Kernel.krnTrace('CPU cycle');
             //FETCH
-            var currentCode = this.fetch(_currentPcb.pc);
+            var currentCode = this.fetch(this.PC);
             console.log(_currentPcb);
             this.execute(currentCode);
             _MemoryManager.printMemory();
-            _currentPcb.printPCB();
+            this.printCPU();
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
         };
         //increment pc
         Cpu.prototype.incrementPcBy = function (num) {
-            _currentPcb.pc = _currentPcb.pc + num;
+            this.PC = this.PC + num;
         };
         //get commands 
         Cpu.prototype.fetch = function (currentPC) {
@@ -74,68 +91,52 @@ var TSOS;
                     this.storeAccInMemory();
                     this.incrementPcBy(3);
                     break;
-                // case '6D':
-                //     this.addsWithCarry(instr, pcb, currentCodeCounter);
-                //     currentCodeCounter = currentCodeCounter + 3;
-                //     currentCode = instr[currentCodeCounter];
-                //     counter = counter - 2;
-                //     break;
-                // case 'A2':
-                //     this.loadXWithConstant(instr, pcb, currentCodeCounter);
-                //     currentCodeCounter = currentCodeCounter + 2;
-                //     currentCode = instr[currentCodeCounter];
-                //     counter = counter - 1;
-                //     break;
-                // case 'AE':
-                //     this.loadXFromMemory(instr, pcb, currentCodeCounter);
-                //     currentCodeCounter = currentCodeCounter + 3;
-                //     currentCode = instr[currentCodeCounter];
-                //     counter = counter - 2;
-                //
-                //     break;
-                // case 'A0':
-                //     this.loadYWithConstant(instr, pcb, currentCodeCounter);
-                //     currentCodeCounter = currentCodeCounter + 2;
-                //     currentCode = instr[currentCodeCounter];
-                //     counter = counter - 1;
-                //     break;
-                // case 'AC':
-                //     this.loadYFromMemory(instr, pcb, currentCodeCounter);
-                //     currentCodeCounter = currentCodeCounter + 3;
-                //     currentCode = instr[currentCodeCounter];
-                //     counter = counter - 2;
-                //     break;
-                // case 'AE':
-                //     this.noOperation();
-                //     currentCodeCounter = currentCodeCounter + 1;
-                //     currentCode = instr[currentCodeCounter];
-                //     break;
+                case '6D':
+                    this.addsWithCarry();
+                    this.incrementPcBy(3);
+                    break;
+                case 'A2':
+                    this.loadXWithConstant();
+                    this.incrementPcBy(2);
+                    break;
+                case 'AE':
+                    this.loadXFromMemory();
+                    this.incrementPcBy(3);
+                    break;
+                case 'A0':
+                    this.loadYWithConstant();
+                    this.incrementPcBy(2);
+                    break;
+                case 'AC':
+                    this.loadYFromMemory();
+                    this.incrementPcBy(3);
+                    break;
+                case 'AE':
+                    this.noOperation();
+                    this.incrementPcBy(1);
+                    break;
                 case '00':
                     this.break();
                     break;
-                // case 'EC':
-                //     this.compareMemoryToX(instr, pcb, currentCodeCounter);
-                //     currentCodeCounter = currentCodeCounter + 3;
-                //     currentCode = instr[currentCodeCounter];
-                //     counter = counter - 2;
-                //     break;
-                // case 'D0':
-                //     this.branchNBytes(instr, pcb, currentCodeCounter, currentCode, counter,pid);
-                //     break;
-                // case 'EE':
-                //     this.incrementByte(instr, pcb, currentCodeCounter);
-                //     currentCodeCounter = currentCodeCounter + 3;
-                //     currentCode = instr[currentCodeCounter];
-                //     counter = counter - 2;
-                //     break;
-                // case 'FF':
-                //     this.systemCall(instr, pcb, currentCodeCounter);
-                //     currentCodeCounter = currentCodeCounter + 1;
-                //     currentCode = instr[currentCodeCounter];
-                //     break;
+                case 'EC':
+                    this.compareMemoryToX();
+                    this.incrementPcBy(2);
+                    break;
+                case 'D0':
+                    this.branchNBytes();
+                    break;
+                    // case 'EE':
+                    this.incrementByte();
+                    this.incrementPcBy(3);
+                    break;
+                case 'FF':
+                    this.systemCall();
+                    this.incrementPcBy(1);
+                    break;
                 default:
                     _StdOut.putText("INVALID");
                     //_StdOut.advanceLine();
+                    this.incrementPcBy(1);
                     break;
             }
         };
@@ -149,17 +150,17 @@ var TSOS;
         };
         //get next byte
         Cpu.prototype.getNextByte = function () {
-            return _MemoryManager.memory.memoryBlocks[_currentPcb.pc + 1];
+            return _MemoryManager.memory.memoryBlocks[this.PC + 1];
         };
         //get next next byte
         Cpu.prototype.getNextNextByte = function () {
-            return _MemoryManager.memory.memoryBlocks[_currentPcb.pc + 2];
+            return _MemoryManager.memory.memoryBlocks[this.PC + 2];
         };
         //A9 - LDA
         //Loads accumulater with constant
         Cpu.prototype.loadAccWithConstant = function () {
             //loads acc with the next element in instruction array
-            _currentPcb.acc = this.getNextByte();
+            this.Acc = this.getNextByte();
             //  _StdOut.putText("Load acc with constant");
             //   _StdOut.advanceLine();
         };
@@ -171,7 +172,7 @@ var TSOS;
             //changes address from hex to decimal
             var decAddress = this.hexToDec(address);
             //sets accumulater to content from memory
-            _currentPcb.acc = _MemoryManager.memory.memoryBlocks[decAddress];
+            this.Acc = _MemoryManager.memory.memoryBlocks[decAddress];
             //_StdOut.putText("Load acc from memory");
             //_StdOut.advanceLine();
         };
@@ -183,18 +184,18 @@ var TSOS;
             //translate that address from hex to decimal
             var decAddress = this.hexToDec(address);
             //sets contents of that address to accumulater
-            _MemoryManager.memory.memoryBlocks[decAddress] = _currentPcb.acc;
+            _MemoryManager.memory.memoryBlocks[decAddress] = this.Acc;
             // _StdOut.putText("Store acc in memory");
             // _StdOut.advanceLine();
         };
         //6D - ADC
         //Adds content of given address to the contents of the accumulater
         //and keeps results in accumulater
-        Cpu.prototype.addsWithCarry = function (instr, pcb, currentCodeCounter) {
+        Cpu.prototype.addsWithCarry = function () {
             //retrieves the contents at the given address (in hex)
-            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(instr[1 + currentCodeCounter])];
+            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())];
             //retrievs content of accumulater (in hex)
-            var acc = pcb.acc;
+            var acc = this.Acc;
             //converts the two num to dec and adds them
             var result = this.hexToDec(content) + this.hexToDec(acc);
             //formats correctly (changes to hex, then to uppercase, and adds "0" if neccessary)
@@ -203,41 +204,41 @@ var TSOS;
                 formattedResult = "0" + formattedResult;
             }
             //loads results back into accumulater
-            pcb.acc = formattedResult;
-            _StdOut.putText("Adds with carry");
-            _StdOut.advanceLine();
+            this.Acc = formattedResult;
+            // _StdOut.putText("Adds with carry");
+            // _StdOut.advanceLine();
         };
         //A2 - LDX
         //Loads the X register with a constant
-        Cpu.prototype.loadXWithConstant = function (instr, pcb, currentCodeCounter) {
+        Cpu.prototype.loadXWithConstant = function () {
             //loads given constant in x register
-            pcb.xreg = instr[1 + currentCodeCounter];
-            _StdOut.putText("Loads X register with constant");
-            _StdOut.advanceLine();
+            this.Xreg = this.getNextByte();
+            // _StdOut.putText("Loads X register with constant");
+            // _StdOut.advanceLine();
         };
         //AE - LDX
         //Loads the X register from memory
-        Cpu.prototype.loadXFromMemory = function (instr, pcb, currentCodeCounter) {
+        Cpu.prototype.loadXFromMemory = function () {
             //loads content at given address in x register
-            pcb.xreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(instr[1 + currentCodeCounter])];
-            _StdOut.putText("Load X register from memory");
-            _StdOut.advanceLine();
+            this.Xreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())];
+            // _StdOut.putText("Load X register from memory");
+            //  _StdOut.advanceLine();
         };
         //A0 - LDY
         //Loads Y register with a constant
-        Cpu.prototype.loadYWithConstant = function (instr, pcb, currentCodeCounter) {
+        Cpu.prototype.loadYWithConstant = function () {
             //loads given constant in y register
-            pcb.yreg = instr[1 + currentCodeCounter];
-            _StdOut.putText("Loads Y register with constant");
-            _StdOut.advanceLine();
+            this.Yreg = this.getNextByte();
+            // _StdOut.putText("Loads Y register with constant");
+            // _StdOut.advanceLine();
         };
         //AC -LDY
         //Loads the X register from memory
-        Cpu.prototype.loadYFromMemory = function (instr, pcb, currentCodeCounter) {
+        Cpu.prototype.loadYFromMemory = function () {
             //loads content at given address in y register  f
-            pcb.yreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(instr[1 + currentCodeCounter])];
-            _StdOut.putText("Load Y register from memory");
-            _StdOut.advanceLine();
+            this.Yreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())];
+            // _StdOut.putText("Load Y register from memory");
+            // _StdOut.advanceLine();
         };
         //EA - NOP
         // performs no operation
@@ -249,6 +250,12 @@ var TSOS;
         //Break (really a system call)
         //Set CPU regs to PCBs
         Cpu.prototype.break = function () {
+            _currentPcb.acc = this.Acc;
+            _currentPcb.pc = this.PC;
+            _currentPcb.xreg = this.Xreg;
+            _currentPcb.yreg = this.Yreg;
+            _currentPcb.zflag = this.Zflag;
+            _currentPcb.printPCB();
             //starts executing cycle
             _CPU.isExecuting = false;
             // _StdOut.putText("Complete");
@@ -257,73 +264,65 @@ var TSOS;
         //EC - CPX
         //Compares a byte at a given location in memory to X register
         //if they are equals, sets Z flag to "01", if not sets Z flag to "00"
-        Cpu.prototype.compareMemoryToX = function (instr, pcb, currentCodeCounter) {
+        Cpu.prototype.compareMemoryToX = function () {
             //retrieves the contents at the given address (in hex)
-            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(instr[1 + currentCodeCounter])];
+            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())];
             //convert cotent to decimal
             var decContent = this.hexToDec(content);
             // convert content in x register to decimal
-            var decXReg = this.hexToDec(pcb.xreg);
+            var decXReg = this.hexToDec(this.Xreg);
             //compares two decimal nums for equality
             //if equal. sets z flag to 01
             if (decContent == decXReg) {
-                pcb.zflag = "01";
+                _currentPcb.zflag = "01";
             }
             else {
-                pcb.zflag = "00";
+                this.Zflag = 0;
             }
-            _StdOut.putText("Compares Memory to X");
-            _StdOut.advanceLine();
+            //_StdOut.putText("Compares Memory to X");
+            //_StdOut.advanceLine();
         };
         //D0 - BNE
         //Branch n bytes if Z flag = "00"
-        Cpu.prototype.branchNBytes = function (instr, pcb, currentCodeCounter, currentCode, counter, pid) {
+        Cpu.prototype.branchNBytes = function () {
             //checks to see if z flag is set to "00"
-            if (pcb.zflag == "00") {
+            if (this.Zflag.toString() == "00") {
                 //retrieves the contents at the given address (in hex)
-                var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(instr[1 + currentCodeCounter])];
+                var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())];
                 //convert cotent to decimal
                 var decContent = this.hexToDec(content);
-                //jumps currentCodeCounter to given address
-                //ands sets the currentCode to that address
-                currentCodeCounter = decContent;
-                currentCode = instr[currentCodeCounter];
-                //sets counter back to counter of full loaded code
-                //TODO
-                //This will result in trailing INVALIDs because
-                //this counter will be >= the actual length of the loaded code
-                //Will have to fix how execute loops based on this counter in future versions
-                counter = _CPU.PIDArray[pid];
+                //jumps current pc to given address + current pc mod 256 ???
+                _currentPcb.pc = (_currentPcb.pc + decContent) % 256;
             }
-            _StdOut.putText("Branches N bytes if Z flag = 0");
-            _StdOut.advanceLine();
+            //_StdOut.putText("Branches N bytes if Z flag = 0");
+            // _StdOut.advanceLine();
         };
         //EE - INC
         //Increment the value of a byte at a given address in memory
-        Cpu.prototype.incrementByte = function (instr, pcb, currentCodeCounter) {
+        Cpu.prototype.incrementByte = function () {
             //retrieves the contents at the given address (in hex)
-            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(instr[1 + currentCodeCounter])];
+            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())];
             //change content to decimal and add one
             var incremented = this.hexToDec(content) + 1;
             //convert back to hex and load back into register
-            _MemoryManager.memory.memoryBlocks[this.hexToDec(instr[1 + currentCodeCounter])] = this.decToHex(incremented);
-            _StdOut.putText("Increment Byte");
-            _StdOut.advanceLine();
+            _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())] = this.decToHex(incremented);
+            // _StdOut.putText("Increment Byte");
+            //_StdOut.advanceLine();
         };
         //FF - SYS
         //System Call
         // if "01" is in X reg, then print integer stored in Y register
         // if "02" is in X reg, print the 00-terminated string stored at the address in the Y register
-        Cpu.prototype.systemCall = function (instr, pcb, currentCodeCounter) {
+        Cpu.prototype.systemCall = function () {
             //checks if x reg is "01"
             //if so, prints y reg integer to console
-            if (pcb.xreg == "01") {
-                _StdOut.putText(pcb.yreg);
+            if (this.Xreg.toString() == "01") {
+                _StdOut.putText(_currentPcb.yreg);
                 _StdOut.advanceLine();
             }
             //TODO not quite sure what this should do
-            if (pcb.xreg == "02") {
-                _StdOut.putText(pcb.yreg);
+            if (this.Xreg.toString() == "02") {
+                _StdOut.putText(_currentPcb.yreg);
                 _StdOut.advanceLine();
             }
             _StdOut.putText("System Call");

@@ -27,21 +27,22 @@ var TSOS;
         ProcessControlBlock.prototype.init = function () {
             //initializes instance of PCB with CPU values
             this.pid = _pcbArray.length - 1;
-            this.pc = _CPU.PC;
-            this.acc = _CPU.Acc;
-            this.xreg = _CPU.Xreg;
-            this.yreg = _CPU.Yreg;
-            this.zflag = _CPU.Zflag;
+            this.pc = 0;
+            this.acc = 0;
+            this.xreg = 0;
+            this.yreg = 0;
+            this.zflag = 0;
         };
         ;
         ProcessControlBlock.prototype.printPCB = function () {
-            //prints pcb properties to diplay
+            //retrieves pcb contents
             var printPc = document.getElementById("pcStatusDisplay");
             //var printIr = document.getElementById("irStatusDisplay");
             var printAcc = document.getElementById("accStatusDisplay");
             var printXr = document.getElementById("xrStatusDisplay");
             var printYr = document.getElementById("yrStatusDisplay");
             var printZf = document.getElementById("zfStatusDisplay");
+            //prints content to screen
             printPc.innerHTML = this.pc;
             //printIr.innerHTML = this.ir;
             printAcc.innerHTML = this.acc;

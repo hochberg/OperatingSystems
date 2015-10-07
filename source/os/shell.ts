@@ -488,11 +488,9 @@ module TSOS {
                     for (var i = 0; inputArray.length > i; i++) {
                         _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
                     }
-
-              
              
-                    //TODO shouldnt print here
-                    //_MemoryManager.printMemory();
+                    //TODO shouldnt print here (PROB SHOULD ACTUALLY)
+                    _MemoryManager.printMemory();
 
                     //TODO CHANGE TO IS EXECUTING TRUE
                     // Initialize the processControlBlock
@@ -524,11 +522,13 @@ module TSOS {
         }
 
         public shellRun(args) {
-            if (! args) {
+            //fix
+            var nullArray = [];
+            nullArray.push(args);
+            if (nullArray[0].length == 0) {
                 _StdOut.putText("Please specifiy a PID");
                 //_StdOut.advanceLine()
-
-            } else {
+            }else {
                 //cdepending on user input, changes currentPCB
                 _currentPcb = _pcbArray[args]
                 //starts executing cycle

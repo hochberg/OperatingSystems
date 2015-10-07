@@ -27,15 +27,15 @@ module TSOS {
 public init(): void {
 	//initializes instance of PCB with CPU values
 	    this.pid = _pcbArray.length - 1;
-		this.pc = _CPU.PC;
-		this.acc = _CPU.Acc;
-		this.xreg = _CPU.Xreg;
-		this.yreg = _CPU.Yreg;
-		this.zflag = _CPU.Zflag;
+		this.pc = 0;
+		this.acc = 0;
+		this.xreg = 0;
+		this.yreg = 0;
+		this.zflag = 0;
 			  };
 
 public printPCB(): void {
-	//prints pcb properties to diplay
+	//retrieves pcb contents
 	var printPc = document.getElementById("pcStatusDisplay");
 	//var printIr = document.getElementById("irStatusDisplay");
 	var printAcc = document.getElementById("accStatusDisplay");
@@ -43,14 +43,14 @@ public printPCB(): void {
 	var printYr = document.getElementById("yrStatusDisplay");
 	var printZf = document.getElementById("zfStatusDisplay");
 
-
-   printPc.innerHTML = this.pc;
-   //printIr.innerHTML = this.ir;
-   printAcc.innerHTML = this.acc;
-   printXr.innerHTML = this.xreg;
-   printYr.innerHTML = this.yreg;
-   printZf.innerHTML = this.zflag;
-			  };
+	//prints content to screen
+    printPc.innerHTML = this.pc;
+    //printIr.innerHTML = this.ir;
+    printAcc.innerHTML = this.acc;
+    printXr.innerHTML = this.xreg;
+    printYr.innerHTML = this.yreg;
+    printZf.innerHTML = this.zflag;
+	 		  };
 
 
 
