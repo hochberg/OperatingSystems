@@ -55,12 +55,10 @@ module TSOS {
                 } else
                     //up arrow functionality
                     if (chr == String.fromCharCode(998)) { //up key
-                        console.log("up");
                         this.upKey(chr);
                     } else
                         //down arrow functionality
                         if (chr == String.fromCharCode(999)) { //down key
-                            console.log("down");
                             this.downKey(chr);
                         } else
                             // backspace fucntionality
@@ -97,7 +95,6 @@ module TSOS {
          for (var i = 0; numCommands > i; i++) {
              if (this.buffer == (commands[i].command.substring(0, bufferLength))) {
                  possibleCommands.push(commands[i]);
-                 console.log(possibleCommands);
              }
          }
          //if there is only one possbile command
@@ -151,7 +148,6 @@ module TSOS {
 
 
   public upKey(chr): void {
-      console.log(_OsShell.commandHistoryIndex +" UP START");
       //checks to see if anything is in command histroy
       if (_OsShell.commandHistoryIndex >= 1) {
           //measures buffer's width
@@ -168,14 +164,12 @@ module TSOS {
           };
           //removes last letter and backspace key from buffer
           this.buffer = _OsShell.commandHistory[_OsShell.commandHistoryIndex - 1];
-          console.log(_OsShell.commandHistoryIndex );
           _DrawingContext.drawText(this.currentFont, this.currentFontSize,
               this.currentXPosition,
               this.currentYPosition, this.buffer);
           _OsShell.commandHistoryIndex = _OsShell.commandHistoryIndex - 1;
           //sets x position after new buffer width
           this.currentXPosition = this.currentXPosition + CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, this.buffer);
-            console.log(_OsShell.commandHistoryIndex +" UP FINISH");
                 }
             }
 

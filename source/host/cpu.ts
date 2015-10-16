@@ -27,7 +27,10 @@ module TSOS {
                     public Zflag: number = 0,
                     public IR: number = 0,
                     public isExecuting: boolean = false,
-                    public isSingleStep: boolean = false
+                    public isSingleStep: boolean = false,
+                    public scCount: number = 0 //used to next line only once more,
+                                                //regardless of how many system calls are executed
+
                     ) {
 
         }
@@ -41,6 +44,7 @@ module TSOS {
             this.IR = 0;
             this.isExecuting = false;
             this.isSingleStep = false;
+            this.scCount = 0;
         }
 
         public printCPU(): void {
@@ -65,7 +69,6 @@ module TSOS {
             _Kernel.krnTrace('CPU cycle');
             //FETCH
             var currentCode = this.fetch(this.PC);
-            //console.log(_currentPcb);
             this.execute(currentCode);
             _MemoryManager.printMemory();
             this.printCPU();
@@ -82,7 +85,6 @@ module TSOS {
         //get commands 
         public fetch(currentPC){
             //fetchs the op code at the current process code in the pcb
-            console.log(_MemoryManager.memory.memoryBlocks[currentPC]);
             return _MemoryManager.memory.memoryBlocks[currentPC];
         }
 
@@ -231,8 +233,6 @@ module TSOS {
             if (formattedResult.length < 2){formattedResult= "0"+ formattedResult}
             //loads results back into accumulater
             this.Acc = formattedResult;
-            // _StdOut.putText("Adds with carry");
-            // _StdOut.advanceLine();
         }
 
         //A2 - LDX
@@ -300,6 +300,9 @@ module TSOS {
             //if in Single Step mode, stops Single Step when break-ed
             if (_CPU.isSingleStep){
             TSOS.Control.hostBtnSingleStepStop_click((<HTMLButtonElement>document.getElementById("btnSingleStepStop")));
+
+            //reinitializes system call count
+            this.scCount = 0;
             }
         }
 
@@ -315,46 +318,24 @@ module TSOS {
             var decXReg = this.hexToDec(this.Xreg);
             //compares two decimal nums for equality
             //if equal. sets z flag to 01
-            console.log(decContent + " Dec");
-            console.log(decContent + " x");
             if (decContent == decXReg){
                 _CPU.Zflag = 1;
             }else{//if not equal, set z flag to "00"
                 this.Zflag = 0 ;
             }
-            //_StdOut.putText("Compares Memory to X");
-            //_StdOut.advanceLine();
         }
 
         //D0 - BNE
         //Branch n bytes if Z flag = "00"
         public branchNBytes() {
-             console.log("yo0000");
-             console.log(this.Zflag.toString() == "00");
-             console.log(this.Zflag);
-
             //checks to see if z flag is set to "00"
             if(this.Zflag.toString() == "0"){
-                console.log("uhrfuh");
-            //retrieves the contents at the given address (in hex)
-                console.log(this.getNextByte());
-                console.log(this.hexToDec(this.getNextByte()));
-               // var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())];
-             // console.log(content + "content");
             //convert cotent to decimal
               var decContent = this.hexToDec(this.getNextByte());
-            console.log(decContent + "address");
-            //jumps current pc to given address + current pc mod 256 ???
-            console.log(decContent + " content");
-            console.log(_CPU.PC + " current");
-
-
-
+            //jumps current pc to given address + current pc - 256
+            //wrap around
             _CPU.PC = (_CPU.PC + decContent) - 256 ;
-            console.log(_CPU.PC + "yo");
             }
-            //_StdOut.putText("Branches N bytes if Z flag = 0");
-           // _StdOut.advanceLine();
         }
 
         //EE - INC
@@ -381,7 +362,6 @@ module TSOS {
                 //prints y reg in hex
                 
                 _StdOut.putText((this.hexToDec(this.Yreg)).toString());
-                _StdOut.advanceLine();
               
             }
             //TODO not quite sure what this should do
@@ -402,8 +382,7 @@ module TSOS {
                 while (nonZeroCode){
                 //concates char translated into ascii to string
                 asciiString = asciiString + String.fromCharCode(Number(currentCharCode));
-                console.log(String.fromCharCode(Number(currentCharCode)));
-
+               
                 //furthers counter, current location and current code 
                 charCounter = charCounter + 1;
                 currentLoc = this.hexToDec(this.Yreg) + charCounter;
@@ -415,17 +394,33 @@ module TSOS {
                 }
                }
                   //prints string
-                 
                  _StdOut.putText(asciiString);
-                 _StdOut.advanceLine();
-                 
-
                    
             }
+            var sysCount = this.sysCallCount();
+            //only advances line once if it is the last syscall fired in execution
+            if (this.scCount == sysCount) {
+                _StdOut.advanceLine();
+            }
+
+            this.scCount = this.scCount + 1;
+        }
+
+        //counts how many System calls are in memory
+        //used to advance line only one after a syscall
+        public sysCallCount() {
+            var count = 0;
+            for (var i = 0; i < _MemoryManager.memory.memoryBlocks.length; i= i+1) {
+                if ((_MemoryManager.memory.memoryBlocks[i] == "FF") ||
+                    (_MemoryManager.memory.memoryBlocks[i] == "EA")) {
+                    count++;
+                }   
+            }
+            return count;
         }
 
 
 
 
+        }
     }
-}

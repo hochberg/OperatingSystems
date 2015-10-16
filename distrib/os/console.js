@@ -51,13 +51,11 @@ var TSOS;
                 else 
                 //up arrow functionality
                 if (chr == String.fromCharCode(998)) {
-                    console.log("up");
                     this.upKey(chr);
                 }
                 else 
                 //down arrow functionality
                 if (chr == String.fromCharCode(999)) {
-                    console.log("down");
                     this.downKey(chr);
                 }
                 else 
@@ -93,7 +91,6 @@ var TSOS;
             for (var i = 0; numCommands > i; i++) {
                 if (this.buffer == (commands[i].command.substring(0, bufferLength))) {
                     possibleCommands.push(commands[i]);
-                    console.log(possibleCommands);
                 }
             }
             //if there is only one possbile command
@@ -132,7 +129,6 @@ var TSOS;
             }
         };
         Console.prototype.upKey = function (chr) {
-            console.log(_OsShell.commandHistoryIndex + " UP START");
             //checks to see if anything is in command histroy
             if (_OsShell.commandHistoryIndex >= 1) {
                 //measures buffer's width
@@ -146,12 +142,10 @@ var TSOS;
                 ;
                 //removes last letter and backspace key from buffer
                 this.buffer = _OsShell.commandHistory[_OsShell.commandHistoryIndex - 1];
-                console.log(_OsShell.commandHistoryIndex);
                 _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, this.buffer);
                 _OsShell.commandHistoryIndex = _OsShell.commandHistoryIndex - 1;
                 //sets x position after new buffer width
                 this.currentXPosition = this.currentXPosition + TSOS.CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, this.buffer);
-                console.log(_OsShell.commandHistoryIndex + " UP FINISH");
             }
         };
         Console.prototype.downKey = function (chr) {

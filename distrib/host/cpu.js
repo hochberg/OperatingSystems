@@ -17,7 +17,8 @@
 var TSOS;
 (function (TSOS) {
     var Cpu = (function () {
-        function Cpu(PC, Acc, Xreg, Yreg, Zflag, IR, isExecuting, isSingleStep) {
+        function Cpu(PC, Acc, Xreg, Yreg, Zflag, IR, isExecuting, isSingleStep, scCount //used to next line only once more,
+            ) {
             if (PC === void 0) { PC = 0; }
             if (Acc === void 0) { Acc = 0; }
             if (Xreg === void 0) { Xreg = 0; }
@@ -26,6 +27,7 @@ var TSOS;
             if (IR === void 0) { IR = 0; }
             if (isExecuting === void 0) { isExecuting = false; }
             if (isSingleStep === void 0) { isSingleStep = false; }
+            if (scCount === void 0) { scCount = 0; }
             this.PC = PC;
             this.Acc = Acc;
             this.Xreg = Xreg;
@@ -34,6 +36,7 @@ var TSOS;
             this.IR = IR;
             this.isExecuting = isExecuting;
             this.isSingleStep = isSingleStep;
+            this.scCount = scCount;
         }
         Cpu.prototype.init = function () {
             this.PC = 0;
@@ -44,6 +47,7 @@ var TSOS;
             this.IR = 0;
             this.isExecuting = false;
             this.isSingleStep = false;
+            this.scCount = 0;
         };
         Cpu.prototype.printCPU = function () {
             //retrieve ids of pcb display
@@ -66,7 +70,6 @@ var TSOS;
             _Kernel.krnTrace('CPU cycle');
             //FETCH
             var currentCode = this.fetch(this.PC);
-            //console.log(_currentPcb);
             this.execute(currentCode);
             _MemoryManager.printMemory();
             this.printCPU();
@@ -80,7 +83,6 @@ var TSOS;
         //get commands 
         Cpu.prototype.fetch = function (currentPC) {
             //fetchs the op code at the current process code in the pcb
-            console.log(_MemoryManager.memory.memoryBlocks[currentPC]);
             return _MemoryManager.memory.memoryBlocks[currentPC];
         };
         //decode and execute
@@ -214,8 +216,6 @@ var TSOS;
             }
             //loads results back into accumulater
             this.Acc = formattedResult;
-            // _StdOut.putText("Adds with carry");
-            // _StdOut.advanceLine();
         };
         //A2 - LDX
         //Loads the X register with a constant
@@ -275,6 +275,8 @@ var TSOS;
             //if in Single Step mode, stops Single Step when break-ed
             if (_CPU.isSingleStep) {
                 TSOS.Control.hostBtnSingleStepStop_click(document.getElementById("btnSingleStepStop"));
+                //reinitializes system call count
+                this.scCount = 0;
             }
         };
         //EC - CPX
@@ -289,42 +291,24 @@ var TSOS;
             var decXReg = this.hexToDec(this.Xreg);
             //compares two decimal nums for equality
             //if equal. sets z flag to 01
-            console.log(decContent + " Dec");
-            console.log(decContent + " x");
             if (decContent == decXReg) {
                 _CPU.Zflag = 1;
             }
             else {
                 this.Zflag = 0;
             }
-            //_StdOut.putText("Compares Memory to X");
-            //_StdOut.advanceLine();
         };
         //D0 - BNE
         //Branch n bytes if Z flag = "00"
         Cpu.prototype.branchNBytes = function () {
-            console.log("yo0000");
-            console.log(this.Zflag.toString() == "00");
-            console.log(this.Zflag);
             //checks to see if z flag is set to "00"
             if (this.Zflag.toString() == "0") {
-                console.log("uhrfuh");
-                //retrieves the contents at the given address (in hex)
-                console.log(this.getNextByte());
-                console.log(this.hexToDec(this.getNextByte()));
-                // var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())];
-                // console.log(content + "content");
                 //convert cotent to decimal
                 var decContent = this.hexToDec(this.getNextByte());
-                console.log(decContent + "address");
-                //jumps current pc to given address + current pc mod 256 ???
-                console.log(decContent + " content");
-                console.log(_CPU.PC + " current");
+                //jumps current pc to given address + current pc - 256
+                //wrap around
                 _CPU.PC = (_CPU.PC + decContent) - 256;
-                console.log(_CPU.PC + "yo");
             }
-            //_StdOut.putText("Branches N bytes if Z flag = 0");
-            // _StdOut.advanceLine();
         };
         //EE - INC
         //Increment the value of a byte at a given address in memory
@@ -348,7 +332,6 @@ var TSOS;
             if (this.Xreg.toString() == "01") {
                 //prints y reg in hex
                 _StdOut.putText((this.hexToDec(this.Yreg)).toString());
-                _StdOut.advanceLine();
             }
             //TODO not quite sure what this should do
             if (this.Xreg.toString() == "02") {
@@ -366,7 +349,6 @@ var TSOS;
                 while (nonZeroCode) {
                     //concates char translated into ascii to string
                     asciiString = asciiString + String.fromCharCode(Number(currentCharCode));
-                    console.log(String.fromCharCode(Number(currentCharCode)));
                     //furthers counter, current location and current code 
                     charCounter = charCounter + 1;
                     currentLoc = this.hexToDec(this.Yreg) + charCounter;
@@ -378,8 +360,25 @@ var TSOS;
                 }
                 //prints string
                 _StdOut.putText(asciiString);
+            }
+            var sysCount = this.sysCallCount();
+            //only advances line once if it is the last syscall fired in execution
+            if (this.scCount == sysCount) {
                 _StdOut.advanceLine();
             }
+            this.scCount = this.scCount + 1;
+        };
+        //counts how many System calls are in memory
+        //used to advance line only one after a syscall
+        Cpu.prototype.sysCallCount = function () {
+            var count = 0;
+            for (var i = 0; i < _MemoryManager.memory.memoryBlocks.length; i = i + 1) {
+                if ((_MemoryManager.memory.memoryBlocks[i] == "FF") ||
+                    (_MemoryManager.memory.memoryBlocks[i] == "EA")) {
+                    count++;
+                }
+            }
+            return count;
         };
         return Cpu;
     })();
