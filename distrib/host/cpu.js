@@ -66,7 +66,7 @@ var TSOS;
             _Kernel.krnTrace('CPU cycle');
             //FETCH
             var currentCode = this.fetch(this.PC);
-            console.log(_currentPcb);
+            //console.log(_currentPcb);
             this.execute(currentCode);
             _MemoryManager.printMemory();
             this.printCPU();
@@ -127,7 +127,7 @@ var TSOS;
                     break;
                 case 'EC':
                     this.compareMemoryToX();
-                    this.incrementPcBy(2);
+                    this.incrementPcBy(3);
                     break;
                 case 'D0':
                     this.branchNBytes();
@@ -289,8 +289,10 @@ var TSOS;
             var decXReg = this.hexToDec(this.Xreg);
             //compares two decimal nums for equality
             //if equal. sets z flag to 01
+            console.log(decContent + " Dec");
+            console.log(decContent + " x");
             if (decContent == decXReg) {
-                _currentPcb.zflag = "01";
+                _CPU.Zflag = 1;
             }
             else {
                 this.Zflag = 0;
@@ -301,14 +303,25 @@ var TSOS;
         //D0 - BNE
         //Branch n bytes if Z flag = "00"
         Cpu.prototype.branchNBytes = function () {
+            console.log("yo0000");
+            console.log(this.Zflag.toString() == "00");
+            console.log(this.Zflag);
             //checks to see if z flag is set to "00"
-            if (this.Zflag.toString() == "00") {
+            if (this.Zflag.toString() == "0") {
+                console.log("uhrfuh");
                 //retrieves the contents at the given address (in hex)
-                var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())];
+                console.log(this.getNextByte());
+                console.log(this.hexToDec(this.getNextByte()));
+                // var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())];
+                // console.log(content + "content");
                 //convert cotent to decimal
-                var decContent = this.hexToDec(content);
+                var decContent = this.hexToDec(this.getNextByte());
+                console.log(decContent + "address");
                 //jumps current pc to given address + current pc mod 256 ???
-                _currentPcb.pc = (_currentPcb.pc + decContent) % 256;
+                console.log(decContent + " content");
+                console.log(_CPU.PC + " current");
+                _CPU.PC = (_CPU.PC + decContent) - 256;
+                console.log(_CPU.PC + "yo");
             }
             //_StdOut.putText("Branches N bytes if Z flag = 0");
             // _StdOut.advanceLine();
@@ -345,20 +358,21 @@ var TSOS;
                 var charCounter = 0;
                 //current location of code to be read, translated to hex
                 var currentLoc = (this.hexToDec(this.Yreg));
-                //current code in memory to be read at loc
-                var currentCharCode = (_MemoryManager.memory.memoryBlocks[currentLoc]);
+                //current code in memory to be read at loc, translted to dec
+                var currentCharCode = this.hexToDec(_MemoryManager.memory.memoryBlocks[currentLoc]);
                 //checks if non-zero elements are at given address, boolean value
-                var nonZeroCode = !(currentCharCode === "00");
+                var nonZeroCode = !(currentCharCode === 0);
                 //checks to see if next byte should terminate
                 while (nonZeroCode) {
                     //concates char translated into ascii to string
                     asciiString = asciiString + String.fromCharCode(Number(currentCharCode));
+                    console.log(String.fromCharCode(Number(currentCharCode)));
                     //furthers counter, current location and current code 
                     charCounter = charCounter + 1;
                     currentLoc = this.hexToDec(this.Yreg) + charCounter;
-                    currentCharCode = (_MemoryManager.memory.memoryBlocks[currentLoc]);
+                    currentCharCode = this.hexToDec(_MemoryManager.memory.memoryBlocks[currentLoc]);
                     //if next code isn't set, changes boolean to exit loop
-                    if (currentCharCode === "00") {
+                    if (currentCharCode === 0) {
                         nonZeroCode = false;
                     }
                 }

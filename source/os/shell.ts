@@ -511,7 +511,7 @@ module TSOS {
                     _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
                 }
                 //clears user text area
-                document.getElementById("taProgramInput").value = "";
+               // document.getElementById("taProgramInput").value = "";
                 //resets
                 var isHex = true;
             }
