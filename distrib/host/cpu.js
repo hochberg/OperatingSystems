@@ -16,18 +16,20 @@
 var TSOS;
 (function (TSOS) {
     var Cpu = (function () {
-        function Cpu(PC, Acc, Xreg, Yreg, Zflag, isExecuting) {
+        function Cpu(PC, Acc, Xreg, Yreg, Zflag, IR, isExecuting) {
             if (PC === void 0) { PC = 0; }
             if (Acc === void 0) { Acc = 0; }
             if (Xreg === void 0) { Xreg = 0; }
             if (Yreg === void 0) { Yreg = 0; }
             if (Zflag === void 0) { Zflag = 0; }
+            if (IR === void 0) { IR = 0; }
             if (isExecuting === void 0) { isExecuting = false; }
             this.PC = PC;
             this.Acc = Acc;
             this.Xreg = Xreg;
             this.Yreg = Yreg;
             this.Zflag = Zflag;
+            this.IR = IR;
             this.isExecuting = isExecuting;
         }
         Cpu.prototype.init = function () {
@@ -36,19 +38,20 @@ var TSOS;
             this.Xreg = 0;
             this.Yreg = 0;
             this.Zflag = 0;
+            this.IR = 0;
             this.isExecuting = false;
         };
         Cpu.prototype.printCPU = function () {
             //retrieve ids of pcb display
             var printPc = document.getElementById("pcCPUDisplay");
-            //var printIr = document.getElementById("irStatusDisplay");
+            var printIr = document.getElementById("irStatusDisplay");
             var printAcc = document.getElementById("accCPUDisplay");
             var printXr = document.getElementById("xrCPUDisplay");
             var printYr = document.getElementById("yrCPUDisplay");
             var printZf = document.getElementById("zfCPUDisplay");
             //print cpu values to string
             printPc.innerHTML = this.PC.toString();
-            //printIr.innerHTML = this.ir;
+            printIr.innerHTML = this.IR.toString();
             printAcc.innerHTML = this.Acc.toString();
             printXr.innerHTML = this.Xreg.toString();
             printYr.innerHTML = this.Yreg.toString();
@@ -125,7 +128,7 @@ var TSOS;
                 case 'D0':
                     this.branchNBytes();
                     break;
-                    // case 'EE':
+                case 'EE':
                     this.incrementByte();
                     this.incrementPcBy(3);
                     break;
@@ -139,6 +142,7 @@ var TSOS;
                     this.incrementPcBy(1);
                     break;
             }
+            this.IR = currentCode;
         };
         //converts a num in hex to decimal equivalent
         Cpu.prototype.hexToDec = function (hex) {
@@ -255,6 +259,7 @@ var TSOS;
             _currentPcb.xreg = this.Xreg;
             _currentPcb.yreg = this.Yreg;
             _currentPcb.zflag = this.Zflag;
+            _currentPcb.ir = this.IR;
             _currentPcb.printPCB();
             //starts executing cycle
             _CPU.isExecuting = false;
@@ -322,11 +327,29 @@ var TSOS;
             }
             //TODO not quite sure what this should do
             if (this.Xreg.toString() == "02") {
-                _StdOut.putText(_currentPcb.yreg);
+                var asciiString = "";
+                var charCounter = 0;
+                var currentLoc = (this.hexToDec(this.Yreg));
+                var currentCharCode = (_MemoryManager.memory.memoryBlocks[currentLoc]);
+                var nonZeroCode = !(currentCharCode === "00");
+                //var nonZeroCode = true;
+                //checks to see if next byte should terminate
+                while (nonZeroCode) {
+                    //  for (var i = 0; 4 > i; i++) {
+                    //chages y reg to decimal, adds sys counter and finds location of code in memory
+                    asciiString = asciiString + String.fromCharCode(Number(currentCharCode));
+                    charCounter = charCounter + 1;
+                    currentLoc = this.hexToDec(this.Yreg) + charCounter;
+                    currentCharCode = (_MemoryManager.memory.memoryBlocks[currentLoc]);
+                    console.log((currentCharCode));
+                    if (currentCharCode === "00") {
+                        nonZeroCode = false;
+                        console.log("here");
+                    }
+                }
+                _StdOut.putText(asciiString);
                 _StdOut.advanceLine();
             }
-            _StdOut.putText("System Call");
-            _StdOut.advanceLine();
         };
         return Cpu;
     })();

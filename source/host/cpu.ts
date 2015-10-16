@@ -24,6 +24,7 @@ module TSOS {
                     public Xreg: number = 0,
                     public Yreg: number = 0,
                     public Zflag: number = 0,
+                    public IR: number = 0,
                     public isExecuting: boolean = false
                     ) {
 
@@ -35,13 +36,14 @@ module TSOS {
             this.Xreg = 0;
             this.Yreg = 0;
             this.Zflag = 0;
+            this.IR = 0;
             this.isExecuting = false;
         }
 
         public printCPU(): void {
             //retrieve ids of pcb display
             var printPc = document.getElementById("pcCPUDisplay");
-            //var printIr = document.getElementById("irStatusDisplay");
+            var printIr = document.getElementById("irStatusDisplay");
             var printAcc = document.getElementById("accCPUDisplay");
             var printXr = document.getElementById("xrCPUDisplay");
             var printYr = document.getElementById("yrCPUDisplay");
@@ -49,7 +51,7 @@ module TSOS {
 
            //print cpu values to string
            printPc.innerHTML = this.PC.toString();
-           //printIr.innerHTML = this.ir;
+           printIr.innerHTML = this.IR.toString();
            printAcc.innerHTML = this.Acc.toString();
            printXr.innerHTML = this.Xreg.toString();
            printYr.innerHTML = this.Yreg.toString();
@@ -133,7 +135,7 @@ module TSOS {
                 case 'D0':
                     this.branchNBytes();
                     break;
-                // case 'EE':
+                 case 'EE':
                     this.incrementByte();
                     this.incrementPcBy(3);
                     break;
@@ -149,6 +151,7 @@ module TSOS {
                     
                     break;
             }
+            this.IR = currentCode; 
 
 
         }
@@ -282,6 +285,7 @@ module TSOS {
             _currentPcb.xreg = this.Xreg;
             _currentPcb.yreg = this.Yreg;
             _currentPcb.zflag = this.Zflag;
+            _currentPcb.ir = this.IR;
             _currentPcb.printPCB();
             
              //starts executing cycle
@@ -354,11 +358,44 @@ module TSOS {
             }
             //TODO not quite sure what this should do
             if (this.Xreg.toString() == "02"){
-                _StdOut.putText(_currentPcb.yreg);
-                _StdOut.advanceLine();
+                var asciiString = "";
+                var charCounter = 0;
+
+                var currentLoc = (this.hexToDec(this.Yreg));
+                var currentCharCode = (_MemoryManager.memory.memoryBlocks[currentLoc]);
+                
+                var nonZeroCode = !(currentCharCode === "00");
+                //var nonZeroCode = true;
+
+                //checks to see if next byte should terminate
+                while (nonZeroCode){
+                 //  for (var i = 0; 4 > i; i++) {
+
+                //chages y reg to decimal, adds sys counter and finds location of code in memory
+              
+                asciiString = asciiString + String.fromCharCode(Number(currentCharCode));
+                charCounter = charCounter + 1;
+                currentLoc = this.hexToDec(this.Yreg) + charCounter;
+                currentCharCode = (_MemoryManager.memory.memoryBlocks[currentLoc]);
+                console.log((currentCharCode));
+
+
+
+                if (currentCharCode === "00") {
+
+                    nonZeroCode = false;
+
+                    console.log("here");
+                }
+            
+               
+
+               }
+
+                 _StdOut.putText(asciiString);
+                 _StdOut.advanceLine();
+                   
             }
-            _StdOut.putText("System Call");
-            _StdOut.advanceLine();
         }
 
 
