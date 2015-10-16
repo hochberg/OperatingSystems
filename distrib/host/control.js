@@ -77,6 +77,7 @@ var TSOS;
             // .. enable the Halt and Reset buttons ...
             document.getElementById("btnHaltOS").disabled = false;
             document.getElementById("btnReset").disabled = false;
+            document.getElementById("btnSingleStepStart").disabled = false;
             // .. set focus on the OS console display ...
             document.getElementById("display").focus();
             // ... Create and initialize the CPU (because it's part of the hardware)  ...
@@ -109,6 +110,26 @@ var TSOS;
             // That boolean parameter is the 'forceget' flag. When it is true it causes the page to always
             // be reloaded from the server. If it is false or not specified the browser may reload the
             // page from its cache, which is not what we want.
+        };
+        Control.hostBtnSingleStepStart_click = function (btn) {
+            //disabled start button and enables next and stop
+            btn.disabled = true;
+            document.getElementById("btnSingleStepNext").disabled = false;
+            document.getElementById("btnSingleStepStop").disabled = false;
+            //changes boolean Single Step mode to ON
+            _CPU.isSingleStep = true;
+        };
+        Control.hostBtnSingleStepNext_click = function (btn) {
+            //executes exactly one cpu cycle on every click
+            _CPU.cycle();
+        };
+        Control.hostBtnSingleStepStop_click = function (btn) {
+            //disables stop and next buttons, and enables single step
+            btn.disabled = true;
+            document.getElementById("btnSingleStepNext").disabled = true;
+            document.getElementById("btnSingleStepStart").disabled = false;
+            //changes single step mode to OFF
+            _CPU.isSingleStep = false;
         };
         //calls BSOD Interrupt
         Control.bsodInterrupt = function () {

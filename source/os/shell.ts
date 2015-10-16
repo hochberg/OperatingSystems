@@ -189,6 +189,7 @@ module TSOS {
             //this.currentCommand = "";
             // We just got a command, so advance the line...
             _StdOut.advanceLine();
+
             // ... call the command function passing in the args with some über-cool functional programming ...
             fn(args);
             // Check to see if we need to advance the line again
@@ -196,7 +197,11 @@ module TSOS {
                 _StdOut.advanceLine();
             }
             // ... and finally write the prompt again.
-            this.putPrompt();
+            // ... but does not write prompt if run is called
+            // run will handle returning prompt manually after executing
+            if (!(this.currentCommand === "run")){
+                this.putPrompt();
+                }
         }
 
         public parseInput(buffer): UserCommand {
@@ -477,7 +482,8 @@ module TSOS {
                     }
                     //if not hex char 
                     if (hexMatch.length == 0) {
-                        isHex = false;
+                        isHex = false;
+
                     }
                 }
                 if (isHex) {
@@ -492,18 +498,9 @@ module TSOS {
                     //TODO shouldnt print here (PROB SHOULD ACTUALLY)
                     _MemoryManager.printMemory();
 
-                    //TODO CHANGE TO IS EXECUTING TRUE
-                    // Initialize the processControlBlock
-                    // _ProcessControlBlock = new ProcessControlBlock();        
-                    //_ProcessControlBlock.init();
-                    // _ProcessControlBlock.printPCB(); //for now
-                    // _CPU.PIDArray.push(commandsCount); //
-
-                    //////////////////
-                    //********* make new pcb for each
+                    //pushes new pcb into _pcbArray
                     _pcbArray.push(new ProcessControlBlock());
                     _pcbArray[_pcbArray.length - 1].init();
-                    console.log(_pcbArray[0]);
 
                     // _CPU.execute(userInput);
                     _StdOut.putText("User input: [" + userInput + "] Valid Input");
@@ -534,7 +531,6 @@ module TSOS {
                 //starts executing cycle
                 _CPU.isExecuting = true;
                 _StdOut.putText("Running...");
-                //_StdOut.advanceLine();
                 //console.log(_MemoryManager.memory);
                 //_CPU.execute(_MemoryManager.memory.memoryBlocks, _ProcessControlBlock.pid, _pcbArray[_ProcessControlBlock.pid]);
             }

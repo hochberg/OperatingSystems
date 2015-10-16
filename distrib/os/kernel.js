@@ -110,8 +110,10 @@ var TSOS;
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             }
             else if (_CPU.isExecuting) {
-                _CPU.cycle();
-                console.log("cycle");
+                if (!(_CPU.isSingleStep)) {
+                    _CPU.cycle();
+                    console.log("cycle");
+                }
             }
             else {
                 this.krnTrace("Idle");

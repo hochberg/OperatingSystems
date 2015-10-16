@@ -1,4 +1,5 @@
 ///<reference path="../globals.ts" />
+///<reference path="control.ts" />
 /* ------------
      CPU.ts
 
@@ -16,7 +17,7 @@
 var TSOS;
 (function (TSOS) {
     var Cpu = (function () {
-        function Cpu(PC, Acc, Xreg, Yreg, Zflag, IR, isExecuting) {
+        function Cpu(PC, Acc, Xreg, Yreg, Zflag, IR, isExecuting, isSingleStep) {
             if (PC === void 0) { PC = 0; }
             if (Acc === void 0) { Acc = 0; }
             if (Xreg === void 0) { Xreg = 0; }
@@ -24,6 +25,7 @@ var TSOS;
             if (Zflag === void 0) { Zflag = 0; }
             if (IR === void 0) { IR = 0; }
             if (isExecuting === void 0) { isExecuting = false; }
+            if (isSingleStep === void 0) { isSingleStep = false; }
             this.PC = PC;
             this.Acc = Acc;
             this.Xreg = Xreg;
@@ -31,6 +33,7 @@ var TSOS;
             this.Zflag = Zflag;
             this.IR = IR;
             this.isExecuting = isExecuting;
+            this.isSingleStep = isSingleStep;
         }
         Cpu.prototype.init = function () {
             this.PC = 0;
@@ -40,11 +43,12 @@ var TSOS;
             this.Zflag = 0;
             this.IR = 0;
             this.isExecuting = false;
+            this.isSingleStep = false;
         };
         Cpu.prototype.printCPU = function () {
             //retrieve ids of pcb display
             var printPc = document.getElementById("pcCPUDisplay");
-            var printIr = document.getElementById("irStatusDisplay");
+            var printIr = document.getElementById("irCPUDisplay");
             var printAcc = document.getElementById("accCPUDisplay");
             var printXr = document.getElementById("xrCPUDisplay");
             var printYr = document.getElementById("yrCPUDisplay");
@@ -114,7 +118,7 @@ var TSOS;
                     this.loadYFromMemory();
                     this.incrementPcBy(3);
                     break;
-                case 'AE':
+                case 'EA':
                     this.noOperation();
                     this.incrementPcBy(1);
                     break;
@@ -127,6 +131,7 @@ var TSOS;
                     break;
                 case 'D0':
                     this.branchNBytes();
+                    this.incrementPcBy(2);
                     break;
                 case 'EE':
                     this.incrementByte();
@@ -137,7 +142,7 @@ var TSOS;
                     this.incrementPcBy(1);
                     break;
                 default:
-                    _StdOut.putText("INVALID");
+                    _StdOut.putText("INVALID: " + currentCode);
                     //_StdOut.advanceLine();
                     this.incrementPcBy(1);
                     break;
@@ -247,8 +252,8 @@ var TSOS;
         //EA - NOP
         // performs no operation
         Cpu.prototype.noOperation = function () {
-            _StdOut.putText("No Operation");
-            _StdOut.advanceLine();
+            //TODO
+            this.systemCall();
         };
         //00 - BRK
         //Break (really a system call)
@@ -259,12 +264,18 @@ var TSOS;
             _currentPcb.xreg = this.Xreg;
             _currentPcb.yreg = this.Yreg;
             _currentPcb.zflag = this.Zflag;
-            _currentPcb.ir = this.IR;
+            //TODO maybe
+            _currentPcb.ir = "00";
+            //prints current pcb 
             _currentPcb.printPCB();
             //starts executing cycle
             _CPU.isExecuting = false;
-            // _StdOut.putText("Complete");
-            // _StdOut.advanceLine();
+            //returns prompt on new line
+            _OsShell.putPrompt();
+            //if in Single Step mode, stops Single Step when break-ed
+            if (_CPU.isSingleStep) {
+                TSOS.Control.hostBtnSingleStepStop_click(document.getElementById("btnSingleStepStop"));
+            }
         };
         //EC - CPX
         //Compares a byte at a given location in memory to X register
@@ -322,31 +333,36 @@ var TSOS;
             //checks if x reg is "01"
             //if so, prints y reg integer to console
             if (this.Xreg.toString() == "01") {
-                _StdOut.putText(_currentPcb.yreg);
+                //prints y reg in hex
+                _StdOut.putText((this.hexToDec(this.Yreg)).toString());
                 _StdOut.advanceLine();
             }
             //TODO not quite sure what this should do
             if (this.Xreg.toString() == "02") {
+                //initialze string to be printed
                 var asciiString = "";
+                //initialize counter to progress through memory address
                 var charCounter = 0;
+                //current location of code to be read, translated to hex
                 var currentLoc = (this.hexToDec(this.Yreg));
+                //current code in memory to be read at loc
                 var currentCharCode = (_MemoryManager.memory.memoryBlocks[currentLoc]);
+                //checks if non-zero elements are at given address, boolean value
                 var nonZeroCode = !(currentCharCode === "00");
-                //var nonZeroCode = true;
                 //checks to see if next byte should terminate
                 while (nonZeroCode) {
-                    //  for (var i = 0; 4 > i; i++) {
-                    //chages y reg to decimal, adds sys counter and finds location of code in memory
+                    //concates char translated into ascii to string
                     asciiString = asciiString + String.fromCharCode(Number(currentCharCode));
+                    //furthers counter, current location and current code 
                     charCounter = charCounter + 1;
                     currentLoc = this.hexToDec(this.Yreg) + charCounter;
                     currentCharCode = (_MemoryManager.memory.memoryBlocks[currentLoc]);
-                    console.log((currentCharCode));
+                    //if next code isn't set, changes boolean to exit loop
                     if (currentCharCode === "00") {
                         nonZeroCode = false;
-                        console.log("here");
                     }
                 }
+                //prints string
                 _StdOut.putText(asciiString);
                 _StdOut.advanceLine();
             }

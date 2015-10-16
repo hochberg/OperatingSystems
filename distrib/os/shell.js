@@ -139,7 +139,11 @@ var TSOS;
                 _StdOut.advanceLine();
             }
             // ... and finally write the prompt again.
-            this.putPrompt();
+            // ... but does not write prompt if run is called
+            // run will handle returning prompt manually after executing
+            if (!(this.currentCommand === "run")) {
+                this.putPrompt();
+            }
         };
         Shell.prototype.parseInput = function (buffer) {
             var retVal = new TSOS.UserCommand();
@@ -417,17 +421,9 @@ var TSOS;
                     }
                     //TODO shouldnt print here (PROB SHOULD ACTUALLY)
                     _MemoryManager.printMemory();
-                    //TODO CHANGE TO IS EXECUTING TRUE
-                    // Initialize the processControlBlock
-                    // _ProcessControlBlock = new ProcessControlBlock();        
-                    //_ProcessControlBlock.init();
-                    // _ProcessControlBlock.printPCB(); //for now
-                    // _CPU.PIDArray.push(commandsCount); //
-                    //////////////////
-                    //********* make new pcb for each
+                    //pushes new pcb into _pcbArray
                     _pcbArray.push(new TSOS.ProcessControlBlock());
                     _pcbArray[_pcbArray.length - 1].init();
-                    console.log(_pcbArray[0]);
                     // _CPU.execute(userInput);
                     _StdOut.putText("User input: [" + userInput + "] Valid Input");
                     _StdOut.advanceLine();

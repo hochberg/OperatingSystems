@@ -27,6 +27,7 @@ var _MemoryManager; // creates instance of Memory Manger
 var _Memory; //creates instance of core memory
 var _pcbArray; // creates global PCB array to conatin all instances of PCB (may reorganize in future)
 var _currentPcb; //keeps track of currently running pcb
+var _Control; //Connected for Single Step ease
 var _OSclock = 0; // Page 23.
 var _Mode = 0; // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.
 var _Canvas; // Initialized in Control.hostInit().

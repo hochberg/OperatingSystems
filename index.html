@@ -31,7 +31,6 @@
    <script type="text/javascript" src="distrib/os/memoryManager.js"></script>
    <script type="text/javascript" src="distrib/os/processControlBlock.js"></script>
 
-
  
   
 
@@ -55,7 +54,7 @@
 
              <div id="divButtonBar" style="margin:4px;">
       <input type="button"
-             class="btn btn-default"
+             class="btn btn-default btn-lg"
              id = "btnStartOS"
              name="brnStartOS"
              value="Start"
@@ -63,7 +62,7 @@
              onclick="TSOS.Control.hostBtnStartOS_click(this);">
 
       <input type="button"
-             class="btn btn-default"
+             class="btn btn-default btn-lg"
              id = "btnHaltOS"
              name="brnHaltOS"
              disabled="disabled"
@@ -72,14 +71,43 @@
              onclick="TSOS.Control.hostBtnHaltOS_click(this);">
 
       <input type="button"
-             class="btn btn-default"
+             class="btn btn-default btn-lg"
              id = "btnReset"
              name="brnReset"
              disabled="disabled"
              value="Reset"
              tabindex="2"
              onclick="TSOS.Control.hostBtnReset_click(this);">
-       <div>
+
+      <input type="button"
+             class="btn btn-default btn-lg"
+             id = "btnSingleStepStart"
+             name="btnSingleStepStart"
+             disabled="disabled"
+             value="Step"
+             tabindex="2"
+             onclick="TSOS.Control.hostBtnSingleStepStart_click(this);">
+
+     <button type="button" 
+             class="btn btn-default btn-lg"
+             id = "btnSingleStepNext"
+             disabled="disabled"
+             onclick="TSOS.Control.hostBtnSingleStepNext_click(this);">
+       <span class="glyphicon glyphicon-arrow-right"
+             aria-hidden="true"></span>
+      </button>
+
+      <button type="button" 
+              class="btn btn-default btn-lg"
+              id = "btnSingleStepStop"
+              disabled="disabled"
+              onclick="TSOS.Control.hostBtnSingleStepStop_click(this);">
+        <span class="glyphicon glyphicon-stop" 
+              aria-hidden="true"></span>
+      </button>
+      
+
+       <div >
        <div style="float:left;  position: relative;"> Date: </div>
              <div style="float:left;" id="kernalDateAndTime"> </div> 
              </div>
@@ -87,6 +115,10 @@
              <div style="float:left;  position: relative;"> Staus:</div>
              <div style="float:left;" id="userStatus"> </div> 
              </div>
+
+            
+
+ 
 
 
     

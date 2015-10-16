@@ -3,6 +3,7 @@
 ///<reference path="../host/memoryManager.ts" />
 ///<reference path="../host/shell.ts" />
 
+
 /* ------------
      Control.ts
 
@@ -97,6 +98,8 @@ module TSOS {
             // .. enable the Halt and Reset buttons ...
             (<HTMLButtonElement>document.getElementById("btnHaltOS")).disabled = false;
             (<HTMLButtonElement>document.getElementById("btnReset")).disabled = false;
+            (<HTMLButtonElement>document.getElementById("btnSingleStepStart")).disabled = false;
+
 
             // .. set focus on the OS console display ...
             document.getElementById("display").focus();
@@ -139,8 +142,31 @@ module TSOS {
             // page from its cache, which is not what we want.
         }
 
-          //calls BSOD Interrupt
-         public static bsodInterrupt(): void {
+        public static hostBtnSingleStepStart_click(btn): void {
+            //disabled start button and enables next and stop
+            btn.disabled = true;
+            (<HTMLButtonElement>document.getElementById("btnSingleStepNext")).disabled = false;
+            (<HTMLButtonElement>document.getElementById("btnSingleStepStop")).disabled = false;
+            //changes boolean Single Step mode to ON
+            _CPU.isSingleStep = true;
+        }
+
+        public static hostBtnSingleStepNext_click(btn): void {
+            //executes exactly one cpu cycle on every click
+            _CPU.cycle();    
+        }
+
+        public static hostBtnSingleStepStop_click(btn): void {
+            //disables stop and next buttons, and enables single step
+            btn.disabled = true;
+            (<HTMLButtonElement>document.getElementById("btnSingleStepNext")).disabled = true;
+            (<HTMLButtonElement>document.getElementById("btnSingleStepStart")).disabled = false;
+            //changes single step mode to OFF
+            _CPU.isSingleStep = false;
+        }
+
+        //calls BSOD Interrupt
+        public static bsodInterrupt(): void {
         _KernelInterruptQueue.enqueue(new Interrupt(BSOD_IRQ, "BIG ERROR"));
         }
     }
