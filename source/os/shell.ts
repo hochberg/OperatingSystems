@@ -519,7 +519,11 @@ module TSOS {
         }
 
         public shellRun(args) {
-            //fix
+            //set up currently to only run one program at a time
+            //resets cpu's pc every run
+            _CPU.PC = 0;
+
+            //if a pid is not selected
             var nullArray = [];
             nullArray.push(args);
             if (nullArray[0].length == 0) {

@@ -84,7 +84,7 @@ module TSOS {
             if (minutes < 10){possibleZero="0"}
             //Writes date and time on NavBar   
             document.getElementById("kernalDateAndTime").innerHTML = hours.toString()+":"+ possibleZero+
-                                            minutes.toString()+" "+dayOrNight + " " + date.toDateString();
+                                            minutes.toString()+" "+dayOrNight + " " + date.toDateString() + " ";
         }
 
         public krnShutdown() {

@@ -27,9 +27,10 @@ module TSOS {
                     public Zflag: number = 0,
                     public IR: number = 0,
                     public isExecuting: boolean = false,
-                    public isSingleStep: boolean = false,
-                    public scCount: number = 0 //used to next line only once more,
-                                                //regardless of how many system calls are executed
+                    public isSingleStep: boolean = false
+                    //,
+                    //   public scCount: number = 0 //used to next line only once more,
+                                                   //regardless of how many system calls are executed
 
                     ) {
 
@@ -44,7 +45,7 @@ module TSOS {
             this.IR = 0;
             this.isExecuting = false;
             this.isSingleStep = false;
-            this.scCount = 0;
+          //  this.scCount = 0;
         }
 
         public printCPU(): void {
@@ -290,6 +291,7 @@ module TSOS {
             //TODO maybe
             _currentPcb.ir = "00";
 
+
             //prints current pcb 
             _currentPcb.printPCB();
              //starts executing cycle
@@ -302,7 +304,11 @@ module TSOS {
             TSOS.Control.hostBtnSingleStepStop_click((<HTMLButtonElement>document.getElementById("btnSingleStepStop")));
 
             //reinitializes system call count
-            this.scCount = 0;
+            // this.scCount = 0;
+            // console.log("sc count= " + this.scCount)
+
+            //reset PC
+            _CPU.PC = 0;
             }
         }
 
@@ -330,11 +336,18 @@ module TSOS {
         public branchNBytes() {
             //checks to see if z flag is set to "00"
             if(this.Zflag.toString() == "0"){
+                console.log(this.getNextByte());
             //convert cotent to decimal
               var decContent = this.hexToDec(this.getNextByte());
             //jumps current pc to given address + current pc - 256
             //wrap around
-            _CPU.PC = (_CPU.PC + decContent) - 256 ;
+              console.log(decContent);
+              console.log(_CPU.PC);
+              if ((_CPU.PC + decContent) > 256) {
+                  _CPU.PC = (_CPU.PC + decContent) - 256;
+              }else{
+                  _CPU.PC = decContent + _CPU.PC;
+              } 
             }
         }
 
@@ -397,27 +410,35 @@ module TSOS {
                  _StdOut.putText(asciiString);
                    
             }
-            var sysCount = this.sysCallCount();
-            //only advances line once if it is the last syscall fired in execution
-            if (this.scCount == sysCount) {
-                _StdOut.advanceLine();
-            }
 
-            this.scCount = this.scCount + 1;
+           // var sysCount = this.sysCallCount();
+           //only advances line once if it is the last syscall fired in execution
+           //   this.scCount = this.scCount + 1;
+           // console.log(this.scCount);
+           // console.log(sysCount);
+           // if (this.scCount == sysCount) {
+                _StdOut.advanceLine();
+           //}
+
+            
+
         }
 
+        //TODO Attempt of a way to keep FF calls on same line,
+        //Maybe fix in the future, problem was with loops
+        //
         //counts how many System calls are in memory
         //used to advance line only one after a syscall
-        public sysCallCount() {
-            var count = 0;
-            for (var i = 0; i < _MemoryManager.memory.memoryBlocks.length; i= i+1) {
-                if ((_MemoryManager.memory.memoryBlocks[i] == "FF") ||
-                    (_MemoryManager.memory.memoryBlocks[i] == "EA")) {
-                    count++;
-                }   
-            }
-            return count;
-        }
+        // public sysCallCount() {
+        //     var count = 0;
+        //     for (var i = 0; i < _MemoryManager.memory.memoryBlocks.length; i= i+1) {
+        //         if ((_MemoryManager.memory.memoryBlocks[i] == "FF") ||
+        //             (_MemoryManager.memory.memoryBlocks[i] == "EA")) {
+        //             count++;
+        //         }   
+        //     }
+        //     return count;
+        // }
 
 
 

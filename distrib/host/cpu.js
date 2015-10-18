@@ -17,8 +17,7 @@
 var TSOS;
 (function (TSOS) {
     var Cpu = (function () {
-        function Cpu(PC, Acc, Xreg, Yreg, Zflag, IR, isExecuting, isSingleStep, scCount //used to next line only once more,
-            ) {
+        function Cpu(PC, Acc, Xreg, Yreg, Zflag, IR, isExecuting, isSingleStep) {
             if (PC === void 0) { PC = 0; }
             if (Acc === void 0) { Acc = 0; }
             if (Xreg === void 0) { Xreg = 0; }
@@ -27,7 +26,6 @@ var TSOS;
             if (IR === void 0) { IR = 0; }
             if (isExecuting === void 0) { isExecuting = false; }
             if (isSingleStep === void 0) { isSingleStep = false; }
-            if (scCount === void 0) { scCount = 0; }
             this.PC = PC;
             this.Acc = Acc;
             this.Xreg = Xreg;
@@ -36,7 +34,6 @@ var TSOS;
             this.IR = IR;
             this.isExecuting = isExecuting;
             this.isSingleStep = isSingleStep;
-            this.scCount = scCount;
         }
         Cpu.prototype.init = function () {
             this.PC = 0;
@@ -47,7 +44,7 @@ var TSOS;
             this.IR = 0;
             this.isExecuting = false;
             this.isSingleStep = false;
-            this.scCount = 0;
+            //  this.scCount = 0;
         };
         Cpu.prototype.printCPU = function () {
             //retrieve ids of pcb display
@@ -276,7 +273,10 @@ var TSOS;
             if (_CPU.isSingleStep) {
                 TSOS.Control.hostBtnSingleStepStop_click(document.getElementById("btnSingleStepStop"));
                 //reinitializes system call count
-                this.scCount = 0;
+                // this.scCount = 0;
+                // console.log("sc count= " + this.scCount)
+                //reset PC
+                _CPU.PC = 0;
             }
         };
         //EC - CPX
@@ -303,11 +303,19 @@ var TSOS;
         Cpu.prototype.branchNBytes = function () {
             //checks to see if z flag is set to "00"
             if (this.Zflag.toString() == "0") {
+                console.log(this.getNextByte());
                 //convert cotent to decimal
                 var decContent = this.hexToDec(this.getNextByte());
                 //jumps current pc to given address + current pc - 256
                 //wrap around
-                _CPU.PC = (_CPU.PC + decContent) - 256;
+                console.log(decContent);
+                console.log(_CPU.PC);
+                if ((_CPU.PC + decContent) > 256) {
+                    _CPU.PC = (_CPU.PC + decContent) - 256;
+                }
+                else {
+                    _CPU.PC = decContent + _CPU.PC;
+                }
             }
         };
         //EE - INC
@@ -361,24 +369,14 @@ var TSOS;
                 //prints string
                 _StdOut.putText(asciiString);
             }
-            var sysCount = this.sysCallCount();
+            // var sysCount = this.sysCallCount();
             //only advances line once if it is the last syscall fired in execution
-            if (this.scCount == sysCount) {
-                _StdOut.advanceLine();
-            }
-            this.scCount = this.scCount + 1;
-        };
-        //counts how many System calls are in memory
-        //used to advance line only one after a syscall
-        Cpu.prototype.sysCallCount = function () {
-            var count = 0;
-            for (var i = 0; i < _MemoryManager.memory.memoryBlocks.length; i = i + 1) {
-                if ((_MemoryManager.memory.memoryBlocks[i] == "FF") ||
-                    (_MemoryManager.memory.memoryBlocks[i] == "EA")) {
-                    count++;
-                }
-            }
-            return count;
+            //   this.scCount = this.scCount + 1;
+            // console.log(this.scCount);
+            // console.log(sysCount);
+            // if (this.scCount == sysCount) {
+            _StdOut.advanceLine();
+            //}
         };
         return Cpu;
     })();

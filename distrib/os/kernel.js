@@ -83,7 +83,7 @@ var TSOS;
             }
             //Writes date and time on NavBar   
             document.getElementById("kernalDateAndTime").innerHTML = hours.toString() + ":" + possibleZero +
-                minutes.toString() + " " + dayOrNight + " " + date.toDateString();
+                minutes.toString() + " " + dayOrNight + " " + date.toDateString() + " ";
         };
         Kernel.prototype.krnShutdown = function () {
             this.krnTrace("begin shutdown OS");
