@@ -2,10 +2,11 @@
 <html>
 <head>
    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-   <meta name="author"             content="Alan G. Labouseur" />
+   <meta name="author"             content="Alex Hochberg" />
    <link rel="stylesheet" href="tsos.css" type="text/css" media="screen" />
+   <link rel="shortcut icon" href="distrib/images/beard.png"/>
    <title>
-      ALOS - a browser-based virtual Operating System in TypeScript
+      BeardOS - a browser-based virtual Operating System in TypeScript
    </title>
 
    <!-- Globals CONSTANTS and _Variables. Must included be first. -->
@@ -48,13 +49,13 @@
 <div id="divMain" style="width:100%;">
    </div>
 
-<div class="navBar" style="margin:5px; width:900px; ">
+<div class="navBar" style="margin:5px; ">
     <nav role="navigation" class="navbar navbar-default">
         <div class="navbar-header">
 
              <div id="divButtonBar" style="margin:4px;">
       <input type="button"
-             class="btn btn-default btn-lg"
+             class="btn btn-default btn-lg navbar-left"
              id = "btnStartOS"
              name="brnStartOS"
              value="Start"
@@ -62,7 +63,7 @@
              onclick="TSOS.Control.hostBtnStartOS_click(this);">
 
       <input type="button"
-             class="btn btn-default btn-lg"
+             class="btn btn-default btn-lg navbar-left"
              id = "btnHaltOS"
              name="brnHaltOS"
              disabled="disabled"
@@ -71,7 +72,7 @@
              onclick="TSOS.Control.hostBtnHaltOS_click(this);">
 
       <input type="button"
-             class="btn btn-default btn-lg"
+             class="btn btn-default btn-lg navbar-left"
              id = "btnReset"
              name="brnReset"
              disabled="disabled"
@@ -80,7 +81,7 @@
              onclick="TSOS.Control.hostBtnReset_click(this);">
 
       <input type="button"
-             class="btn btn-default btn-lg"
+             class="btn btn-default btn-lg navbar-left"
              id = "btnSingleStepStart"
              name="btnSingleStepStart"
              disabled="disabled"
@@ -89,7 +90,7 @@
              onclick="TSOS.Control.hostBtnSingleStepStart_click(this);">
 
      <button type="button" 
-             class="btn btn-default btn-lg"
+             class="btn btn-default btn-lg navbar-left"
              id = "btnSingleStepNext"
              disabled="disabled"
              onclick="TSOS.Control.hostBtnSingleStepNext_click(this);">
@@ -98,33 +99,32 @@
       </button>
 
       <button type="button" 
-              class="btn btn-default btn-lg"
+              class="btn btn-default btn-lg navbar-left"
               id = "btnSingleStepStop"
               disabled="disabled"
               onclick="TSOS.Control.hostBtnSingleStepStop_click(this);">
         <span class="glyphicon glyphicon-stop" 
               aria-hidden="true"></span>
       </button>
-      
 
-       <div >
-       <div style="float:left;  position: relative;"> Date: </div>
-             <div style="float:left;" id="kernalDateAndTime"> </div> 
-             </div>
+       <div style=" float:right; padding-right: 18px;">
+         <p class="navbar-text "><b>Status:</b></p> 
+      <p class="navbar-text navbar-right"  id="userStatus"></p> 
+    </div>
 
-             <div style="float:left;  position: relative;"> Staus:</div>
-             <div style="float:left;" id="userStatus"> </div> 
-             </div>
+      <div style=" float:right; padding-right: 18px;">
+         <p class="navbar-text "><b>Date:</b></p> 
+      <p class="navbar-text navbar-right" id="kernalDateAndTime">
+      </p> 
+    </div>
 
-            
-
- 
-
-
-    
     </nav>
 </div>
 </div>
+<div class="center">
+<h2 style="color: #663300;"><b>BeardOS</b></h2>
+</div>
+<div class="center">
 
 <div style=" float:left; padding-right: 10px;">
 
@@ -145,24 +145,30 @@
 
    <div id="divLog"  >
       <label>
-         Host Log
+        <div id="brown"> Host Log </div>
          <br>
          <textarea name="taHostLog"
                    id  ="taHostLog"
                    rows="26"
                    cols="48"
+                   style="background-color:#E6E6E6;
+                          border: 2px solid #663300;"
          ></textarea>
       </label>
    </div>
 
    <div id="divUserProgramInput" >
       <label>
+        <div id="brown">
          User Program Input
+       </div>
          <br>
          <textarea name="taProgramInput"
                    id  ="taProgramInput"
                    rows="8"
                    cols="48"
+                   style="background-color:#E6E6E6;
+                          border: 2px solid #663300;"
          ></textarea>
       </label>
    </div>
@@ -181,7 +187,11 @@
 </div>
 
 <div class="pcbStatusWrapper" ><label>PCB Status</label><br>
-              <table class="table" id = "pcbStatusTable" style="width:300px;">
+              <table class="table" 
+                     id = "pcbStatusTable" 
+                     style="width:300px;
+                            background-color:#E6E6E6;
+                            border: 2px solid #663300;">
                   <tr>
                     <th>PC</th>
                     <th>IR</th>
@@ -202,7 +212,11 @@
     </div>
 
     <div class="cpuStatusWrapper" ><label>CPU Status</label><br>
-              <table class="table" id = "cpuStatusTable" style="width:300px;">
+              <table  class="table" 
+                      id = "cpuStatusTable" 
+                      style="width:300px;
+                            background-color:#E6E6E6;
+                            border: 2px solid #663300;">
                   <tr>
                     <th>PC</th>
                     <th>IR</th>
@@ -221,6 +235,8 @@
                 </tr>
               </table>
     </div>
+
+</div>
 
 </div>
 

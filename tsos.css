@@ -1,15 +1,20 @@
 /* TSOS.css */
 
 body {
-  background: #70944D url(distrib/images/linen.png) repeat;
+
+  background-image: url(distrib/images/beard.png);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: 30% 20%; 
   font-family: Helvetica, Verdana, Arial, sans-serif;
   font-size: 12pt;
   font-weight: normal;
   font-style: normal;
+  color: #663300;
 }
 
 h1 {
-  color: black;
+  color: #663300;
   font-size: 24pt;
   font-weight: normal;
   font-style: normal;
@@ -17,13 +22,14 @@ h1 {
 }
 
 h2 {
-  color: black;
+  color: #663300;
   font-size: 20pt;
   font-weight: normal;
   font-style: normal;
 }
 
 h3 {
+  color: #663300;
   font-family: Helvetica, Verdana, Arial, sans-serif;
   font-size: 16pt;
   font-weight: normal;
@@ -31,14 +37,24 @@ h3 {
 }
 
 table, th, td {
-  background-color:#FFFFFF;
+  background-color:#E6E6E6;
+
+}
+.brown {
+  color: #663300;
+
+}
+
+.center {
+    margin: auto;
+    width: 75%;
 
 }
 
 
 #display {
-  background-color:#DFDBC3;
-  border: 2px solid red;
+  background-color:#E6E6E6;
+  border: 2px solid #663300;
   cursor: default;
 }
 
@@ -54,10 +70,11 @@ table, th, td {
 }
 
 .memoryBlockContainer {
+  border: 2px solid #663300;
   color: black;
   font-family: Arial;
   font-size: 13pt;
-  background-color:#FFFFFF;
+  background-color:#E6E6E6;
   display: inline-block;
   height: 300px;
   overflow: scroll;

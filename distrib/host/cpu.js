@@ -274,7 +274,6 @@ var TSOS;
                 TSOS.Control.hostBtnSingleStepStop_click(document.getElementById("btnSingleStepStop"));
                 //reinitializes system call count
                 // this.scCount = 0;
-                // console.log("sc count= " + this.scCount)
                 //reset PC
                 _CPU.PC = 0;
             }
@@ -303,13 +302,10 @@ var TSOS;
         Cpu.prototype.branchNBytes = function () {
             //checks to see if z flag is set to "00"
             if (this.Zflag.toString() == "0") {
-                console.log(this.getNextByte());
                 //convert cotent to decimal
                 var decContent = this.hexToDec(this.getNextByte());
                 //jumps current pc to given address + current pc - 256
                 //wrap around
-                console.log(decContent);
-                console.log(_CPU.PC);
                 if ((_CPU.PC + decContent) > 256) {
                     _CPU.PC = (_CPU.PC + decContent) - 256;
                 }
