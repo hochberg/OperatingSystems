@@ -13,7 +13,7 @@
 //
 // Global CONSTANTS (TypeScript 1.5 introduced const. Very cool.)
 //
-const APP_NAME: string    = "ALOS";  // 'cause Bob and I were at a loss for a better name.11
+const APP_NAME: string    = "potatOS";  // cause jijoij
 const APP_VERSION: string = "666";   // What did you expect?
 
 const CPU_CLOCK_INTERVAL: number = 100;   // This is in ms (milliseconds) so 1000 = 1 second.
@@ -32,7 +32,7 @@ const BSOD_IRQ: number = 2; //bsod interrupt
 var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class. 
 var _MemoryManager: TSOS.memoryManager;  // creates instance of Memory Manger
 var _Memory: TSOS.coreMemory;  //creates instance of core memory
-var _pcbArray: any; // creates global PCB array to conatin all instances of PCB (may reorganize in future)
+var _residentList: any; // creates global PCB array to conatin all instances of PCB (may reorganize in future)
 var _currentPcb: any; //keeps track of currently running pcb
 var _Control: TSOS.Control; //Connected for Single Step ease
 

@@ -421,13 +421,14 @@ var TSOS;
                     }
                     //TODO shouldnt print here (PROB SHOULD ACTUALLY)
                     _MemoryManager.printMemory();
-                    //pushes new pcb into _pcbArray
-                    _pcbArray.push(new TSOS.ProcessControlBlock());
-                    _pcbArray[_pcbArray.length - 1].init();
+                    //pushes new pcb into _residentList
+                    _residentList.push(new TSOS.ProcessControlBlock());
+                    _residentList[_residentList.length - 1].init();
+                    _residentList[_residentList.length - 1].printResidentList();
                     // _CPU.execute(userInput);
                     _StdOut.putText("User input: [" + userInput + "] Valid Input");
                     _StdOut.advanceLine();
-                    _StdOut.putText("Process ID: " + (_pcbArray.length - 1));
+                    _StdOut.putText("Process ID: " + (_residentList.length - 1));
                 }
                 else {
                     _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
@@ -450,7 +451,7 @@ var TSOS;
             }
             else {
                 //cdepending on user input, changes currentPCB
-                _currentPcb = _pcbArray[args];
+                _currentPcb = _residentList[args];
                 //starts executing cycle
                 _CPU.isExecuting = true;
                 _StdOut.putText("Running...");

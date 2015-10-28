@@ -487,7 +487,6 @@ module TSOS {
                     }
                 }
                 if (isHex) {
-
                     //makes array of hex code split by spaces
                     var inputArray = userInput.split(" ");
                     //inputs user code into memory manager memory
@@ -498,14 +497,15 @@ module TSOS {
                     //TODO shouldnt print here (PROB SHOULD ACTUALLY)
                     _MemoryManager.printMemory();
 
-                    //pushes new pcb into _pcbArray
-                    _pcbArray.push(new ProcessControlBlock());
-                    _pcbArray[_pcbArray.length - 1].init();
+                    //pushes new pcb into _residentList
+                    _residentList.push(new ProcessControlBlock());
+                    _residentList[_residentList.length - 1].init();
+                    _residentList[_residentList.length - 1].printResidentList();
 
                     // _CPU.execute(userInput);
                     _StdOut.putText("User input: [" + userInput + "] Valid Input");
                     _StdOut.advanceLine();
-                    _StdOut.putText("Process ID: " + (_pcbArray.length - 1));
+                    _StdOut.putText("Process ID: " + (_residentList.length - 1));
 
                 } else {
                     _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
@@ -531,12 +531,12 @@ module TSOS {
                 //_StdOut.advanceLine()
             }else {
                 //cdepending on user input, changes currentPCB
-                _currentPcb = _pcbArray[args]
+                _currentPcb = _residentList[args]
                 //starts executing cycle
                 _CPU.isExecuting = true;
                 _StdOut.putText("Running...");
                 //console.log(_MemoryManager.memory);
-                //_CPU.execute(_MemoryManager.memory.memoryBlocks, _ProcessControlBlock.pid, _pcbArray[_ProcessControlBlock.pid]);
+                //_CPU.execute(_MemoryManager.memory.memoryBlocks, _ProcessControlBlock.pid, _residentList[_ProcessControlBlock.pid]);
             }
         }
 

@@ -30,7 +30,7 @@ module TSOS {
                     public isSingleStep: boolean = false
                     //,
                     //   public scCount: number = 0 //used to next line only once more,
-                                                   //regardless of how many system calls are executed
+                                                   //regardless of how many system calls are executed TEST
 
                     ) {
 
@@ -48,7 +48,9 @@ module TSOS {
           //  this.scCount = 0;
         }
 
+//moved to control
         public printCPU(): void {
+
             //retrieve ids of pcb display
             var printPc = document.getElementById("pcCPUDisplay");
             var printIr = document.getElementById("irCPUDisplay");
@@ -73,6 +75,7 @@ module TSOS {
             this.execute(currentCode);
             _MemoryManager.printMemory();
             this.printCPU();
+            //_currentPcb.printResidentList()
 
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
@@ -293,7 +296,8 @@ module TSOS {
 
 
             //prints current pcb 
-            _currentPcb.printPCB();
+            //_currentPcb.printPCB();
+            _currentPcb.printReadyQueue();
              //starts executing cycle
             _CPU.isExecuting = false;
              //returns prompt on new line

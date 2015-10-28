@@ -46,6 +46,7 @@ var TSOS;
             this.isSingleStep = false;
             //  this.scCount = 0;
         };
+        //moved to control
         Cpu.prototype.printCPU = function () {
             //retrieve ids of pcb display
             var printPc = document.getElementById("pcCPUDisplay");
@@ -70,6 +71,7 @@ var TSOS;
             this.execute(currentCode);
             _MemoryManager.printMemory();
             this.printCPU();
+            //_currentPcb.printResidentList()
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
         };
@@ -264,7 +266,8 @@ var TSOS;
             //TODO maybe
             _currentPcb.ir = "00";
             //prints current pcb 
-            _currentPcb.printPCB();
+            //_currentPcb.printPCB();
+            _currentPcb.printReadyQueue();
             //starts executing cycle
             _CPU.isExecuting = false;
             //returns prompt on new line

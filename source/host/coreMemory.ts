@@ -24,7 +24,8 @@ module TSOS {
         }
         public init(): void {
             //initalizes all memory blocks with "00"
-            for (var i = 0; i < 256; i++) {
+            //increased for 3 memory blocks
+            for (var i = 0; i < 768; i++) {
                 this.memoryBlocks[i] = '00';
             }
 

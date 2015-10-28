@@ -11,7 +11,7 @@
 //
 // Global CONSTANTS (TypeScript 1.5 introduced const. Very cool.)
 //
-var APP_NAME = "ALOS"; // 'cause Bob and I were at a loss for a better name.11
+var APP_NAME = "potatOS"; // cause jijoij
 var APP_VERSION = "666"; // What did you expect?
 var CPU_CLOCK_INTERVAL = 100; // This is in ms (milliseconds) so 1000 = 1 second.
 var TIMER_IRQ = 0; // Pages 23 (timer), 9 (interrupts), and 561 (interrupt priority).
@@ -25,7 +25,7 @@ var BSOD_IRQ = 2; //bsod interrupt
 var _CPU; // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class. 
 var _MemoryManager; // creates instance of Memory Manger
 var _Memory; //creates instance of core memory
-var _pcbArray; // creates global PCB array to conatin all instances of PCB (may reorganize in future)
+var _residentList; // creates global PCB array to conatin all instances of PCB (may reorganize in future)
 var _currentPcb; //keeps track of currently running pcb
 var _Control; //Connected for Single Step ease
 var _OSclock = 0; // Page 23.

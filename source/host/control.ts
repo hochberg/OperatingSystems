@@ -53,7 +53,7 @@ module TSOS {
             //Creates array to hold all instances of PCB
             // new PCBs are created and are pushed into array when load is executed
             //TODO may need to reorganize this
-             _pcbArray = [];
+             _residentList = [];
 
             // Check for our testing and enrichment core, which
             // may be referenced here (from index.html) as function Glados().

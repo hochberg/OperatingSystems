@@ -4,9 +4,9 @@
    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
    <meta name="author"             content="Alex Hochberg" />
    <link rel="stylesheet" href="tsos.css" type="text/css" media="screen" />
-   <link rel="shortcut icon" href="distrib/images/beard.png"/>
+   <link rel="shortcut icon" href="distrib/images/potatoes.jpg"/>
    <title>
-      BeardOS - a browser-based virtual Operating System in TypeScript
+      potatOS - a browser-based virtual Operating System in TypeScript
    </title>
 
    <!-- Globals CONSTANTS and _Variables. Must included be first. -->
@@ -37,9 +37,9 @@
 
    <!-- Other Routines  -->
    <script type="text/javascript" src="distrib/utils.js"></script>
-   <!-- Uncomment this line below to enable GLaDOS testing     -->
+   <!-- Uncomment this line below to enable GLaDOS testing     
    <script type="text/javascript" src="http://www.labouseur.com/courses/os/projects/glados.js"></script>
-
+    -->
    <!--Bootstrap -->
    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
@@ -122,7 +122,7 @@
 </div>
 </div>
 <div class="center">
-<h2 style="color: #663300;"><b>BeardOS</b></h2>
+<h2 style="color: #000000;"><b>potatOS</b></h2>
 </div>
 <div class="center">
 
@@ -186,30 +186,48 @@
    </div>
 </div>
 
-<div class="pcbStatusWrapper" ><label>PCB Status</label><br>
+<div class="pcbReadyQueueWrapper" ><label>Ready Queue</label><br>
               <table class="table" 
-                     id = "pcbStatusTable" 
+                     id = "pcbReadyQueueTable" 
                      style="width:300px;
                             background-color:#E6E6E6;
                             border: 2px solid #663300;">
                   <tr>
+                    <th>PID</th>
                     <th>PC</th>
                     <th>IR</th>
                     <th>ACC</th>
                     <th>X</th>
                     <th>Y</th>
                     <th>Z</th>
+                    <th>Base</th>
+                    <th>Limit</th>
                   </tr>
-                  <tr>
-                    <td id="pcStatusDisplay">&nbsp;</td>
-                    <td id="irStatusDisplay">&nbsp;</td>
-                    <td id="accStatusDisplay">&nbsp;</td>
-                    <td id="xrStatusDisplay">&nbsp;</td>
-                    <td id="yrStatusDisplay">&nbsp;</td>
-                    <td id="zfStatusDisplay">&nbsp;</td>
-                </tr>
+            
               </table>
     </div>
+
+<div class="pcbResidentListWrapper" ><label>Resident List</label><br>
+              <table class="table" 
+                     id = "pcbResidentListTable" 
+                     style="width:300px;
+                            background-color:#E6E6E6;
+                            border: 2px solid #663300;">
+                  <tr>
+                    <th>PID</th>
+                    <th>PC</th>
+                    <th>IR</th>
+                    <th>ACC</th>
+                    <th>X</th>
+                    <th>Y</th>
+                    <th>Z</th>
+                    <th>Base</th>
+                    <th>Limit</th>
+                  </tr>
+            
+              </table>
+    </div>
+
 
     <div class="cpuStatusWrapper" ><label>CPU Status</label><br>
               <table  class="table" 
@@ -224,6 +242,7 @@
                     <th>X</th>
                     <th>Y</th>
                     <th>Z</th>
+                    
                   </tr>
                   <tr>
                     <td id="pcCPUDisplay">&nbsp;</td>
