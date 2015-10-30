@@ -26,7 +26,7 @@ module TSOS {
         public commandHistory = []; //yes sir
         public currentCommand = ""; //yes sir
         public commandHistoryIndex = 0; //yes sir
-        =
+        
  
         constructor() {
         }
@@ -41,7 +41,7 @@ module TSOS {
             // ver
             sc = new ShellCommand(this.shellVer,
                 "ver",
-                "- Displays the current version data. Because versions are important.");
+                "- Displays the current version data.");
             this.commandList[this.commandList.length] = sc;
 
             // help
@@ -53,7 +53,7 @@ module TSOS {
             // shutdown
             sc = new ShellCommand(this.shellShutdown,
                 "shutdown",
-                "- Shuts down the virtual OS but leaves the underlying host / hardware simulation running.");
+                "- Shuts down OS.");
             this.commandList[this.commandList.length] = sc;
 
             // cls
@@ -128,8 +128,35 @@ module TSOS {
                 "<pid> - Runs code from memory.");
             this.commandList[this.commandList.length] = sc;
 
-            // ps  - list the running processes and their IDs
-            // kill <id> - kills the specified process id.
+            // clearmem
+            sc = new ShellCommand(this.shellClearmem,
+                "clearmem",
+                "- Clears all memory partitions.");
+            this.commandList[this.commandList.length] = sc;
+
+            // runall
+            sc = new ShellCommand(this.shellRunall,
+                "runall",
+                "- Runs all processes.");
+            this.commandList[this.commandList.length] = sc;
+
+            // quantum
+            sc = new ShellCommand(this.shellQuantum,
+                "quantum",
+                "<int> - Set quantum value for Round Robin.");
+            this.commandList[this.commandList.length] = sc;
+
+            // ps
+            sc = new ShellCommand(this.shellPs,
+                "ps",
+                "- Prints all active PIDs to console.");
+            this.commandList[this.commandList.length] = sc;
+
+            // kill
+            sc = new ShellCommand(this.shellKill,
+                "kill",
+                "<pid> - Murders specified process.");
+            this.commandList[this.commandList.length] = sc;
 
             //
             // Display the initial prompt.
@@ -357,7 +384,27 @@ module TSOS {
                         break;
                     //run
                     case "run":
-                        _StdOut.putText("[run <pid>] runs program in memory, specifed by the given PID");
+                        _StdOut.putText("[run <pid>] runs program in memory, specifed by the given PID.");
+                        break;
+                    //clearmem
+                    case "clearmem":
+                        _StdOut.putText("[clearmem] deletes all code in memory and clears up memory partitions.");
+                        break;
+                    //runall
+                    case "runall":
+                        _StdOut.putText("[runall] runs all programs in memory.");
+                        break;
+                    //quantum
+                    case "quantum":
+                        _StdOut.putText("[quantum <int>] sets the Round Robin quantum.");
+                        break;
+                    //ps
+                    case "ps":
+                        _StdOut.putText("[ps] displays all the PIDs of all active processes.");
+                        break;
+                    //kill
+                    case "kill":
+                        _StdOut.putText("[kill <pid>] kills an active process, specified by the given PID.");
                         break;
 
                     default:
@@ -540,8 +587,8 @@ module TSOS {
                         var inputArray = userInput.split(" ");
                         //TODO FIX WHERE CODE GOES IN MEMORY
                         //inputs user code into memory manager memory
-                        for (var i = parseInt(_residentList[_residentList.length - 1].base); inputArray.length > i; i++) {
-                            _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
+                        for (var i = 0; inputArray.length > i; i++) {
+                            _MemoryManager.memory.memoryBlocks[i + parseInt(_residentList[_residentList.length - 1].base)] = inputArray[i];
                         }
              
                         //TODO shouldnt print here (PROB SHOULD ACTUALLY)
@@ -565,7 +612,6 @@ module TSOS {
                 //resets
                 var isHex = true;
             }
-console.log(_residentList);
 
         }
 
@@ -573,7 +619,6 @@ console.log(_residentList);
             //set up currently to only run one program at a time
             //resets cpu's pc every run
             _CPU.PC = 0;
-console.log(_residentList);
             //if a pid is not selected
             var nullArray = [];
             nullArray.push(args);
@@ -592,9 +637,15 @@ console.log(_residentList);
                         console.log(_residentList);
                        
                        //TODO fix eventually
-                        _currentPcb = _readyQueue[0];
-                        _readyQueue[0].state = "Running";
-        
+                        for (var i = 0; _readyQueue.length > i; i++) {
+                            if (args == _readyQueue[i].pid) {
+                                _currentPcb = _readyQueue[i];
+                                _readyQueue[i].state = "Running";
+                                console.log(_currentPcb);
+
+                            }
+                        }
+
                         _Display.printFullResidentList();
                         _Display.printFullReadyQueue();
 
@@ -610,6 +661,35 @@ console.log(_residentList);
                 //_CPU.execute(_MemoryManager.memory.memoryBlocks, _ProcessControlBlock.pid, _residentList[_ProcessControlBlock.pid]);
             }
         }
+
+        public shellClearmem(args) {
+            _Memory.init();
+            _MemoryManager.printMemory();
+            _StdOut.putText("Memory has been cleared.");
+        }
+
+        public shellRunall(args) {
+            _StdOut.putText("ra");
+        }
+
+        public shellQuantum(args) {
+            _StdOut.putText("q");
+        }
+
+        public shellPs(args) {
+            var tempString = "";
+           
+            for  (var i = 0; _readyQueue.length > i; i++) {
+                tempString = tempString + _readyQueue[i].pid + " ";
+            }
+            _StdOut.putText("Active Processes' PIDs: "+tempString);
+        }
+
+        public shellKill(args) {
+            _StdOut.putText("k");
+        }
+
+
 
         
 

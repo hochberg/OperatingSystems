@@ -90,7 +90,11 @@ module TSOS {
         //get commands 
         public fetch(currentPC){
             //fetchs the op code at the current process code in the pcb
-            return _MemoryManager.memory.memoryBlocks[currentPC];
+            //TODO maybe???
+            console.log(_currentPcb+ "here");
+            console.log(_currentPcb.base+ "here");
+            console.log("yo"+_MemoryManager.memory.memoryBlocks[currentPC + parseInt(_currentPcb.base)]);
+            return _MemoryManager.memory.memoryBlocks[currentPC+parseInt(_currentPcb.base)];
         }
 
         //decode and execute
@@ -162,7 +166,7 @@ module TSOS {
                     break;
             }
             this.IR = currentCode;
-            
+
             //update current PCB
             _currentPcb.acc = this.Acc;
             _currentPcb.pc = this.PC;
@@ -187,17 +191,18 @@ module TSOS {
 
         //get next byte
         public getNextByte(){
-            return _MemoryManager.memory.memoryBlocks[this.PC + 1];
+            return _MemoryManager.memory.memoryBlocks[this.PC + 1 +parseInt(_currentPcb.base)];
         }
 
         //get next next byte
         public getNextNextByte(){
-            return _MemoryManager.memory.memoryBlocks[this.PC + 2];
+            return _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
         }
 
         //A9 - LDA
         //Loads accumulater with constant
         public loadAccWithConstant() {
+            console.log(this.getNextByte()+"bro");
             //loads acc with the next element in instruction array
             this.Acc = this.getNextByte();
           //  _StdOut.putText("Load acc with constant");
