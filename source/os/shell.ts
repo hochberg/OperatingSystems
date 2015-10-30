@@ -454,6 +454,19 @@ module TSOS {
             TSOS.Control.bsodInterrupt();
         }
 
+        //checks to see if memoryPartitionArray has an empty spot
+        public emptyMemoryPartition(){
+            for (var i = 0; 2 > i; i++) {
+            //    //if one is empty(false)
+                if(!_memoryPartitionArray[i]){
+                    return true;
+                }
+            }
+           return false;
+            console.log("fuck");
+        }
+       
+
         public shellLoad(args) {
 
             //retrieves input form Program input
@@ -466,6 +479,17 @@ module TSOS {
             var commands = userInput.split(" ");
             var commandsCount = commands.length;
             console.log(commandsCount);
+
+            var isEmptyPartition = false;
+            //TODO make this separtate function
+             for (var i = 0; 3 > i; i++) {
+             //    //if one is empty(false)
+                 console.log(_memoryPartitionArray);
+                 if (!_memoryPartitionArray[i]){
+                     isEmptyPartition= true;
+                 }
+             }
+ 
 
             //checks to make sure it is nonEmpty
             if (userInput == "") {
@@ -488,27 +512,44 @@ module TSOS {
                     }
                 }
                 if (isHex) {
-                    //makes array of hex code split by spaces
-                    var inputArray = userInput.split(" ");
-                    //inputs user code into memory manager memory
-                    for (var i = 0; inputArray.length > i; i++) {
-                        _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
-                    }
+                    if (isEmptyPartition) {
+                        //makes array of hex code split by spaces
+                        var inputArray = userInput.split(" ");
+                        //inputs user code into memory manager memory
+                        for (var i = 0; inputArray.length > i; i++) {
+                            _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
+                        }
              
-                    //TODO shouldnt print here (PROB SHOULD ACTUALLY)
-                    _MemoryManager.printMemory();
+                        //TODO shouldnt print here (PROB SHOULD ACTUALLY)
+                        _MemoryManager.printMemory();
 
-                    //pushes new pcb into _residentList
-                    _residentList.push(new ProcessControlBlock());
-                    _residentList[_residentList.length - 1].init();
-                    //_residentList[_residentList.length - 1].printResidentList();
+                        //pushes new pcb into _residentList
+                        _residentList.push(new ProcessControlBlock());
+                        _residentList[_residentList.length - 1].init();
 
-                    _Display.printFullResidentList();
+                          console.log(_memoryPartitionArray + "dude");
+                        //memory partition chooser
+                        for (var i = 0; 2 > i; i++) {
 
-                    // _CPU.execute(userInput);
-                    _StdOut.putText("User input: [" + userInput + "] Valid Input");
-                    _StdOut.advanceLine();
-                    _StdOut.putText("Process ID: " + _residentList[_residentList.length - 1].pid);
+                            //if partition is empty
+                            if (!_memoryPartitionArray[i]) {
+                                _memoryPartitionArray[i] = true;
+                                //current pcb
+                                _residentList[_residentList.length - 1].base = i * 256;
+                                _residentList[_residentList.length - 1].limit = ((i + 1) * 256) - 1;
+                                console.log(_memoryPartitionArray + "dudeman"+ i);
+                                i = i + 10;
+                            } 
+                        }
+                        _Display.printFullResidentList();
+
+                        // _CPU.execute(userInput);
+                        _StdOut.putText("User input: [" + userInput + "] Valid Input");
+                        _StdOut.advanceLine();
+                        _StdOut.putText("Process ID: " + _residentList[_residentList.length - 1].pid);
+                    } else {
+                        _StdOut.putText("No empty Memory Partitions.");
+                                }
 
                 } else {
                     _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
@@ -542,6 +583,7 @@ module TSOS {
                        
                        //TODO fix eventually
                         _currentPcb = _readyQueue[0];
+                        _readyQueue[0].state = "Running";
         
                         _Display.printFullResidentList();
                         _Display.printFullReadyQueue();
@@ -558,6 +600,8 @@ module TSOS {
                 //_CPU.execute(_MemoryManager.memory.memoryBlocks, _ProcessControlBlock.pid, _residentList[_ProcessControlBlock.pid]);
             }
         }
+
+        
 
 
 

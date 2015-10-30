@@ -33,10 +33,11 @@ var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure th
 var _MemoryManager: TSOS.memoryManager;  // creates instance of Memory Manger
 var _Memory: TSOS.coreMemory;  //creates instance of core memory
 var _Display: TSOS.processControlBlock;  //creates instance of display
-var _residentList: any; // creates global PCB array to conatin all instances of PCB (may reorganize in future)
-var _readyQueue: any; // 
+var _residentList: any; // creates global PCB array to conatin instances of PCB that are loaed into resident list
+var _readyQueue: any; // creates global PCB array to conatin instances of PCB that are running in the ready queue
 var _currentPcb: any; //keeps track of currently running pcb
 var _pidCount: number = 0; //pid count
+var _memoryPartitionArray: any; //keeps tracks off processes within the three memory partitions
 var _Control: TSOS.Control; //Connected for Single Step ease
 
 

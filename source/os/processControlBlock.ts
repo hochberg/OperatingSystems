@@ -22,7 +22,8 @@ module TSOS {
 				          public zflag = null,
 						  public ir = null,
 						  public base = null,
-						  public limit = null
+						  public limit = null,
+						  public state = null,
 		) {
 
 		}
@@ -38,6 +39,7 @@ public init(): void {
 		this.ir = "";
 		this.base = 0;
 		this.limit = 0;
+		this.state = "New"
 			  };
 
 
@@ -45,6 +47,7 @@ public init(): void {
 			  var pcbTable = document.getElementById("pcbReadyQueueTable");
 			  var pcbTableLength = pcbTable.getElementsByTagName("tr").length;
 			  //first clear
+			  console.log(pcbTableLength);
 			  for (var i = 1; pcbTableLength > i; i++) {
 			  	pcbTable.deleteRow(i);
 			  }
@@ -72,6 +75,7 @@ public init(): void {
 				  var printZCell = pcbRow.insertCell(6);
 				  var printBaseCell = pcbRow.insertCell(7);
 				  var printLimitCell = pcbRow.insertCell(8);
+				  var printStateCell = pcbRow.insertCell(9);
 
 				  printPidCell.innerHTML = pcb.pid;
 				  printPcCell.innerHTML = pcb.pc;
@@ -82,6 +86,7 @@ public init(): void {
 				  printZCell.innerHTML = pcb.zflag;
 				  printBaseCell.innerHTML = pcb.base;
 				  printLimitCell.innerHTML = pcb.limit;
+				  printStateCell.innerHTML = pcb.state;
 				 
 				  	  };
 	
@@ -118,6 +123,7 @@ public init(): void {
 				  var printZCell = pcbRow.insertCell(6);
 				  var printBaseCell = pcbRow.insertCell(7);
 				  var printLimitCell = pcbRow.insertCell(8);
+				  var printStateCell = pcbRow.insertCell(9);
 
 				  printPidCell.innerHTML = pcb.pid;
 				  printPcCell.innerHTML = pcb.pc;
@@ -128,29 +134,30 @@ public init(): void {
 				  printZCell.innerHTML = pcb.zflag;
 				  printBaseCell.innerHTML = pcb.base;
 				  printLimitCell.innerHTML = pcb.limit;
+				  printStateCell.innerHTML = pcb.state;
 			
 
 
 			  };
 
-			  public printPCB(): void {
-	//retrieves pcb contents
-	var printPc = document.getElementById("pcStatusDisplay");
-	var printAcc = document.getElementById("accStatusDisplay");
-	var printXr = document.getElementById("xrStatusDisplay");
-	var printYr = document.getElementById("yrStatusDisplay");
-	var printZf = document.getElementById("zfStatusDisplay");
-	var printIr = document.getElementById("irStatusDisplay");
+	// 		  public printPCB(): void {
+	// //retrieves pcb contents
+	// var printPc = document.getElementById("pcStatusDisplay");
+	// var printAcc = document.getElementById("accStatusDisplay");
+	// var printXr = document.getElementById("xrStatusDisplay");
+	// var printYr = document.getElementById("yrStatusDisplay");
+	// var printZf = document.getElementById("zfStatusDisplay");
+	// var printIr = document.getElementById("irStatusDisplay");
 
-	//prints content to screen
-    printPc.innerHTML = this.pc;
-    printAcc.innerHTML = this.acc;
-    printXr.innerHTML = this.xreg;
-    printYr.innerHTML = this.yreg;
-    printZf.innerHTML = this.zflag;
-    printIr.innerHTML = this.ir;
+	// //prints content to screen
+ //    printPc.innerHTML = this.pc;
+ //    printAcc.innerHTML = this.acc;
+ //    printXr.innerHTML = this.xreg;
+ //    printYr.innerHTML = this.yreg;
+ //    printZf.innerHTML = this.zflag;
+ //    printIr.innerHTML = this.ir;
 
-	 		  };
+	//  		  };
 
 
 

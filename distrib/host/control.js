@@ -42,12 +42,15 @@ var TSOS;
             // Set focus on the start button.
             // Use the TypeScript cast to HTMLInputElement
             document.getElementById("btnStartOS").focus();
-            //
+            //create resident list to hold pcbs that have been loaded
             _residentList = [];
-            //
+            //create ready queue to hold pcbs that are running
             _readyQueue = [];
-            //
+            //create pid count to keep track of pids
             var _pidCount = 0;
+            //create memory partition array to keep track of what memory partitions are filled/unfilled
+            //initializes as three false(unfilled) memory partitions
+            _memoryPartitionArray = [false, false, false];
             // Check for our testing and enrichment core, which
             // may be referenced here (from index.html) as function Glados().
             if (typeof Glados === "function") {

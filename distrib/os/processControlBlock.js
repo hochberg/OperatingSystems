@@ -10,7 +10,7 @@
 var TSOS;
 (function (TSOS) {
     var ProcessControlBlock = (function () {
-        function ProcessControlBlock(pid, pc, acc, xreg, yreg, zflag, ir, base, limit) {
+        function ProcessControlBlock(pid, pc, acc, xreg, yreg, zflag, ir, base, limit, state) {
             if (pid === void 0) { pid = null; }
             if (pc === void 0) { pc = null; }
             if (acc === void 0) { acc = null; }
@@ -20,6 +20,7 @@ var TSOS;
             if (ir === void 0) { ir = null; }
             if (base === void 0) { base = null; }
             if (limit === void 0) { limit = null; }
+            if (state === void 0) { state = null; }
             this.pid = pid;
             this.pc = pc;
             this.acc = acc;
@@ -29,6 +30,7 @@ var TSOS;
             this.ir = ir;
             this.base = base;
             this.limit = limit;
+            this.state = state;
         }
         ProcessControlBlock.prototype.init = function () {
             //initializes instance of PCB with CPU values
@@ -41,12 +43,14 @@ var TSOS;
             this.ir = "";
             this.base = 0;
             this.limit = 0;
+            this.state = "New";
         };
         ;
         ProcessControlBlock.prototype.printFullReadyQueue = function () {
             var pcbTable = document.getElementById("pcbReadyQueueTable");
             var pcbTableLength = pcbTable.getElementsByTagName("tr").length;
             //first clear
+            console.log(pcbTableLength);
             for (var i = 1; pcbTableLength > i; i++) {
                 pcbTable.deleteRow(i);
             }
@@ -69,6 +73,7 @@ var TSOS;
             var printZCell = pcbRow.insertCell(6);
             var printBaseCell = pcbRow.insertCell(7);
             var printLimitCell = pcbRow.insertCell(8);
+            var printStateCell = pcbRow.insertCell(9);
             printPidCell.innerHTML = pcb.pid;
             printPcCell.innerHTML = pcb.pc;
             printIrCell.innerHTML = pcb.ir;
@@ -78,6 +83,7 @@ var TSOS;
             printZCell.innerHTML = pcb.zflag;
             printBaseCell.innerHTML = pcb.base;
             printLimitCell.innerHTML = pcb.limit;
+            printStateCell.innerHTML = pcb.state;
         };
         ;
         ProcessControlBlock.prototype.printFullResidentList = function () {
@@ -106,6 +112,7 @@ var TSOS;
             var printZCell = pcbRow.insertCell(6);
             var printBaseCell = pcbRow.insertCell(7);
             var printLimitCell = pcbRow.insertCell(8);
+            var printStateCell = pcbRow.insertCell(9);
             printPidCell.innerHTML = pcb.pid;
             printPcCell.innerHTML = pcb.pc;
             printIrCell.innerHTML = pcb.ir;
@@ -115,23 +122,7 @@ var TSOS;
             printZCell.innerHTML = pcb.zflag;
             printBaseCell.innerHTML = pcb.base;
             printLimitCell.innerHTML = pcb.limit;
-        };
-        ;
-        ProcessControlBlock.prototype.printPCB = function () {
-            //retrieves pcb contents
-            var printPc = document.getElementById("pcStatusDisplay");
-            var printAcc = document.getElementById("accStatusDisplay");
-            var printXr = document.getElementById("xrStatusDisplay");
-            var printYr = document.getElementById("yrStatusDisplay");
-            var printZf = document.getElementById("zfStatusDisplay");
-            var printIr = document.getElementById("irStatusDisplay");
-            //prints content to screen
-            printPc.innerHTML = this.pc;
-            printAcc.innerHTML = this.acc;
-            printXr.innerHTML = this.xreg;
-            printYr.innerHTML = this.yreg;
-            printZf.innerHTML = this.zflag;
-            printIr.innerHTML = this.ir;
+            printStateCell.innerHTML = pcb.state;
         };
         ;
         return ProcessControlBlock;
