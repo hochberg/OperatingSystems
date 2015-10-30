@@ -29,7 +29,7 @@ module TSOS {
 
 public init(): void {
 	//initializes instance of PCB with CPU values
-	    this.pid = _residentList.length - 1;
+	    this.pid = _pidCount++;
 		this.pc = 0;
 		this.acc = 0;
 		this.xreg = 0;
@@ -41,39 +41,68 @@ public init(): void {
 			  };
 
 
+			  public printFullReadyQueue(): void {
+			  var pcbTable = document.getElementById("pcbReadyQueueTable");
+			  var pcbTableLength = pcbTable.getElementsByTagName("tr").length;
+			  //first clear
+			  for (var i = 1; pcbTableLength > i; i++) {
+			  	pcbTable.deleteRow(i);
+			  }
 
-			  public printReadyQueue(): void {
+			  	  for (var i = 0; _readyQueue.length > i; i++) {
+			  		  this.printOneReadyQueue(_readyQueue[i]);
+
+			    	}
+			    }
+
+
+			  public printOneReadyQueue(pcb): void {
 				//gets table
-				  // var pcbTable = document.getElementById("pcbReadyQueueTable");
-				  // var pcbTableLength = pcbTable.getElementsByTagName("tr").length;
-				  // console.log(pcbTableLength);
-				  // var pcbRow = pcbTable.insertRow(pcbTableLength);
+				  var pcbTable = document.getElementById("pcbReadyQueueTable");
+				  var pcbTableLength = pcbTable.getElementsByTagName("tr").length;
+				  console.log(pcbTableLength);
+				  var pcbRow = pcbTable.insertRow(pcbTableLength);
 
-				  // var printPidCell = pcbRow.insertCell(0);
-				  // var printPcCell = pcbRow.insertCell(1);
-				  // var printIrCell = pcbRow.insertCell(2);
-				  // var printAccCell = pcbRow.insertCell(3);
-				  // var printXCell = pcbRow.insertCell(4);
-				  // var printYCell = pcbRow.insertCell(5);
-				  // var printZCell = pcbRow.insertCell(6);
-				  // var printBaseCell = pcbRow.insertCell(7);
-				  // var printLimitCell = pcbRow.insertCell(8);
+				  var printPidCell = pcbRow.insertCell(0);
+				  var printPcCell = pcbRow.insertCell(1);
+				  var printIrCell = pcbRow.insertCell(2);
+				  var printAccCell = pcbRow.insertCell(3);
+				  var printXCell = pcbRow.insertCell(4);
+				  var printYCell = pcbRow.insertCell(5);
+				  var printZCell = pcbRow.insertCell(6);
+				  var printBaseCell = pcbRow.insertCell(7);
+				  var printLimitCell = pcbRow.insertCell(8);
 
-				  // printPidCell.innerHTML = this.pid;
-				  // printPcCell.innerHTML = this.pc;
-				  // printIrCell.innerHTML = this.ir;
-				  // printAccCell.innerHTML = this.acc;
-				  // printXCell.innerHTML = this.xreg;
-				  // printYCell.innerHTML = this.yreg;
-				  // printZCell.innerHTML = this.zflag;
-				  // printBaseCell.innerHTML = this.base;
-				  // printLimitCell.innerHTML = this.limit;
-				 
-
+				  printPidCell.innerHTML = pcb.pid;
+				  printPcCell.innerHTML = pcb.pc;
+				  printIrCell.innerHTML = pcb.ir;
+				  printAccCell.innerHTML = pcb.acc;
+				  printXCell.innerHTML = pcb.xreg;
+				  printYCell.innerHTML = pcb.yreg;
+				  printZCell.innerHTML = pcb.zflag;
+				  printBaseCell.innerHTML = pcb.base;
+				  printLimitCell.innerHTML = pcb.limit;
 				 
 				  	  };
+	
 
-			  public printResidentList(): void {
+			  public printFullResidentList(): void {
+			var pcbTable = document.getElementById("pcbResidentListTable");
+			var pcbTableLength = pcbTable.getElementsByTagName("tr").length;
+			//first clear
+			for (var i = 1; pcbTableLength > i; i++) {
+				pcbTable.deleteRow(i);
+			}
+
+				  for (var i = 0; _residentList.length > i; i++) {
+					  this.printOneResidentList(_residentList[i]);
+
+			  	}
+			  }
+
+
+
+			  public printOneResidentList(pcb): void {
 				//gets table
 				  var pcbTable = document.getElementById("pcbResidentListTable");
 				  var pcbTableLength = pcbTable.getElementsByTagName("tr").length;
@@ -90,21 +119,21 @@ public init(): void {
 				  var printBaseCell = pcbRow.insertCell(7);
 				  var printLimitCell = pcbRow.insertCell(8);
 
-				  printPidCell.innerHTML = this.pid;
-				  printPcCell.innerHTML = this.pc;
-				  printIrCell.innerHTML = this.ir;
-				  printAccCell.innerHTML = this.acc;
-				  printXCell.innerHTML = this.xreg;
-				  printYCell.innerHTML = this.yreg;
-				  printZCell.innerHTML = this.zflag;
-				  printBaseCell.innerHTML = this.base;
-				  printLimitCell.innerHTML = this.limit;
-				 
+				  printPidCell.innerHTML = pcb.pid;
+				  printPcCell.innerHTML = pcb.pc;
+				  printIrCell.innerHTML = pcb.ir;
+				  printAccCell.innerHTML = pcb.acc;
+				  printXCell.innerHTML = pcb.xreg;
+				  printYCell.innerHTML = pcb.yreg;
+				  printZCell.innerHTML = pcb.zflag;
+				  printBaseCell.innerHTML = pcb.base;
+				  printLimitCell.innerHTML = pcb.limit;
+			
 
-				 
-				  	  };
 
-public printPCB(): void {
+			  };
+
+			  public printPCB(): void {
 	//retrieves pcb contents
 	var printPc = document.getElementById("pcStatusDisplay");
 	var printAcc = document.getElementById("accStatusDisplay");

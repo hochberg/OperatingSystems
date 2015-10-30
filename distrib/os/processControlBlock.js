@@ -32,7 +32,7 @@ var TSOS;
         }
         ProcessControlBlock.prototype.init = function () {
             //initializes instance of PCB with CPU values
-            this.pid = _residentList.length - 1;
+            this.pid = _pidCount++;
             this.pc = 0;
             this.acc = 0;
             this.xreg = 0;
@@ -43,33 +43,55 @@ var TSOS;
             this.limit = 0;
         };
         ;
-        ProcessControlBlock.prototype.printReadyQueue = function () {
+        ProcessControlBlock.prototype.printFullReadyQueue = function () {
+            var pcbTable = document.getElementById("pcbReadyQueueTable");
+            var pcbTableLength = pcbTable.getElementsByTagName("tr").length;
+            //first clear
+            for (var i = 1; pcbTableLength > i; i++) {
+                pcbTable.deleteRow(i);
+            }
+            for (var i = 0; _readyQueue.length > i; i++) {
+                this.printOneReadyQueue(_readyQueue[i]);
+            }
+        };
+        ProcessControlBlock.prototype.printOneReadyQueue = function (pcb) {
             //gets table
-            // var pcbTable = document.getElementById("pcbReadyQueueTable");
-            // var pcbTableLength = pcbTable.getElementsByTagName("tr").length;
-            // console.log(pcbTableLength);
-            // var pcbRow = pcbTable.insertRow(pcbTableLength);
-            // var printPidCell = pcbRow.insertCell(0);
-            // var printPcCell = pcbRow.insertCell(1);
-            // var printIrCell = pcbRow.insertCell(2);
-            // var printAccCell = pcbRow.insertCell(3);
-            // var printXCell = pcbRow.insertCell(4);
-            // var printYCell = pcbRow.insertCell(5);
-            // var printZCell = pcbRow.insertCell(6);
-            // var printBaseCell = pcbRow.insertCell(7);
-            // var printLimitCell = pcbRow.insertCell(8);
-            // printPidCell.innerHTML = this.pid;
-            // printPcCell.innerHTML = this.pc;
-            // printIrCell.innerHTML = this.ir;
-            // printAccCell.innerHTML = this.acc;
-            // printXCell.innerHTML = this.xreg;
-            // printYCell.innerHTML = this.yreg;
-            // printZCell.innerHTML = this.zflag;
-            // printBaseCell.innerHTML = this.base;
-            // printLimitCell.innerHTML = this.limit;
+            var pcbTable = document.getElementById("pcbReadyQueueTable");
+            var pcbTableLength = pcbTable.getElementsByTagName("tr").length;
+            console.log(pcbTableLength);
+            var pcbRow = pcbTable.insertRow(pcbTableLength);
+            var printPidCell = pcbRow.insertCell(0);
+            var printPcCell = pcbRow.insertCell(1);
+            var printIrCell = pcbRow.insertCell(2);
+            var printAccCell = pcbRow.insertCell(3);
+            var printXCell = pcbRow.insertCell(4);
+            var printYCell = pcbRow.insertCell(5);
+            var printZCell = pcbRow.insertCell(6);
+            var printBaseCell = pcbRow.insertCell(7);
+            var printLimitCell = pcbRow.insertCell(8);
+            printPidCell.innerHTML = pcb.pid;
+            printPcCell.innerHTML = pcb.pc;
+            printIrCell.innerHTML = pcb.ir;
+            printAccCell.innerHTML = pcb.acc;
+            printXCell.innerHTML = pcb.xreg;
+            printYCell.innerHTML = pcb.yreg;
+            printZCell.innerHTML = pcb.zflag;
+            printBaseCell.innerHTML = pcb.base;
+            printLimitCell.innerHTML = pcb.limit;
         };
         ;
-        ProcessControlBlock.prototype.printResidentList = function () {
+        ProcessControlBlock.prototype.printFullResidentList = function () {
+            var pcbTable = document.getElementById("pcbResidentListTable");
+            var pcbTableLength = pcbTable.getElementsByTagName("tr").length;
+            //first clear
+            for (var i = 1; pcbTableLength > i; i++) {
+                pcbTable.deleteRow(i);
+            }
+            for (var i = 0; _residentList.length > i; i++) {
+                this.printOneResidentList(_residentList[i]);
+            }
+        };
+        ProcessControlBlock.prototype.printOneResidentList = function (pcb) {
             //gets table
             var pcbTable = document.getElementById("pcbResidentListTable");
             var pcbTableLength = pcbTable.getElementsByTagName("tr").length;
@@ -84,15 +106,15 @@ var TSOS;
             var printZCell = pcbRow.insertCell(6);
             var printBaseCell = pcbRow.insertCell(7);
             var printLimitCell = pcbRow.insertCell(8);
-            printPidCell.innerHTML = this.pid;
-            printPcCell.innerHTML = this.pc;
-            printIrCell.innerHTML = this.ir;
-            printAccCell.innerHTML = this.acc;
-            printXCell.innerHTML = this.xreg;
-            printYCell.innerHTML = this.yreg;
-            printZCell.innerHTML = this.zflag;
-            printBaseCell.innerHTML = this.base;
-            printLimitCell.innerHTML = this.limit;
+            printPidCell.innerHTML = pcb.pid;
+            printPcCell.innerHTML = pcb.pc;
+            printIrCell.innerHTML = pcb.ir;
+            printAccCell.innerHTML = pcb.acc;
+            printXCell.innerHTML = pcb.xreg;
+            printYCell.innerHTML = pcb.yreg;
+            printZCell.innerHTML = pcb.zflag;
+            printBaseCell.innerHTML = pcb.base;
+            printLimitCell.innerHTML = pcb.limit;
         };
         ;
         ProcessControlBlock.prototype.printPCB = function () {

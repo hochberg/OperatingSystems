@@ -2,6 +2,7 @@
 ///<reference path="../utils.ts" />
 ///<reference path="shellCommand.ts" />
 ///<reference path="userCommand.ts" />
+///<reference path="display.ts" />
 /* ------------
    Shell.ts
 
@@ -424,11 +425,12 @@ var TSOS;
                     //pushes new pcb into _residentList
                     _residentList.push(new TSOS.ProcessControlBlock());
                     _residentList[_residentList.length - 1].init();
-                    _residentList[_residentList.length - 1].printResidentList();
+                    //_residentList[_residentList.length - 1].printResidentList();
+                    _Display.printFullResidentList();
                     // _CPU.execute(userInput);
                     _StdOut.putText("User input: [" + userInput + "] Valid Input");
                     _StdOut.advanceLine();
-                    _StdOut.putText("Process ID: " + (_residentList.length - 1));
+                    _StdOut.putText("Process ID: " + _residentList[_residentList.length - 1].pid);
                 }
                 else {
                     _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
@@ -450,8 +452,19 @@ var TSOS;
                 _StdOut.putText("Please specifiy a PID");
             }
             else {
-                //cdepending on user input, changes currentPCB
-                _currentPcb = _residentList[args];
+                for (var i = 0; _residentList.length > i; i++) {
+                    if (args == _residentList[i].pid) {
+                        _readyQueue.push(_residentList[i]);
+                        _residentList.pop(_readyQueue);
+                        //take out of display
+                        //TODO fix eventually
+                        _currentPcb = _readyQueue[0];
+                        _Display.printFullResidentList();
+                        _Display.printFullReadyQueue();
+                    }
+                }
+                //depending on user input, changes currentPCB
+                // _currentPcb = _residentList[args];
                 //starts executing cycle
                 _CPU.isExecuting = true;
                 _StdOut.putText("Running...");

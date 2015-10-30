@@ -75,6 +75,7 @@ module TSOS {
             this.execute(currentCode);
             _MemoryManager.printMemory();
             this.printCPU();
+             _Display.printFullReadyQueue();
             //_currentPcb.printResidentList()
 
             // TODO: Accumulate CPU usage and profiling statistics here.
@@ -161,6 +162,14 @@ module TSOS {
                     break;
             }
             this.IR = currentCode;
+            
+            //update current PCB
+            _currentPcb.acc = this.Acc;
+            _currentPcb.pc = this.PC;
+            _currentPcb.xreg = this.Xreg;
+            _currentPcb.yreg = this.Yreg;
+            _currentPcb.zflag = this.Zflag;
+            _currentPcb.ir = this.IR;
 
         }
 
@@ -297,7 +306,7 @@ module TSOS {
 
             //prints current pcb 
             //_currentPcb.printPCB();
-            _currentPcb.printReadyQueue();
+            _Display.printFullReadyQueue();
              //starts executing cycle
             _CPU.isExecuting = false;
              //returns prompt on new line

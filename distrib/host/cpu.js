@@ -71,6 +71,7 @@ var TSOS;
             this.execute(currentCode);
             _MemoryManager.printMemory();
             this.printCPU();
+            _Display.printFullReadyQueue();
             //_currentPcb.printResidentList()
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
@@ -149,6 +150,13 @@ var TSOS;
                     break;
             }
             this.IR = currentCode;
+            //update current PCB
+            _currentPcb.acc = this.Acc;
+            _currentPcb.pc = this.PC;
+            _currentPcb.xreg = this.Xreg;
+            _currentPcb.yreg = this.Yreg;
+            _currentPcb.zflag = this.Zflag;
+            _currentPcb.ir = this.IR;
         };
         //converts a num in hex to decimal equivalent
         Cpu.prototype.hexToDec = function (hex) {
@@ -267,7 +275,7 @@ var TSOS;
             _currentPcb.ir = "00";
             //prints current pcb 
             //_currentPcb.printPCB();
-            _currentPcb.printReadyQueue();
+            _Display.printFullReadyQueue();
             //starts executing cycle
             _CPU.isExecuting = false;
             //returns prompt on new line

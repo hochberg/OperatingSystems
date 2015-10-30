@@ -32,8 +32,11 @@ const BSOD_IRQ: number = 2; //bsod interrupt
 var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class. 
 var _MemoryManager: TSOS.memoryManager;  // creates instance of Memory Manger
 var _Memory: TSOS.coreMemory;  //creates instance of core memory
+var _Display: TSOS.processControlBlock;  //creates instance of display
 var _residentList: any; // creates global PCB array to conatin all instances of PCB (may reorganize in future)
+var _readyQueue: any; // 
 var _currentPcb: any; //keeps track of currently running pcb
+var _pidCount: number = 0; //pid count
 var _Control: TSOS.Control; //Connected for Single Step ease
 
 

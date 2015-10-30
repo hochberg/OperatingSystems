@@ -1,6 +1,7 @@
 ///<reference path="../globals.ts" />
 ///<reference path="../os/canvastext.ts" />
 ///<reference path="../host/memoryManager.ts" />
+
 ///<reference path="../host/shell.ts" />
 
 
@@ -50,10 +51,12 @@ module TSOS {
             // Use the TypeScript cast to HTMLInputElement
             (<HTMLInputElement> document.getElementById("btnStartOS")).focus();
             
-            //Creates array to hold all instances of PCB
-            // new PCBs are created and are pushed into array when load is executed
-            //TODO may need to reorganize this
+            //
              _residentList = [];
+             //
+             _readyQueue = [];
+             //
+             var _pidCount = 0;
 
             // Check for our testing and enrichment core, which
             // may be referenced here (from index.html) as function Glados().
@@ -115,6 +118,14 @@ module TSOS {
               // Initialize the memory manager
             _MemoryManager = new MemoryManager();        
             _MemoryManager.init();
+
+            _Display = new ProcessControlBlock();
+
+            //   //TODO THIS IS BAD, chnage this when you take print statements out of pcb class
+            //   // Initialize the pcb
+            // _pcb = new processControlBlock();        
+            // _pcb.init();
+
 
 
             // ... then set the host clock pulse ...

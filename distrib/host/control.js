@@ -42,10 +42,12 @@ var TSOS;
             // Set focus on the start button.
             // Use the TypeScript cast to HTMLInputElement
             document.getElementById("btnStartOS").focus();
-            //Creates array to hold all instances of PCB
-            // new PCBs are created and are pushed into array when load is executed
-            //TODO may need to reorganize this
+            //
             _residentList = [];
+            //
+            _readyQueue = [];
+            //
+            var _pidCount = 0;
             // Check for our testing and enrichment core, which
             // may be referenced here (from index.html) as function Glados().
             if (typeof Glados === "function") {
@@ -89,6 +91,11 @@ var TSOS;
             // Initialize the memory manager
             _MemoryManager = new TSOS.MemoryManager();
             _MemoryManager.init();
+            _Display = new TSOS.ProcessControlBlock();
+            //   //TODO THIS IS BAD, chnage this when you take print statements out of pcb class
+            //   // Initialize the pcb
+            // _pcb = new processControlBlock();        
+            // _pcb.init();
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(TSOS.Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.
