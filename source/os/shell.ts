@@ -482,13 +482,15 @@ module TSOS {
 
             var isEmptyPartition = false;
             //TODO make this separtate function
-             for (var i = 0; 3 > i; i++) {
+             for (var i = 0; 2 >= i; i++) {
              //    //if one is empty(false)
-                 console.log(_memoryPartitionArray);
+                 console.log(_memoryPartitionArray+ i);
                  if (!_memoryPartitionArray[i]){
                      isEmptyPartition= true;
+                     console.log(isEmptyPartition);
+                     i = i + 42;
                  }
-             }
+            }
  
 
             //checks to make sure it is nonEmpty
@@ -513,23 +515,14 @@ module TSOS {
                 }
                 if (isHex) {
                     if (isEmptyPartition) {
-                        //makes array of hex code split by spaces
-                        var inputArray = userInput.split(" ");
-                        //inputs user code into memory manager memory
-                        for (var i = 0; inputArray.length > i; i++) {
-                            _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
-                        }
-             
-                        //TODO shouldnt print here (PROB SHOULD ACTUALLY)
-                        _MemoryManager.printMemory();
 
-                        //pushes new pcb into _residentList
+                          //pushes new pcb into _residentList
                         _residentList.push(new ProcessControlBlock());
                         _residentList[_residentList.length - 1].init();
 
-                          console.log(_memoryPartitionArray + "dude");
+
                         //memory partition chooser
-                        for (var i = 0; 2 > i; i++) {
+                        for (var i = 0; 2 >= i; i++) {
 
                             //if partition is empty
                             if (!_memoryPartitionArray[i]) {
@@ -537,12 +530,25 @@ module TSOS {
                                 //current pcb
                                 _residentList[_residentList.length - 1].base = i * 256;
                                 _residentList[_residentList.length - 1].limit = ((i + 1) * 256) - 1;
-                                console.log(_memoryPartitionArray + "dudeman"+ i);
-                                i = i + 10;
+                               // console.log(_memoryPartitionArray + "dudeman"+ i);
+                                i = i + 42;
                             } 
                         }
                         _Display.printFullResidentList();
 
+                        //makes array of hex code split by spaces
+                        var inputArray = userInput.split(" ");
+                        //TODO FIX WHERE CODE GOES IN MEMORY
+                        //inputs user code into memory manager memory
+                        for (var i = parseInt(_residentList[_residentList.length - 1].base); inputArray.length > i; i++) {
+                            _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
+                        }
+             
+                        //TODO shouldnt print here (PROB SHOULD ACTUALLY)
+                        _MemoryManager.printMemory();
+
+                      
+                     
                         // _CPU.execute(userInput);
                         _StdOut.putText("User input: [" + userInput + "] Valid Input");
                         _StdOut.advanceLine();
@@ -559,6 +565,7 @@ module TSOS {
                 //resets
                 var isHex = true;
             }
+console.log(_residentList);
 
         }
 
@@ -566,7 +573,7 @@ module TSOS {
             //set up currently to only run one program at a time
             //resets cpu's pc every run
             _CPU.PC = 0;
-
+console.log(_residentList);
             //if a pid is not selected
             var nullArray = [];
             nullArray.push(args);
@@ -576,10 +583,13 @@ module TSOS {
             }else {
                 for  (var i = 0; _residentList.length > i; i++) {
                     if (args == _residentList[i].pid) {
-                     
+                         
+                        console.log(_residentList);
                         _readyQueue.push(_residentList[i]);
-                        _residentList.pop(_readyQueue);
+                        _residentList.splice(i, 1);
                         //take out of display
+                        console.log(_readyQueue);
+                        console.log(_residentList);
                        
                        //TODO fix eventually
                         _currentPcb = _readyQueue[0];

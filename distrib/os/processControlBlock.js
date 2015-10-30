@@ -50,9 +50,8 @@ var TSOS;
             var pcbTable = document.getElementById("pcbReadyQueueTable");
             var pcbTableLength = pcbTable.getElementsByTagName("tr").length;
             //first clear
-            console.log(pcbTableLength);
             for (var i = 1; pcbTableLength > i; i++) {
-                pcbTable.deleteRow(i);
+                pcbTable.deleteRow(1);
             }
             for (var i = 0; _readyQueue.length > i; i++) {
                 this.printOneReadyQueue(_readyQueue[i]);
@@ -91,7 +90,7 @@ var TSOS;
             var pcbTableLength = pcbTable.getElementsByTagName("tr").length;
             //first clear
             for (var i = 1; pcbTableLength > i; i++) {
-                pcbTable.deleteRow(i);
+                pcbTable.deleteRow(1);
             }
             for (var i = 0; _residentList.length > i; i++) {
                 this.printOneResidentList(_residentList[i]);
