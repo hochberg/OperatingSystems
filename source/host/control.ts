@@ -123,13 +123,8 @@ module TSOS {
             _MemoryManager = new MemoryManager();        
             _MemoryManager.init();
 
+            //TODO this should not be in processControlBlock
             _Display = new ProcessControlBlock();
-
-            //   //TODO THIS IS BAD, chnage this when you take print statements out of pcb class
-            //   // Initialize the pcb
-            // _pcb = new processControlBlock();        
-            // _pcb.init();
-
 
 
             // ... then set the host clock pulse ...
@@ -180,9 +175,14 @@ module TSOS {
             _CPU.isSingleStep = false;
         }
 
-        //calls BSOD Interrupt
+        //call BSOD Interrupt
         public static bsodInterrupt(): void {
         _KernelInterruptQueue.enqueue(new Interrupt(BSOD_IRQ, "BIG ERROR"));
+        }
+
+        //call Kill Interrupt
+        public static killInterrupt(): void {
+        _KernelInterruptQueue.enqueue(new Interrupt(KILL_IRQ, "Kill"));
         }
     }
 }

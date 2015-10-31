@@ -278,21 +278,29 @@ var TSOS;
             _currentPcb.zflag = this.Zflag;
             //TODO maybe
             _currentPcb.ir = "00";
-            //prints current pcb 
-            //_currentPcb.printPCB();
-            _Display.printFullReadyQueue();
-            //starts executing cycle
-            _CPU.isExecuting = false;
-            //returns prompt on new line
-            _OsShell.putPrompt();
-            //if in Single Step mode, stops Single Step when break-ed
-            if (_CPU.isSingleStep) {
-                TSOS.Control.hostBtnSingleStepStop_click(document.getElementById("btnSingleStepStop"));
-                //reinitializes system call count
-                // this.scCount = 0;
-                //reset PC
-                _CPU.PC = 0;
+            //removes pcb from ready queue
+            for (var i = 0; _readyQueue.length > i; i++) {
+                if (_currentPcb.pid == _readyQueue[i].pid) {
+                    _readyQueue.splice(i, 1);
+                }
+                //prints current pcb 
+                _Display.printFullReadyQueue();
+                //starts executing cycle
+                _CPU.isExecuting = false;
+                //returns prompt on new line
+                _OsShell.putPrompt();
+                //if in Single Step mode, stops Single Step when break-ed
+                if (_CPU.isSingleStep) {
+                    TSOS.Control.hostBtnSingleStepStop_click(document.getElementById("btnSingleStepStop"));
+                    //reinitializes system call count
+                    // this.scCount = 0;
+                    //reset PC
+                    _CPU.PC = 0;
+                }
             }
+            //EC - CPX
+            //Compares a byte at a given location in memory to X register
+            //if they are equals, sets Z flag to "01", if not sets Z flag to "00"
         };
         //EC - CPX
         //Compares a byte at a given location in memory to X register

@@ -514,16 +514,19 @@ var TSOS;
             }
         };
         Shell.prototype.shellRun = function (args) {
-            //set up currently to only run one program at a time
-            //resets cpu's pc every run
-            _CPU.PC = 0;
             //if a pid is not selected
             var nullArray = [];
             nullArray.push(args);
             if (nullArray[0].length == 0) {
                 _StdOut.putText("Please specifiy a PID");
             }
+            else if (args > _pidCount) {
+                _StdOut.putText("PID does not exist");
+            }
             else {
+                //set up currently to only run one program at a time
+                //resets cpu's pc every run
+                _CPU.PC = 0;
                 for (var i = 0; _residentList.length > i; i++) {
                     if (args == _residentList[i].pid) {
                         console.log(_residentList);
@@ -532,7 +535,7 @@ var TSOS;
                         //take out of display
                         console.log(_readyQueue);
                         console.log(_residentList);
-                        //TODO fix eventually
+                        //
                         for (var i = 0; _readyQueue.length > i; i++) {
                             if (args == _readyQueue[i].pid) {
                                 _currentPcb = _readyQueue[i];
@@ -570,7 +573,8 @@ var TSOS;
             _StdOut.putText("Active Processes' PIDs: " + tempString);
         };
         Shell.prototype.shellKill = function (args) {
-            _StdOut.putText("k");
+            TSOS.Control.killInterrupt();
+            _StdOut.putText("Process " + args + " killed.");
         };
         return Shell;
     })();

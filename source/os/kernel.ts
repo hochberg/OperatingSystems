@@ -158,6 +158,9 @@ module TSOS {
                 case BSOD_IRQ:
                     this.krnTrapError("BSOD");
                     break;
+                case KILL_IRQ:
+                    this.krnTrapKill();
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
@@ -211,6 +214,33 @@ module TSOS {
             _DrawingContext.fillStyle="blue";
            _DrawingContext.fillRect(0, 0, _Canvas.width, _Canvas.height);
             clearInterval(_hardwareClockID);
+        }
+
+        public krnTrapKill() {
+            Control.hostLog("OS KILL PROCESS");
+            _CPU.isExecuting = false;
+
+            //kills memory
+            for (var i = _currentPcb.base; i <= _currentPcb.limit; i++) {
+                console.log(_Memory.memoryBlocks[i]+"yo");
+                _Memory.memoryBlocks[i] = '00';
+            }
+            //shows it
+            _MemoryManager.printMemory();
+
+
+            //pops process' pcb from ready queue
+            for (var i = 0; _readyQueue.length > i; i++) {
+                if (_currentPcb.pid == _readyQueue[i].pid) {
+                    _readyQueue.splice(i, 1);
+                }
+            //shows it
+            _Display.printFullReadyQueue();
+            //reset CPU?
+            _CPU.init();
+            _CPU.printCPU();
+
+            //clearInterval(_hardwareClockID);
         }
 
 

@@ -94,11 +94,8 @@ var TSOS;
             // Initialize the memory manager
             _MemoryManager = new TSOS.MemoryManager();
             _MemoryManager.init();
+            //TODO this should not be in processControlBlock
             _Display = new TSOS.ProcessControlBlock();
-            //   //TODO THIS IS BAD, chnage this when you take print statements out of pcb class
-            //   // Initialize the pcb
-            // _pcb = new processControlBlock();        
-            // _pcb.init();
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(TSOS.Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.
@@ -141,9 +138,13 @@ var TSOS;
             //changes single step mode to OFF
             _CPU.isSingleStep = false;
         };
-        //calls BSOD Interrupt
+        //call BSOD Interrupt
         Control.bsodInterrupt = function () {
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(BSOD_IRQ, "BIG ERROR"));
+        };
+        //call Kill Interrupt
+        Control.killInterrupt = function () {
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(KILL_IRQ, "Kill"));
         };
         return Control;
     })();

@@ -308,9 +308,12 @@ module TSOS {
             //TODO maybe
             _currentPcb.ir = "00";
 
-
+            //removes pcb from ready queue
+            for (var i = 0; _readyQueue.length > i; i++) {
+                if (_currentPcb.pid == _readyQueue[i].pid) {
+                    _readyQueue.splice(i, 1);
+                }
             //prints current pcb 
-            //_currentPcb.printPCB();
             _Display.printFullReadyQueue();
              //starts executing cycle
             _CPU.isExecuting = false;

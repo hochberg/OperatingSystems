@@ -24,6 +24,8 @@ const KEYBOARD_IRQ: number = 1;
 
 const BSOD_IRQ: number = 2; //bsod interrupt
 
+const KILL_IRQ: number = 3; //kill interrupt
+
 
 //
 // Global Variables
