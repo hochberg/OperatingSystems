@@ -428,6 +428,7 @@ var TSOS;
             console.log("fuck");
         };
         Shell.prototype.shellLoad = function (args) {
+            console.log("is this working");
             //retrieves input form Program input
             var userInput = document.getElementById("taProgramInput").value;
             //array of all hex digitis
@@ -560,10 +561,36 @@ var TSOS;
             _StdOut.putText("Memory has been cleared.");
         };
         Shell.prototype.shellRunall = function (args) {
-            _StdOut.putText("ra");
+            if (_residentList.length < 1) {
+                _StdOut.putText("No processes in memory.");
+            }
+            else {
+                console.log(_residentList);
+                console.log(_readyQueue);
+                var initialRLLength = _residentList.length;
+                for (var i = 0; initialRLLength > i; i++) {
+                    _readyQueue.push(_residentList[0]);
+                    _residentList.splice(0, 1);
+                    console.log(_readyQueue);
+                    console.log(i);
+                }
+                console.log(_residentList);
+                console.log(_readyQueue);
+                //TODO
+                _currentPcb = _readyQueue[0];
+                _CPU.isRoundRobin = true;
+                _CPU.isExecuting = true;
+            }
         };
         Shell.prototype.shellQuantum = function (args) {
-            _StdOut.putText("q");
+            if (isNaN(args)) {
+                _StdOut.putText("Please Enter a Number.");
+            }
+            else {
+                _quantum = parseInt(args);
+                _tempQuantum = parseInt(args);
+                _StdOut.putText("New Quantum = " + _quantum);
+            }
         };
         Shell.prototype.shellPs = function (args) {
             var tempString = "";

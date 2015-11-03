@@ -17,7 +17,7 @@
 var TSOS;
 (function (TSOS) {
     var Cpu = (function () {
-        function Cpu(PC, Acc, Xreg, Yreg, Zflag, IR, isExecuting, isSingleStep) {
+        function Cpu(PC, Acc, Xreg, Yreg, Zflag, IR, isExecuting, isSingleStep, isRoundRobin) {
             if (PC === void 0) { PC = 0; }
             if (Acc === void 0) { Acc = 0; }
             if (Xreg === void 0) { Xreg = 0; }
@@ -26,6 +26,7 @@ var TSOS;
             if (IR === void 0) { IR = 0; }
             if (isExecuting === void 0) { isExecuting = false; }
             if (isSingleStep === void 0) { isSingleStep = false; }
+            if (isRoundRobin === void 0) { isRoundRobin = false; }
             this.PC = PC;
             this.Acc = Acc;
             this.Xreg = Xreg;
@@ -34,6 +35,7 @@ var TSOS;
             this.IR = IR;
             this.isExecuting = isExecuting;
             this.isSingleStep = isSingleStep;
+            this.isRoundRobin = isRoundRobin;
         }
         Cpu.prototype.init = function () {
             this.PC = 0;
@@ -44,6 +46,7 @@ var TSOS;
             this.IR = 0;
             this.isExecuting = false;
             this.isSingleStep = false;
+            this.isRoundRobin = false;
             //  this.scCount = 0;
         };
         //moved to control
@@ -298,9 +301,6 @@ var TSOS;
                     _CPU.PC = 0;
                 }
             }
-            //EC - CPX
-            //Compares a byte at a given location in memory to X register
-            //if they are equals, sets Z flag to "01", if not sets Z flag to "00"
         };
         //EC - CPX
         //Compares a byte at a given location in memory to X register

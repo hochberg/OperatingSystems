@@ -19,6 +19,7 @@ var TIMER_IRQ = 0; // Pages 23 (timer), 9 (interrupts), and 561 (interrupt prior
 var KEYBOARD_IRQ = 1;
 var BSOD_IRQ = 2; //bsod interrupt
 var KILL_IRQ = 3; //kill interrupt
+var RR_IRQ = 4; //round robin calls context switch on each CPU pulse
 //
 // Global Variables
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.
@@ -32,7 +33,10 @@ var _readyQueue; // creates global PCB array to conatin instances of PCB that ar
 var _currentPcb; //keeps track of currently running pcb
 var _pidCount = 0; //pid count
 var _memoryPartitionArray; //keeps tracks off processes within the three memory partitions
+var _quantum = 6;
+var _tempQuantum = 6;
 var _Control; //Connected for Single Step ease
+var _cpuScheduler; //creates global instance of CpuSched
 var _OSclock = 0; // Page 23.
 var _Mode = 0; // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.
 var _Canvas; // Initialized in Control.hostInit().

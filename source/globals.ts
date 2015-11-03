@@ -26,6 +26,10 @@ const BSOD_IRQ: number = 2; //bsod interrupt
 
 const KILL_IRQ: number = 3; //kill interrupt
 
+const RR_IRQ: number = 4; //round robin calls context switch on each CPU pulse
+
+
+
 
 //
 // Global Variables
@@ -40,7 +44,10 @@ var _readyQueue: any; // creates global PCB array to conatin instances of PCB th
 var _currentPcb: any; //keeps track of currently running pcb
 var _pidCount: number = 0; //pid count
 var _memoryPartitionArray: any; //keeps tracks off processes within the three memory partitions
+var _quantum: number = 6;
+var _tempQuantum: number = 6;
 var _Control: TSOS.Control; //Connected for Single Step ease
+var _cpuScheduler: TSOS.cpuScheduler; //creates global instance of CpuSched
 
 
 

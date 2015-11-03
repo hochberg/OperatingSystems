@@ -1,7 +1,5 @@
 ///<reference path="../globals.ts" />
 ///<reference path="../os/canvastext.ts" />
-///<reference path="../host/memoryManager.ts" />
-///<reference path="../host/shell.ts" />
 /* ------------
      Control.ts
 
@@ -96,6 +94,9 @@ var TSOS;
             _MemoryManager.init();
             //TODO this should not be in processControlBlock
             _Display = new TSOS.ProcessControlBlock();
+            console.log("fuck");
+            _cpuScheduler = new TSOS.cpuScheduler();
+            //_CpuScheduler = new ProcessControlBlock();
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(TSOS.Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.
@@ -145,6 +146,10 @@ var TSOS;
         //call Kill Interrupt
         Control.killInterrupt = function () {
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(KILL_IRQ, "Kill"));
+        };
+        //call Round Robin Interrupt
+        Control.rrInterrupt = function () {
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(RR_IRQ, "Round Robin"));
         };
         return Control;
     })();

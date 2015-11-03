@@ -23,7 +23,7 @@ module TSOS {
 						  public ir = null,
 						  public base = null,
 						  public limit = null,
-						  public state = null,
+						  public state = null
 		) {
 
 		}

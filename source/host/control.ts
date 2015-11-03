@@ -1,8 +1,6 @@
 ///<reference path="../globals.ts" />
 ///<reference path="../os/canvastext.ts" />
-///<reference path="../host/memoryManager.ts" />
 
-///<reference path="../host/shell.ts" />
 
 
 /* ------------
@@ -126,6 +124,11 @@ module TSOS {
             //TODO this should not be in processControlBlock
             _Display = new ProcessControlBlock();
 
+            console.log("fuck");
+            _cpuScheduler = new cpuScheduler();
+
+           //_CpuScheduler = new ProcessControlBlock();
+
 
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
@@ -183,6 +186,11 @@ module TSOS {
         //call Kill Interrupt
         public static killInterrupt(): void {
         _KernelInterruptQueue.enqueue(new Interrupt(KILL_IRQ, "Kill"));
+        }
+
+        //call Round Robin Interrupt
+        public static rrInterrupt(): void {
+        _KernelInterruptQueue.enqueue(new Interrupt(RR_IRQ, "Round Robin"));
         }
     }
 }

@@ -32,17 +32,17 @@ module TSOS {
             _Console.init();
 
             // Initialize the memory manager
-           // _MemoryManager = new MemoryManager();        
-           // _MemoryManager.init();
+            // _MemoryManager = new MemoryManager();        
+            // _MemoryManager.init();
 
             // Initialize the processControlBlock
-           // _ProcessControlBlock = new ProcessControlBlock();        
-           // _ProcessControlBlock.init();
-           // _ProcessControlBlock.printPCB(); //for now
+            // _ProcessControlBlock = new ProcessControlBlock();        
+            // _ProcessControlBlock.init();
+            // _ProcessControlBlock.printPCB(); //for now
 
 
             // Initialize standard input and output to the _Console.
-            _StdIn  = _Console;
+            _StdIn = _Console;
             _StdOut = _Console;
 
             // Load the Keyboard Device Driver
@@ -76,15 +76,17 @@ module TSOS {
             if (hours == 0) { hours = 12 };
             //decides am or pm
             var dayOrNight = "";
-            if (date.getHours() < 12){dayOrNight="pm"}
-                else { dayOrNight = "am" };
+            if (date.getHours() < 12) { dayOrNight = "pm" }
+            else { dayOrNight = "am" };
             var minutes = date.getMinutes();
             //adds 0 to minutes less than 10
             var possibleZero = "";
-            if (minutes < 10){possibleZero="0"}
+            if (minutes < 10) { possibleZero = "0" }
             //Writes date and time on NavBar   
-            document.getElementById("kernalDateAndTime").innerHTML = hours.toString()+":"+ possibleZero+
-                                            minutes.toString()+" "+dayOrNight + " " + date.toDateString() + " ";
+            document.getElementById("kernalDateAndTime").innerHTML = hours.toString() + ":" + possibleZero +
+                minutes.toString() + " " + dayOrNight + " " + date.toDateString() + " ";
+
+
         }
 
         public krnShutdown() {
@@ -98,10 +100,14 @@ module TSOS {
             // More?
             //
             this.krnTrace("end shutdown OS");
+            clearInterval(_hardwareClockID);
         }
 
 
         public krnOnCPUClockPulse() {
+            this.decrementQuantum();
+            console.log(_quantum);
+            console.log(_tempQuantum);
             /* This gets called from the host hardware simulation every time there is a hardware clock pulse.
                This is NOT the same as a TIMER, which causes an interrupt and is handled like other interrupts.
                This, on the other hand, is the clock pulse from the hardware / VM / host that tells the kernel
@@ -114,9 +120,16 @@ module TSOS {
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             } else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed. 
-                if(!(_CPU.isSingleStep)){
-                _CPU.cycle();
-                console.log("cycle");
+                if (!(_CPU.isSingleStep)) {
+                    if(_CPU.isRoundRobin){
+                        //if quantum is done
+                        if(true){
+                            _CpuScheduler.contextSwitch();
+                           // _MemoryManager.printMemory();
+                        }
+                    }
+                    _CPU.cycle();
+                    console.log("cycle");
                 }
             } else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
                 this.krnTrace("Idle");
@@ -161,6 +174,9 @@ module TSOS {
                 case KILL_IRQ:
                     this.krnTrapKill();
                     break;
+                case RR_IRQ:
+                    _CpuScheduler.contextSwitch();
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
@@ -192,9 +208,9 @@ module TSOS {
         //
         public krnTrace(msg: string) {
            
-             // Check globals to see if trace is set ON.  If so, then (maybe) log the message
-             if (_Trace) {
-                 if (msg === "Idle") {
+            // Check globals to see if trace is set ON.  If so, then (maybe) log the message
+            if (_Trace) {
+                if (msg === "Idle") {
                     // We can't log every idle clock pulse because it would lag the browser very quickly.
                     if (_OSclock % 10 == 0) {
                         // Check the CPU_CLOCK_INTERVAL in globals.ts for an
@@ -203,16 +219,16 @@ module TSOS {
                     }
                 } else {
                     Control.hostLog(msg, "OS");
-                 }
-             }
-             
+                }
+            }
+
         }
 
         public krnTrapError(msg) {
             Control.hostLog("OS ERROR - TRAP: " + msg);
             this.krnShutdown();
-            _DrawingContext.fillStyle="blue";
-           _DrawingContext.fillRect(0, 0, _Canvas.width, _Canvas.height);
+            _DrawingContext.fillStyle = "blue";
+            _DrawingContext.fillRect(0, 0, _Canvas.width, _Canvas.height);
             clearInterval(_hardwareClockID);
         }
 
@@ -222,7 +238,7 @@ module TSOS {
 
             //kills memory
             for (var i = _currentPcb.base; i <= _currentPcb.limit; i++) {
-                console.log(_Memory.memoryBlocks[i]+"yo");
+                console.log(_Memory.memoryBlocks[i] + "yo");
                 _Memory.memoryBlocks[i] = '00';
             }
             //shows it
@@ -234,14 +250,26 @@ module TSOS {
                 if (_currentPcb.pid == _readyQueue[i].pid) {
                     _readyQueue.splice(i, 1);
                 }
-            //shows it
-            _Display.printFullReadyQueue();
-            //reset CPU?
-            _CPU.init();
-            _CPU.printCPU();
+                //shows it
+                _Display.printFullReadyQueue();
+                //reset CPU?
+                _CPU.init();
+                _CPU.printCPU();
 
-            //clearInterval(_hardwareClockID);
+                //clearInterval(_hardwareClockID);
+            }
+
         }
+
+        public decrementQuantum() {
+            if (_tempQuantum > 0) {
+                _tempQuantum = _tempQuantum - 1;
+            }else{
+                _tempQuantum = _quantum;
+            }
+        }
+    
+
 
 
 

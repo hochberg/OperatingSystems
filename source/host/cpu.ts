@@ -27,7 +27,8 @@ module TSOS {
                     public Zflag: number = 0,
                     public IR: number = 0,
                     public isExecuting: boolean = false,
-                    public isSingleStep: boolean = false
+                    public isSingleStep: boolean = false,
+                    public isRoundRobin: boolean = false
                     //,
                     //   public scCount: number = 0 //used to next line only once more,
                                                    //regardless of how many system calls are executed TEST
@@ -45,6 +46,7 @@ module TSOS {
             this.IR = 0;
             this.isExecuting = false;
             this.isSingleStep = false;
+            this.isRoundRobin = false;
           //  this.scCount = 0;
         }
 
@@ -310,25 +312,26 @@ module TSOS {
 
             //removes pcb from ready queue
             for (var i = 0; _readyQueue.length > i; i++) {
-                if (_currentPcb.pid == _readyQueue[i].pid) {
+                if (_currentPcb.pid == _readyQueue[i].pid) { 
                     _readyQueue.splice(i, 1);
                 }
-            //prints current pcb 
-            _Display.printFullReadyQueue();
-             //starts executing cycle
-            _CPU.isExecuting = false;
-             //returns prompt on new line
-            _OsShell.putPrompt();
+                //prints current pcb 
+                _Display.printFullReadyQueue();
+                //starts executing cycle
+                _CPU.isExecuting = false;
+                //returns prompt on new line
+                _OsShell.putPrompt();
 
-            //if in Single Step mode, stops Single Step when break-ed
-            if (_CPU.isSingleStep){
-            TSOS.Control.hostBtnSingleStepStop_click((<HTMLButtonElement>document.getElementById("btnSingleStepStop")));
+                //if in Single Step mode, stops Single Step when break-ed
+                if (_CPU.isSingleStep) {
+                    TSOS.Control.hostBtnSingleStepStop_click((<HTMLButtonElement>document.getElementById("btnSingleStepStop")));
 
-            //reinitializes system call count
-            // this.scCount = 0;
+                    //reinitializes system call count
+                    // this.scCount = 0;
 
-            //reset PC
-            _CPU.PC = 0;
+                    //reset PC
+                    _CPU.PC = 0;
+                }
             }
         }
 

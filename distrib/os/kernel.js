@@ -96,8 +96,12 @@ var TSOS;
             // More?
             //
             this.krnTrace("end shutdown OS");
+            clearInterval(_hardwareClockID);
         };
         Kernel.prototype.krnOnCPUClockPulse = function () {
+            this.decrementQuantum();
+            console.log(_quantum);
+            console.log(_tempQuantum);
             /* This gets called from the host hardware simulation every time there is a hardware clock pulse.
                This is NOT the same as a TIMER, which causes an interrupt and is handled like other interrupts.
                This, on the other hand, is the clock pulse from the hardware / VM / host that tells the kernel
@@ -111,6 +115,12 @@ var TSOS;
             }
             else if (_CPU.isExecuting) {
                 if (!(_CPU.isSingleStep)) {
+                    if (_CPU.isRoundRobin) {
+                        //if quantum is done
+                        if (true) {
+                            _CpuScheduler.contextSwitch();
+                        }
+                    }
                     _CPU.cycle();
                     console.log("cycle");
                 }
@@ -153,6 +163,9 @@ var TSOS;
                     break;
                 case KILL_IRQ:
                     this.krnTrapKill();
+                    break;
+                case RR_IRQ:
+                    _CpuScheduler.contextSwitch();
                     break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
@@ -222,6 +235,14 @@ var TSOS;
                 //reset CPU?
                 _CPU.init();
                 _CPU.printCPU();
+            }
+        };
+        Kernel.prototype.decrementQuantum = function () {
+            if (_tempQuantum > 0) {
+                _tempQuantum = _tempQuantum - 1;
+            }
+            else {
+                _tempQuantum = _quantum;
             }
         };
         return Kernel;

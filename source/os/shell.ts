@@ -514,10 +514,12 @@ module TSOS {
         }
        
 
+
         public shellLoad(args) {
+            console.log("is this working");
 
             //retrieves input form Program input
-            var userInput = document.getElementById("taProgramInput").value);
+            var userInput = document.getElementById("taProgramInput").value;
             //array of all hex digitis
             var hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', ' '];
             //Default
@@ -675,11 +677,39 @@ module TSOS {
         }
 
         public shellRunall(args) {
-            _StdOut.putText("ra");
+            if(_residentList.length < 1){
+                _StdOut.putText("No processes in memory.");
+            }else{
+                console.log(_residentList);
+                console.log(_readyQueue);
+                var initialRLLength = _residentList.length;
+        for  (var i = 0; initialRLLength > i; i++) {
+            
+            _readyQueue.push(_residentList[0]);
+            _residentList.splice(0, 1);
+            console.log(_readyQueue);
+            console.log(i);
+            
+
+        }
+        console.log(_residentList);
+        console.log(_readyQueue);
+        //TODO
+        _currentPcb = _readyQueue[0];
+        _CPU.isRoundRobin = true;
+        _CPU.isExecuting = true;
+
+            }
         }
 
         public shellQuantum(args) {
-            _StdOut.putText("q");
+            if (isNaN(args)){
+                _StdOut.putText("Please Enter a Number.");
+            }else{
+            _quantum = parseInt(args);
+            _tempQuantum = parseInt(args);
+            _StdOut.putText("New Quantum = "+_quantum);
+        }
         }
 
         public shellPs(args) {
