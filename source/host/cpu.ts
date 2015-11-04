@@ -219,7 +219,7 @@ module TSOS {
             //changes address from hex to decimal
             var decAddress = this.hexToDec(address);
             //sets accumulater to content from memory
-            this.Acc = _MemoryManager.memory.memoryBlocks[decAddress];
+            this.Acc = _MemoryManager.memory.memoryBlocks[decAddress+parseInt(_currentPcb.base)];
             //_StdOut.putText("Load acc from memory");
             //_StdOut.advanceLine();
 
@@ -233,7 +233,7 @@ module TSOS {
             //translate that address from hex to decimal
             var decAddress = this.hexToDec(address);
             //sets contents of that address to accumulater
-            _MemoryManager.memory.memoryBlocks[decAddress] = this.Acc;
+            _MemoryManager.memory.memoryBlocks[decAddress+parseInt(_currentPcb.base)] = this.Acc;
            // _StdOut.putText("Store acc in memory");
            // _StdOut.advanceLine();
         }
@@ -268,7 +268,7 @@ module TSOS {
         //Loads the X register from memory
         public loadXFromMemory() {
             //loads content at given address in x register
-            this.Xreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())];
+            this.Xreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())+parseInt(_currentPcb.base)];
            // _StdOut.putText("Load X register from memory");
           //  _StdOut.advanceLine();
         }
@@ -286,7 +286,7 @@ module TSOS {
         //Loads the X register from memory
         public loadYFromMemory() {
             //loads content at given address in y register  f
-            this.Yreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())];
+            this.Yreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())+parseInt(_currentPcb.base)];
            // _StdOut.putText("Load Y register from memory");
            // _StdOut.advanceLine();
 
@@ -364,7 +364,7 @@ module TSOS {
         //if they are equals, sets Z flag to "01", if not sets Z flag to "00"
         public compareMemoryToX() {
             //retrieves the contents at the given address (in hex)
-            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())];
+            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())+parseInt(_currentPcb.base)];
             //convert cotent to decimal
             var decContent = this.hexToDec(content);
             // convert content in x register to decimal
@@ -400,11 +400,11 @@ module TSOS {
         //Increment the value of a byte at a given address in memory
         public incrementByte() {
             //retrieves the contents at the given address (in hex)
-            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())];
+            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())+parseInt(_currentPcb.base)];
             //change content to decimal and add one
             var incremented = this.hexToDec(content) + 1;
             //convert back to hex and load back into register
-            _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())] = this.decToHex(incremented);
+            _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())+parseInt(_currentPcb.base)] = this.decToHex(incremented);
            // _StdOut.putText("Increment Byte");
             //_StdOut.advanceLine();
         }
@@ -431,7 +431,7 @@ module TSOS {
                 //current location of code to be read, translated to hex
                 var currentLoc = (this.hexToDec(this.Yreg));
                 //current code in memory to be read at loc, translted to dec
-                var currentCharCode = this.hexToDec(_MemoryManager.memory.memoryBlocks[currentLoc]);
+                var currentCharCode = this.hexToDec(_MemoryManager.memory.memoryBlocks[currentLoc+parseInt(_currentPcb.base)]);
                 
                 //checks if non-zero elements are at given address, boolean value
                 var nonZeroCode = !(currentCharCode === 0);
@@ -444,7 +444,7 @@ module TSOS {
                 //furthers counter, current location and current code 
                 charCounter = charCounter + 1;
                 currentLoc = this.hexToDec(this.Yreg) + charCounter;
-                currentCharCode = this.hexToDec(_MemoryManager.memory.memoryBlocks[currentLoc]);
+                currentCharCode = this.hexToDec(_MemoryManager.memory.memoryBlocks[currentLoc+parseInt(_currentPcb.base)]);
                  
                 //if next code isn't set, changes boolean to exit loop
                 if (currentCharCode === 0) {

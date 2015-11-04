@@ -37,8 +37,17 @@ module TSOS {
                         if (i == (readyQueueLength - 1)) {
                             console.log("man");
                             console.log(i);
+
+                            _currentPcb.pc = _CPU.PC ;
+                            _currentPcb.acc = _CPU.Acc;
+                            _currentPcb.xreg = _CPU.Xreg ;
+                            _currentPcb.yreg =  _CPU.Yreg;
+                            _currentPcb.zflag = _CPU.Zflag ;
+                            _currentPcb.ir = _CPU.IR;
+
                             //then cycyle back to first pcb
                             _currentPcb = _readyQueue[0];
+                            console.log(_currentPcb);
                             _CPU.PC = _currentPcb.pc;
                             _CPU.Acc = _currentPcb.acc;
                             _CPU.Xreg = _currentPcb.xreg;
@@ -48,15 +57,23 @@ module TSOS {
 
             
                             //and end for loop
-                            i = i + 42;
+                            i = i + 44;
 
                             //if current pcb is not last
                         } else {
                             //then move to next pcb
+
+                            _currentPcb.pc = _CPU.PC ;
+                            _currentPcb.acc = _CPU.Acc;
+                            _currentPcb.xreg = _CPU.Xreg ;
+                            _currentPcb.yreg =  _CPU.Yreg;
+                            _currentPcb.zflag = _CPU.Zflag ;
+                            _currentPcb.ir = _CPU.IR;
+                            
                             console.log("duude");
                             console.log(_readyQueue[i + 1]);
                             _currentPcb = _readyQueue[i + 1];
-                             _CPU.PC = _currentPcb.pc;
+                            _CPU.PC = _currentPcb.pc;
                             _CPU.Acc = _currentPcb.acc;
                             _CPU.Xreg = _currentPcb.xreg;
                             _CPU.Yreg = _currentPcb.yreg;
@@ -64,7 +81,7 @@ module TSOS {
                             _CPU.IR = _currentPcb.ir;
 
                             //and end for loop
-                            i = i + 42;
+                            i = i + 44;
                         }
                     }
                 }
