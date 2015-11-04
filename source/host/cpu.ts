@@ -92,10 +92,6 @@ module TSOS {
         //get commands 
         public fetch(currentPC){
             //fetchs the op code at the current process code in the pcb
-            //TODO maybe???
-            console.log(_currentPcb+ "here");
-            console.log(_currentPcb.base+ "here");
-            console.log("yo"+_MemoryManager.memory.memoryBlocks[currentPC + parseInt(_currentPcb.base)]);
             return _MemoryManager.memory.memoryBlocks[currentPC+parseInt(_currentPcb.base)];
         }
 
@@ -204,7 +200,6 @@ module TSOS {
         //A9 - LDA
         //Loads accumulater with constant
         public loadAccWithConstant() {
-            console.log(this.getNextByte()+"bro");
             //loads acc with the next element in instruction array
             this.Acc = this.getNextByte();
           //  _StdOut.putText("Load acc with constant");
@@ -310,30 +305,26 @@ module TSOS {
             //TODO maybe
             _currentPcb.ir = "00";
 
-            
-                //if not Round Robin
+            //if not Round Robin
             if (!_CPU.isRoundRobin) { 
                 //starts executing cycle
                 _CPU.isExecuting = false;
-
                 //returns prompt on new line
                 _OsShell.putPrompt();
-
                 //if in Single Step mode, stops Single Step when break-ed
                 if (_CPU.isSingleStep) {
                     TSOS.Control.hostBtnSingleStepStop_click((<HTMLButtonElement>document.getElementById("btnSingleStepStop")));
-
-                    //reinitializes system call count
-                    // this.scCount = 0;
-
                     //reset PC
                     _CPU.PC = 0;
                 }
+                //in Round Robin
             } else {
                 //checks if all processes have finished
                 if (_readyQueue.length == 0) {
                     _CPU.isExecuting = false;
+                //if not
                 } else {
+                    //stores index of current pcb (to remove from Ready Queue after context switching)
                     var tempPcbIndex;
                     for (var i = 0; _readyQueue.length > i; i++) {
                         if (_currentPcb.pid == _readyQueue[i].pid) {
@@ -341,22 +332,14 @@ module TSOS {
                             i = i + 42;
                         }
                     }
+                    //moves to next process
                     _cpuScheduler.contextSwitch();
-                    //TSOS.Control.rrInterrupt();
-                    console.log("hey alex");
-                    console.log(_currentPcb);
-
-                    _cpuScheduler.test(tempPcbIndex);
-                    console.log("hey alex2");
-                    console.log(_readyQueue);
-
-
+                    //removes finished process form ready queue
+                    _readyQueue.splice(tempPcbIndex, 1);
                 }
                     //prints current pcb 
                     _Display.printFullReadyQueue();
             }
-
-             
             }
         
 

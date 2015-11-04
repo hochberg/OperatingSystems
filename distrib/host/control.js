@@ -92,11 +92,10 @@ var TSOS;
             // Initialize the memory manager
             _MemoryManager = new TSOS.MemoryManager();
             _MemoryManager.init();
-            //TODO this should not be in processControlBlock
-            _Display = new TSOS.ProcessControlBlock();
-            console.log("fuck");
+            //Initialize Displayu
+            _Display = new TSOS.Display();
+            //Initialize cpuScheduler
             _cpuScheduler = new TSOS.cpuScheduler();
-            //_CpuScheduler = new ProcessControlBlock();
             // ... then set the host clock pulse ...
             _hardwareClockID = setInterval(TSOS.Devices.hostClockPulse, CPU_CLOCK_INTERVAL);
             // .. and call the OS Kernel Bootstrap routine.

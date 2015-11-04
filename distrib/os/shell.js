@@ -425,27 +425,25 @@ var TSOS;
                 }
             }
             return false;
-            console.log("fuck");
         };
         Shell.prototype.shellLoad = function (args) {
-            console.log("is this working");
             //retrieves input form Program input
             var userInput = document.getElementById("taProgramInput").value;
             //array of all hex digitis
             var hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', ' '];
-            //Default
+            //Defaults
             var isHex = true;
+            var isEmptyPartition = false;
+            //commands are split and counted
             var commands = userInput.split(" ");
             var commandsCount = commands.length;
-            console.log(commandsCount);
-            var isEmptyPartition = false;
-            //TODO make this separtate function
+            //looks for empty memory partition
             for (var i = 0; 2 >= i; i++) {
-                //    //if one is empty(false)
-                console.log(_memoryPartitionArray + i);
+                //if one is empty(false)
                 if (!_memoryPartitionArray[i]) {
+                    //change to true
                     isEmptyPartition = true;
-                    console.log(isEmptyPartition);
+                    //breaks loop
                     i = i + 42;
                 }
             }
@@ -470,22 +468,25 @@ var TSOS;
                     }
                 }
                 if (isHex) {
+                    //if empty memory partition
                     if (isEmptyPartition) {
-                        //pushes new pcb into _residentList
+                        //pushes new pcb into _residentList and initializes
                         _residentList.push(new TSOS.ProcessControlBlock());
                         _residentList[_residentList.length - 1].init();
                         //memory partition chooser
                         for (var i = 0; 2 >= i; i++) {
                             //if partition is empty
                             if (!_memoryPartitionArray[i]) {
+                                //changes to full
                                 _memoryPartitionArray[i] = true;
-                                //current pcb
+                                //sets base and limit
                                 _residentList[_residentList.length - 1].base = i * 256;
                                 _residentList[_residentList.length - 1].limit = ((i + 1) * 256) - 1;
-                                // console.log(_memoryPartitionArray + "dudeman"+ i);
+                                //breaks loop
                                 i = i + 42;
                             }
                         }
+                        //shows resident list
                         _Display.printFullResidentList();
                         //makes array of hex code split by spaces
                         var inputArray = userInput.split(" ");
@@ -494,9 +495,8 @@ var TSOS;
                         for (var i = 0; inputArray.length > i; i++) {
                             _MemoryManager.memory.memoryBlocks[i + parseInt(_residentList[_residentList.length - 1].base)] = inputArray[i];
                         }
-                        //TODO shouldnt print here (PROB SHOULD ACTUALLY)
+                        //shows memory
                         _MemoryManager.printMemory();
-                        // _CPU.execute(userInput);
                         _StdOut.putText("User input: [" + userInput + "] Valid Input");
                         _StdOut.advanceLine();
                         _StdOut.putText("Process ID: " + _residentList[_residentList.length - 1].pid);
@@ -508,8 +508,6 @@ var TSOS;
                 else {
                     _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
                 }
-                //clears user text area
-                // document.getElementById("taProgramInput").value = "";
                 //resets
                 var isHex = true;
             }
@@ -521,86 +519,99 @@ var TSOS;
             if (nullArray[0].length == 0) {
                 _StdOut.putText("Please specifiy a PID");
             }
-            else if (args > _pidCount) {
+            else 
+            //given pid hasn't been created
+            if (args > _pidCount) {
                 _StdOut.putText("PID does not exist");
             }
             else {
                 //set up currently to only run one program at a time
                 //resets cpu's pc every run
                 _CPU.PC = 0;
+                //finds pcb within rl using pid
                 for (var i = 0; _residentList.length > i; i++) {
                     if (args == _residentList[i].pid) {
-                        console.log(_residentList);
+                        //inserts pcb into ready queue
                         _readyQueue.push(_residentList[i]);
+                        //and removes from resident list
                         _residentList.splice(i, 1);
-                        //take out of display
-                        console.log(_readyQueue);
-                        console.log(_residentList);
-                        //
+                        //finds pcb with rq using pid
                         for (var i = 0; _readyQueue.length > i; i++) {
                             if (args == _readyQueue[i].pid) {
+                                //makes current pcb
                                 _currentPcb = _readyQueue[i];
+                                //changes state to Running
                                 _readyQueue[i].state = "Running";
-                                console.log(_currentPcb);
                             }
                         }
+                        //displays rl and rq
                         _Display.printFullResidentList();
                         _Display.printFullReadyQueue();
                     }
                 }
-                //depending on user input, changes currentPCB
-                // _currentPcb = _residentList[args];
                 //starts executing cycle
                 _CPU.isExecuting = true;
                 _StdOut.putText("Running...");
             }
         };
         Shell.prototype.shellClearmem = function (args) {
+            //reinitializes memory and displays
             _Memory.init();
             _MemoryManager.printMemory();
             _StdOut.putText("Memory has been cleared.");
         };
         Shell.prototype.shellRunall = function (args) {
+            //checks if any process is in memory
             if (_residentList.length < 1) {
                 _StdOut.putText("No processes in memory.");
             }
             else {
-                console.log(_residentList);
-                console.log(_readyQueue);
+                //if so records initial resident list length
                 var initialRLLength = _residentList.length;
+                //inserts all processes into resident queue at head
+                //removes all processes from resident list at head
                 for (var i = 0; initialRLLength > i; i++) {
                     _readyQueue.push(_residentList[0]);
                     _residentList.splice(0, 1);
-                    console.log(_readyQueue);
-                    console.log(i);
                 }
+                //displays rl and rq
                 _Display.printFullResidentList();
-                console.log(_residentList);
-                console.log(_readyQueue);
-                //TODO
+                _Display.printFullReadyQueue();
+                //sets first process to current pcb
                 _currentPcb = _readyQueue[0];
+                //changes round robin and executing to true
                 _CPU.isRoundRobin = true;
                 _CPU.isExecuting = true;
             }
         };
         Shell.prototype.shellQuantum = function (args) {
-            if (isNaN(args)) {
-                _StdOut.putText("Please Enter a Number.");
+            //does not allow change of quantum while processes are executing
+            if (_CPU.isExecuting) {
+                _StdOut.putText("Can not change quantum while processes are running!");
             }
             else {
-                _quantum = parseInt(args);
-                _tempQuantum = parseInt(args);
-                _StdOut.putText("New Quantum = " + _quantum);
+                //checks if args is anumber
+                if (isNaN(args)) {
+                    _StdOut.putText("Please Enter a Number.");
+                }
+                else {
+                    //if so sets quantum and temp quantum to given value
+                    _quantum = parseInt(args);
+                    _tempQuantum = parseInt(args);
+                    _StdOut.putText("New Quantum = " + _quantum);
+                }
             }
         };
         Shell.prototype.shellPs = function (args) {
             var tempString = "";
+            //loops through ready queue (all running processes) and concates to string to display
             for (var i = 0; _readyQueue.length > i; i++) {
                 tempString = tempString + _readyQueue[i].pid + " ";
             }
             _StdOut.putText("Active Processes' PIDs: " + tempString);
         };
         Shell.prototype.shellKill = function (args) {
+            //thoughs kill interupt
             TSOS.Control.killInterrupt();
             _StdOut.putText("Process " + args + " killed.");
         };

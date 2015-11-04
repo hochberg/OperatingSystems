@@ -121,13 +121,11 @@ module TSOS {
             _MemoryManager = new MemoryManager();        
             _MemoryManager.init();
 
-            //TODO this should not be in processControlBlock
-            _Display = new ProcessControlBlock();
+            //Initialize Displayu
+            _Display = new Display();
 
-            console.log("fuck");
+            //Initialize cpuScheduler
             _cpuScheduler = new cpuScheduler();
-
-           //_CpuScheduler = new ProcessControlBlock();
 
 
             // ... then set the host clock pulse ...

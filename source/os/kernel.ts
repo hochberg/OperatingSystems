@@ -99,17 +99,16 @@ module TSOS {
             // Unload the Device Drivers?
             // More?
             //
+            // _OsShell.shellClearmem();
+            // _readyQueue = [];
+            // _residentList = [];
+            // _Console.clearScreen();
             this.krnTrace("end shutdown OS");
             clearInterval(_hardwareClockID);
         }
 
 
         public krnOnCPUClockPulse() {
-
-            
-            // console.log(_quantum);
-            // console.log(_tempQuantum);
-            // this.decrementQuantum();
 
             /* This gets called from the host hardware simulation every time there is a hardware clock pulse.
                This is NOT the same as a TIMER, which causes an interrupt and is handled like other interrupts.
@@ -123,29 +122,32 @@ module TSOS {
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             } else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed. 
-                if (!(_CPU.isSingleStep)) {
+                    //checks to see if round robin is on
                     if (_CPU.isRoundRobin) {
-                        //TODO
+                        //if so, checks to see if it finished
                         if (_readyQueue.length == 0) {
+                            //if so, turn round robin off
                             _CPU.isRoundRobin = false
                         } else {
+                            //if still going, decrement quantum
                             this.decrementQuantum();
-                           // console.log(_quantum);
-                           // console.log(_tempQuantum);
                             //if quantum is done
                             if (_tempQuantum == _quantum) {
+                                //call context switch interrupt
                                 TSOS.Control.rrInterrupt();
                             }
+                            //then cycle
                             _CPU.cycle();
-                            console.log("RR cycle");
+                            //console.log("RR cycle");
                         }
                     } else {
+                        //TODO Fix Single Step with Round RObin
+                        if (!(_CPU.isSingleStep)) {
                         _CPU.cycle();
-                        console.log("cycle");
+                        //console.log("cycle");
                     }
-                   
                 }
-            } else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
+            } else { // If there are no interrupts and there is nothing being executed then just be idle. 
                 this.krnTrace("Idle");
             }
         }
@@ -252,12 +254,10 @@ module TSOS {
 
             //kills memory
             for (var i = _currentPcb.base; i <= _currentPcb.limit; i++) {
-                console.log(_Memory.memoryBlocks[i] + "yo");
                 _Memory.memoryBlocks[i] = '00';
             }
             //shows it
             _MemoryManager.printMemory();
-
 
             //pops process' pcb from ready queue
             for (var i = 0; _readyQueue.length > i; i++) {
@@ -270,16 +270,20 @@ module TSOS {
                 //reset CPU?
                 _CPU.init();
                 _CPU.printCPU();
-
                 //clearInterval(_hardwareClockID);
             }
 
         }
 
         public decrementQuantum() {
+            //using mallable gloabal quantum
+            //if not at end of quantum
             if (_tempQuantum > 0) {
+                //subtract 1 from it
                 _tempQuantum = _tempQuantum - 1;
             }else{
+                //if at end, cycle back to beginning of quantum
+                //using static global quantum
                 _tempQuantum = _quantum;
             }
         }

@@ -11,11 +11,11 @@ body {
   font-size: 12pt;
   font-weight: normal;
   font-style: normal;
-  color: #663300;
+  color: #E6E6E6;
 }
 
 h1 {
-  color: #663300;
+  color: #E6E6E6;
   font-size: 24pt;
   font-weight: normal;
   font-style: normal;
@@ -23,14 +23,14 @@ h1 {
 }
 
 h2 {
-  color: #663300;
+  color: #E6E6E6;
   font-size: 20pt;
   font-weight: normal;
   font-style: normal;
 }
 
 h3 {
-  color: #663300;
+  color: #E6E6E6;
   font-family: Helvetica, Verdana, Arial, sans-serif;
   font-size: 16pt;
   font-weight: normal;
@@ -41,10 +41,7 @@ table, th, td {
   background-color:#E6E6E6;
 
 }
-.brown {
-  color: #663300;
 
-}
 
 .center {
     margin: auto;

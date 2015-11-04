@@ -32,6 +32,7 @@
    <script type="text/javascript" src="distrib/os/memoryManager.js"></script>
    <script type="text/javascript" src="distrib/os/processControlBlock.js"></script>
    <script type="text/javascript" src="distrib/os/cpuScheduler.js"></script>
+   <script type="text/javascript" src="distrib/os/display.js"></script>
 
  
   
@@ -123,14 +124,14 @@
 </div>
 </div>
 <div class="center">
-<h2 style="color: #000000;"><b>potatOS</b></h2>
+<h2 style="color: #a2aab0;"><b>potatOS</b></h2>
 </div>
 <div class="center">
 
 <div style=" float:left; padding-right: 10px;">
 
-   <div id="divConsole" style="margin:4px; width:500px; height:500px;  ">
-    <label>
+   <div id="divConsole" style="margin:4px; width:500px; height:500px;   ">
+    <label style="color: #a2aab0;">
       Console
       <canvas id="display"
               width="500px"
@@ -146,7 +147,7 @@
 
    <div id="divLog"  >
       <label>
-        <div id="brown"> Host Log </div>
+        <div style="color: #3e3e3b;"> Host Log </div>
          
          <textarea name="taHostLog"
                    id  ="taHostLog"
@@ -160,7 +161,7 @@
 
    <div id="divUserProgramInput" >
       <label>
-        <div id="brown">
+        <div style="color: #a2aab0;">
          User Program Input
        </div>
          <textarea name="taProgramInput"
@@ -181,12 +182,12 @@
 <div style=" float:left; ">
 
 
-<div class="memoryBlockWrapper" ><label>Memory</label><br>
+<div class="memoryBlockWrapper"  ><label style="color: #3e3e3b;">Memory</label><br>
    <div class="memoryBlockContainer" id="memoryDisplay" >
    </div>
 </div>
 
-<div class="pcbReadyQueueWrapper" ><label>Ready Queue</label><br>
+<div class="pcbReadyQueueWrapper" ><label style="color: #a2aab0;">Ready Queue</label><br>
               <table class="table" 
                      id = "pcbReadyQueueTable" 
                      style="width:300px;
@@ -208,7 +209,7 @@
               </table>
     </div>
 
-<div class="pcbResidentListWrapper" ><label>Resident List</label><br>
+<div class="pcbResidentListWrapper" ><label style="color: #a2aab0;">Resident List</label><br>
               <table class="table" 
                      id = "pcbResidentListTable" 
                      style="width:300px;
@@ -231,7 +232,7 @@
     </div>
 
 
-    <div class="cpuStatusWrapper" ><label>CPU Status</label><br>
+    <div class="cpuStatusWrapper"  ><label style="color: #a2aab0;">CPU Status</label><br>
               <table  class="table" 
                       id = "cpuStatusTable" 
                       style="width:300px;

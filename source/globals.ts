@@ -38,7 +38,7 @@ const RR_IRQ: number = 4; //round robin calls context switch on each CPU pulse
 var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class. 
 var _MemoryManager: TSOS.memoryManager;  // creates instance of Memory Manger
 var _Memory: TSOS.coreMemory;  //creates instance of core memory
-var _Display: TSOS.processControlBlock;  //creates instance of display
+var _Display: TSOS.display;  //creates instance of display
 var _residentList: any; // creates global PCB array to conatin instances of PCB that are loaed into resident list
 var _readyQueue: any; // creates global PCB array to conatin instances of PCB that are running in the ready queue
 var _currentPcb: any; //keeps track of currently running pcb

@@ -95,13 +95,14 @@ var TSOS;
             // Unload the Device Drivers?
             // More?
             //
+            // _OsShell.shellClearmem();
+            // _readyQueue = [];
+            // _residentList = [];
+            // _Console.clearScreen();
             this.krnTrace("end shutdown OS");
             clearInterval(_hardwareClockID);
         };
         Kernel.prototype.krnOnCPUClockPulse = function () {
-            // console.log(_quantum);
-            // console.log(_tempQuantum);
-            // this.decrementQuantum();
             /* This gets called from the host hardware simulation every time there is a hardware clock pulse.
                This is NOT the same as a TIMER, which causes an interrupt and is handled like other interrupts.
                This, on the other hand, is the clock pulse from the hardware / VM / host that tells the kernel
@@ -114,27 +115,29 @@ var TSOS;
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             }
             else if (_CPU.isExecuting) {
-                if (!(_CPU.isSingleStep)) {
-                    if (_CPU.isRoundRobin) {
-                        //TODO
-                        if (_readyQueue.length == 0) {
-                            _CPU.isRoundRobin = false;
-                        }
-                        else {
-                            this.decrementQuantum();
-                            // console.log(_quantum);
-                            // console.log(_tempQuantum);
-                            //if quantum is done
-                            if (_tempQuantum == _quantum) {
-                                TSOS.Control.rrInterrupt();
-                            }
-                            _CPU.cycle();
-                            console.log("RR cycle");
-                        }
+                //checks to see if round robin is on
+                if (_CPU.isRoundRobin) {
+                    //if so, checks to see if it finished
+                    if (_readyQueue.length == 0) {
+                        //if so, turn round robin off
+                        _CPU.isRoundRobin = false;
                     }
                     else {
+                        //if still going, decrement quantum
+                        this.decrementQuantum();
+                        //if quantum is done
+                        if (_tempQuantum == _quantum) {
+                            //call context switch interrupt
+                            TSOS.Control.rrInterrupt();
+                        }
+                        //then cycle
                         _CPU.cycle();
-                        console.log("cycle");
+                    }
+                }
+                else {
+                    //TODO Fix Single Step with Round RObin
+                    if (!(_CPU.isSingleStep)) {
+                        _CPU.cycle();
                     }
                 }
             }
@@ -233,7 +236,6 @@ var TSOS;
             _CPU.isExecuting = false;
             //kills memory
             for (var i = _currentPcb.base; i <= _currentPcb.limit; i++) {
-                console.log(_Memory.memoryBlocks[i] + "yo");
                 _Memory.memoryBlocks[i] = '00';
             }
             //shows it
@@ -252,10 +254,15 @@ var TSOS;
             }
         };
         Kernel.prototype.decrementQuantum = function () {
+            //using mallable gloabal quantum
+            //if not at end of quantum
             if (_tempQuantum > 0) {
+                //subtract 1 from it
                 _tempQuantum = _tempQuantum - 1;
             }
             else {
+                //if at end, cycle back to beginning of quantum
+                //using static global quantum
                 _tempQuantum = _quantum;
             }
         };
