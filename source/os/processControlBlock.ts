@@ -62,7 +62,7 @@ public init(): void {
 				//gets table
 				  var pcbTable = document.getElementById("pcbReadyQueueTable");
 				  var pcbTableLength = pcbTable.getElementsByTagName("tr").length;
-				  console.log(pcbTableLength);
+				  //console.log(pcbTableLength);
 				  var pcbRow = pcbTable.insertRow(pcbTableLength);
 
 				  var printPidCell = pcbRow.insertCell(0);
@@ -110,7 +110,7 @@ public init(): void {
 				//gets table
 				  var pcbTable = document.getElementById("pcbResidentListTable");
 				  var pcbTableLength = pcbTable.getElementsByTagName("tr").length;
-				  console.log(pcbTableLength);
+				 // console.log(pcbTableLength);
 				  var pcbRow = pcbTable.insertRow(pcbTableLength);
 
 				  var printPidCell = pcbRow.insertCell(0);

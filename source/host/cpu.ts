@@ -310,15 +310,12 @@ module TSOS {
             //TODO maybe
             _currentPcb.ir = "00";
 
-            //removes pcb from ready queue
-            for (var i = 0; _readyQueue.length > i; i++) {
-                if (_currentPcb.pid == _readyQueue[i].pid) { 
-                    _readyQueue.splice(i, 1);
-                }
-                //prints current pcb 
-                _Display.printFullReadyQueue();
+            
+                //if not Round Robin
+            if (!_CPU.isRoundRobin) { 
                 //starts executing cycle
                 _CPU.isExecuting = false;
+
                 //returns prompt on new line
                 _OsShell.putPrompt();
 
@@ -332,8 +329,35 @@ module TSOS {
                     //reset PC
                     _CPU.PC = 0;
                 }
+            } else {
+                //checks if all processes have finished
+                if (_readyQueue.length == 0) {
+                    _CPU.isExecuting = false;
+                } else {
+                    var tempPcbIndex;
+                    for (var i = 0; _readyQueue.length > i; i++) {
+                        if (_currentPcb.pid == _readyQueue[i].pid) {
+                            i = tempPcbIndex;
+                            i = i + 42;
+                        }
+                    }
+                    TSOS.Control.rrInterrupt();
+                    console.log("hey alex");
+                    console.log(_currentPcb);
+
+                    _readyQueue.splice(tempPcbIndex, 1);
+                    console.log("hey alex2");
+                    console.log(_readyQueue);
+
+
+                }
+                    //prints current pcb 
+                    _Display.printFullReadyQueue();
             }
-        }
+
+             
+            }
+        
 
         //EC - CPX
         //Compares a byte at a given location in memory to X register

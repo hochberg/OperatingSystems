@@ -99,9 +99,9 @@ var TSOS;
             clearInterval(_hardwareClockID);
         };
         Kernel.prototype.krnOnCPUClockPulse = function () {
-            this.decrementQuantum();
-            console.log(_quantum);
-            console.log(_tempQuantum);
+            // console.log(_quantum);
+            // console.log(_tempQuantum);
+            // this.decrementQuantum();
             /* This gets called from the host hardware simulation every time there is a hardware clock pulse.
                This is NOT the same as a TIMER, which causes an interrupt and is handled like other interrupts.
                This, on the other hand, is the clock pulse from the hardware / VM / host that tells the kernel
@@ -116,13 +116,26 @@ var TSOS;
             else if (_CPU.isExecuting) {
                 if (!(_CPU.isSingleStep)) {
                     if (_CPU.isRoundRobin) {
-                        //if quantum is done
-                        if (true) {
-                            _CpuScheduler.contextSwitch();
+                        //TODO
+                        if (_readyQueue.length == 0) {
+                            _CPU.isRoundRobin = false;
+                        }
+                        else {
+                            this.decrementQuantum();
+                            // console.log(_quantum);
+                            // console.log(_tempQuantum);
+                            //if quantum is done
+                            if (_tempQuantum == _quantum) {
+                                TSOS.Control.rrInterrupt();
+                            }
+                            _CPU.cycle();
+                            console.log("RR cycle");
                         }
                     }
-                    _CPU.cycle();
-                    console.log("cycle");
+                    else {
+                        _CPU.cycle();
+                        console.log("cycle");
+                    }
                 }
             }
             else {
@@ -165,7 +178,7 @@ var TSOS;
                     this.krnTrapKill();
                     break;
                 case RR_IRQ:
-                    _CpuScheduler.contextSwitch();
+                    _cpuScheduler.contextSwitch();
                     break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
@@ -229,6 +242,7 @@ var TSOS;
             for (var i = 0; _readyQueue.length > i; i++) {
                 if (_currentPcb.pid == _readyQueue[i].pid) {
                     _readyQueue.splice(i, 1);
+                    i = i + 42;
                 }
                 //shows it
                 _Display.printFullReadyQueue();

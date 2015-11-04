@@ -687,11 +687,13 @@ module TSOS {
             
             _readyQueue.push(_residentList[0]);
             _residentList.splice(0, 1);
+
             console.log(_readyQueue);
             console.log(i);
             
 
         }
+        _Display.printFullResidentList();
         console.log(_residentList);
         console.log(_readyQueue);
         //TODO

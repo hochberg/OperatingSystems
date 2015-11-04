@@ -105,9 +105,12 @@ module TSOS {
 
 
         public krnOnCPUClockPulse() {
-            this.decrementQuantum();
-            console.log(_quantum);
-            console.log(_tempQuantum);
+
+            
+            // console.log(_quantum);
+            // console.log(_tempQuantum);
+            // this.decrementQuantum();
+
             /* This gets called from the host hardware simulation every time there is a hardware clock pulse.
                This is NOT the same as a TIMER, which causes an interrupt and is handled like other interrupts.
                This, on the other hand, is the clock pulse from the hardware / VM / host that tells the kernel
@@ -121,15 +124,26 @@ module TSOS {
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             } else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed. 
                 if (!(_CPU.isSingleStep)) {
-                    if(_CPU.isRoundRobin){
-                        //if quantum is done
-                        if(true){
-                            _CpuScheduler.contextSwitch();
-                           // _MemoryManager.printMemory();
+                    if (_CPU.isRoundRobin) {
+                        //TODO
+                        if (_readyQueue.length == 0) {
+                            _CPU.isRoundRobin = false
+                        } else {
+                            this.decrementQuantum();
+                           // console.log(_quantum);
+                           // console.log(_tempQuantum);
+                            //if quantum is done
+                            if (_tempQuantum == _quantum) {
+                                TSOS.Control.rrInterrupt();
+                            }
+                            _CPU.cycle();
+                            console.log("RR cycle");
                         }
+                    } else {
+                        _CPU.cycle();
+                        console.log("cycle");
                     }
-                    _CPU.cycle();
-                    console.log("cycle");
+                   
                 }
             } else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
                 this.krnTrace("Idle");
@@ -175,7 +189,7 @@ module TSOS {
                     this.krnTrapKill();
                     break;
                 case RR_IRQ:
-                    _CpuScheduler.contextSwitch();
+                    _cpuScheduler.contextSwitch();
                     break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
@@ -249,6 +263,7 @@ module TSOS {
             for (var i = 0; _readyQueue.length > i; i++) {
                 if (_currentPcb.pid == _readyQueue[i].pid) {
                     _readyQueue.splice(i, 1);
+                    i = i + 42;
                 }
                 //shows it
                 _Display.printFullReadyQueue();

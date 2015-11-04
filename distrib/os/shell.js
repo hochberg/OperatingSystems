@@ -574,6 +574,7 @@ var TSOS;
                     console.log(_readyQueue);
                     console.log(i);
                 }
+                _Display.printFullResidentList();
                 console.log(_residentList);
                 console.log(_readyQueue);
                 //TODO
