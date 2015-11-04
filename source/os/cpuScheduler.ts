@@ -38,12 +38,12 @@ module TSOS {
                             console.log("man");
                             console.log(i);
 
-                            _currentPcb.pc = _CPU.PC ;
-                            _currentPcb.acc = _CPU.Acc;
-                            _currentPcb.xreg = _CPU.Xreg ;
-                            _currentPcb.yreg =  _CPU.Yreg;
-                            _currentPcb.zflag = _CPU.Zflag ;
-                            _currentPcb.ir = _CPU.IR;
+                            // _currentPcb.pc = _CPU.PC ;
+                            // _currentPcb.acc = _CPU.Acc;
+                            // _currentPcb.xreg = _CPU.Xreg ;
+                            // _currentPcb.yreg =  _CPU.Yreg;
+                            // _currentPcb.zflag = _CPU.Zflag ;
+                            // _currentPcb.ir = _CPU.IR;
 
                             //then cycyle back to first pcb
                             _currentPcb = _readyQueue[0];
@@ -63,13 +63,13 @@ module TSOS {
                         } else {
                             //then move to next pcb
 
-                            _currentPcb.pc = _CPU.PC ;
-                            _currentPcb.acc = _CPU.Acc;
-                            _currentPcb.xreg = _CPU.Xreg ;
-                            _currentPcb.yreg =  _CPU.Yreg;
-                            _currentPcb.zflag = _CPU.Zflag ;
-                            _currentPcb.ir = _CPU.IR;
-                            
+                            // _currentPcb.pc = _CPU.PC ;
+                            // _currentPcb.acc = _CPU.Acc;
+                            // _currentPcb.xreg = _CPU.Xreg ;
+                            // _currentPcb.yreg =  _CPU.Yreg;
+                            // _currentPcb.zflag = _CPU.Zflag ;
+                            // _currentPcb.ir = _CPU.IR;
+
                             console.log("duude");
                             console.log(_readyQueue[i + 1]);
                             _currentPcb = _readyQueue[i + 1];
@@ -88,8 +88,11 @@ module TSOS {
 
             }
         }
+        public test(x): void {
 
-    
-                  }
+            _readyQueue.splice(x, 1);
+
+        }
     }
+}
  

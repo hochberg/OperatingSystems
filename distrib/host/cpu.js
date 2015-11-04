@@ -309,10 +309,11 @@ var TSOS;
                             i = i + 42;
                         }
                     }
-                    TSOS.Control.rrInterrupt();
+                    _cpuScheduler.contextSwitch();
+                    //TSOS.Control.rrInterrupt();
                     console.log("hey alex");
                     console.log(_currentPcb);
-                    _readyQueue.splice(tempPcbIndex, 1);
+                    _cpuScheduler.test(tempPcbIndex);
                     console.log("hey alex2");
                     console.log(_readyQueue);
                 }
