@@ -528,7 +528,6 @@ var TSOS;
                 //set up currently to only run one program at a time
                 //resets cpu's pc every run
                 //_CPU.PC = 0;
-                _isRoundRobin = true;
                 //finds pcb within rl using pid
                 for (var i = 0; _residentList.length > i; i++) {
                     if (args == _residentList[i].pid) {
@@ -540,11 +539,17 @@ var TSOS;
                         for (var i = 0; _readyQueue.length > i; i++) {
                             if (args == _readyQueue[i].pid) {
                                 //makes current pcb
-                                _currentPcb = _readyQueue[i];
+                                //FIX
+                                //if(_readyQueue.length==1){
+                                _currentPcb = _readyQueue[0];
+                                _cpuScheduler.insertPcbValuesIntoCpu();
+                                // }
                                 //changes state to Running
                                 _readyQueue[i].state = "Running";
                             }
                         }
+                        console.log("this is the ready queue");
+                        console.log(_readyQueue);
                         //displays rl and rq
                         _Display.printFullResidentList();
                         _Display.printFullReadyQueue();
@@ -552,7 +557,6 @@ var TSOS;
                 }
                 //starts executing cycle
                 _CPU.isExecuting = true;
-                _StdOut.putText("Running...");
             }
         };
         Shell.prototype.shellClearmem = function (args) {
@@ -582,7 +586,6 @@ var TSOS;
                 //sets first process to current pcb
                 _currentPcb = _readyQueue[0];
                 //changes round robin and executing to true
-                _CPU.isRoundRobin = true;
                 _CPU.isExecuting = true;
             }
         };

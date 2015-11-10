@@ -59,7 +59,6 @@ module TSOS {
              //initializes as three false(unfilled) memory partitions
              _memoryPartitionArray = [false, false, false];
 
-
             // Check for our testing and enrichment core, which
             // may be referenced here (from index.html) as function Glados().
             if (typeof Glados === "function") {

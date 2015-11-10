@@ -1,6 +1,6 @@
 ///<reference path="../globals.ts" />
 ///<reference path="../host/control.ts" />
-
+///<reference path="../shell.ts" />
 
 
 
