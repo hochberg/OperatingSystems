@@ -68,6 +68,9 @@ var TSOS;
         };
         ;
         Cpu.prototype.cycle = function () {
+            console.log(_currentPcb.pid);
+            console.log(_currentPcb);
+            console.log(_CPU);
             _Kernel.krnTrace('CPU cycle');
             //FETCH
             var currentCode = this.fetch(this.PC);
@@ -85,6 +88,7 @@ var TSOS;
         };
         //get commands 
         Cpu.prototype.fetch = function (currentPC) {
+            console.log("Fetch =" + (parseInt(_currentPcb.base) + currentPC));
             //fetchs the op code at the current process code in the pcb
             return _MemoryManager.memory.memoryBlocks[currentPC + parseInt(_currentPcb.base)];
         };
@@ -100,8 +104,10 @@ var TSOS;
                     this.incrementPcBy(3);
                     break;
                 case '8D':
+                    console.log("PC1 " + this.PC);
                     this.storeAccInMemory();
                     this.incrementPcBy(3);
+                    console.log("PC2 " + this.PC);
                     break;
                 case '6D':
                     this.addsWithCarry();
@@ -171,15 +177,18 @@ var TSOS;
         };
         //get next byte
         Cpu.prototype.getNextByte = function () {
+            console.log("Get next=" + (this.PC + 1 + parseInt(_currentPcb.base)));
             return _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
         };
         //get next next byte
         Cpu.prototype.getNextNextByte = function () {
+            console.log("Get next next=" + (this.PC + 2 + parseInt(_currentPcb.base)));
             return _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
         };
         //A9 - LDA
         //Loads accumulater with constant
         Cpu.prototype.loadAccWithConstant = function () {
+            console.log("YO" + this.getNextByte());
             //loads acc with the next element in instruction array
             this.Acc = this.getNextByte();
             //  _StdOut.putText("Load acc with constant");
@@ -187,25 +196,31 @@ var TSOS;
         };
         //AD - LDA
         //Loads accumulater from memory
+        //HERE
         Cpu.prototype.loadAccFromMemory = function () {
             //retrieves memory address (after being translated into "little-endian")
             var address = this.getNextNextByte() + this.getNextByte();
             //changes address from hex to decimal
-            var decAddress = this.hexToDec(address);
+            var decAddress = this.hexToDec(address) + _currentPcb.base;
             //sets accumulater to content from memory
-            this.Acc = _MemoryManager.memory.memoryBlocks[decAddress + parseInt(_currentPcb.base)];
+            this.Acc = _MemoryManager.memory.memoryBlocks[decAddress];
             //_StdOut.putText("Load acc from memory");
             //_StdOut.advanceLine();
         };
         //8D - STA
         //Stores accumulater in memory
         Cpu.prototype.storeAccInMemory = function () {
+            console.log("current pcb" + _currentPcb.base);
+            var firstBit = _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
+            var nextBit = _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
             //gets address in memory in little endian
-            var address = this.getNextNextByte() + this.getNextByte();
+            var address = nextBit + firstBit;
+            console.log("ad" + address);
+            //_MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
             //translate that address from hex to decimal
-            var decAddress = this.hexToDec(address);
+            var decAddress = (this.hexToDec(address) + _currentPcb.base);
             //sets contents of that address to accumulater
-            _MemoryManager.memory.memoryBlocks[decAddress + parseInt(_currentPcb.base)] = this.Acc;
+            _MemoryManager.memory.memoryBlocks[decAddress] = this.Acc;
             // _StdOut.putText("Store acc in memory");
             // _StdOut.advanceLine();
         };
@@ -238,8 +253,16 @@ var TSOS;
         //AE - LDX
         //Loads the X register from memory
         Cpu.prototype.loadXFromMemory = function () {
+            console.log("current pcb" + _currentPcb.base);
+            var firstBit = _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
+            var nextBit = _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
+            //gets address in memory in little endian
+            var address = nextBit + firstBit;
+            console.log("ad" + address);
             //loads content at given address in x register
-            this.Xreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte()) + parseInt(_currentPcb.base)];
+            this.Xreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)];
+            console.log("xmem" + this.Xreg);
+            //+parseInt(_currentPcb.base)
             // _StdOut.putText("Load X register from memory");
             //  _StdOut.advanceLine();
         };
@@ -254,10 +277,18 @@ var TSOS;
         //AC -LDY
         //Loads the X register from memory
         Cpu.prototype.loadYFromMemory = function () {
-            //loads content at given address in y register  f
-            this.Yreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte()) + parseInt(_currentPcb.base)];
-            // _StdOut.putText("Load Y register from memory");
-            // _StdOut.advanceLine();
+            console.log("current pcb" + _currentPcb.base);
+            var firstBit = _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
+            var nextBit = _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
+            //gets address in memory in little endian
+            var address = nextBit + firstBit;
+            console.log("ad" + address);
+            //loads content at given address in x register
+            this.Yreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)];
+            console.log("Ymem" + this.Yreg);
+            //+parseInt(_currentPcb.base)
+            // _StdOut.putText("Load X register from memory");
+            //  _StdOut.advanceLine();
         };
         //EA - NOP
         // performs no operation
@@ -317,9 +348,9 @@ var TSOS;
         //if they are equals, sets Z flag to "01", if not sets Z flag to "00"
         Cpu.prototype.compareMemoryToX = function () {
             //retrieves the contents at the given address (in hex)
-            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte()) + parseInt(_currentPcb.base)];
+            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())];
             //convert cotent to decimal
-            var decContent = this.hexToDec(content);
+            var decContent = this.hexToDec(content) + _currentPcb.base;
             // convert content in x register to decimal
             var decXReg = this.hexToDec(this.Xreg);
             //compares two decimal nums for equality
@@ -331,6 +362,7 @@ var TSOS;
                 this.Zflag = 0;
             }
         };
+        //FIXXXXXXXXXXXXXXXX
         //D0 - BNE
         //Branch n bytes if Z flag = "00"
         Cpu.prototype.branchNBytes = function () {
@@ -351,12 +383,23 @@ var TSOS;
         //EE - INC
         //Increment the value of a byte at a given address in memory
         Cpu.prototype.incrementByte = function () {
+            console.log("current pcb" + _currentPcb.base);
+            var firstBit = _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
+            var nextBit = _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
+            //gets address in memory in little endian
+            var address = nextBit + firstBit;
+            console.log("ad" + address);
             //retrieves the contents at the given address (in hex)
-            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte()) + parseInt(_currentPcb.base)];
+            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)];
+            console.log("Content" + content);
             //change content to decimal and add one
             var incremented = this.hexToDec(content) + 1;
             //convert back to hex and load back into register
-            _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte()) + parseInt(_currentPcb.base)] = this.decToHex(incremented);
+            // console.log("Content2" + _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())]);
+            _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)]
+                = this.decToHex(incremented);
+            console.log("INCREMENTED");
+            console.log(this.decToHex(incremented));
             // _StdOut.putText("Increment Byte");
             //_StdOut.advanceLine();
         };

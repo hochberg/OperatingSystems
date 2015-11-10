@@ -18,6 +18,7 @@ module TSOS {
           
 
         public contextSwitch(): void {
+            
             var readyQueueLength = _readyQueue.length;
             //checks to see if only one pcb is in ready queue
             if (readyQueueLength > 1) {

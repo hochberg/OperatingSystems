@@ -616,8 +616,8 @@ module TSOS {
             }else{
                 //set up currently to only run one program at a time
                 //resets cpu's pc every run
-                _CPU.PC = 0;
-
+                //_CPU.PC = 0;
+                    _isRoundRobin = true;
                 //finds pcb within rl using pid
                 for  (var i = 0; _residentList.length > i; i++) {
                     if (args == _residentList[i].pid) {
@@ -650,6 +650,7 @@ module TSOS {
             //reinitializes memory and displays
             _Memory.init();
             _MemoryManager.printMemory();
+            _memoryPartitionArray = [ false, false, false];
             _StdOut.putText("Memory has been cleared.");
         }
 

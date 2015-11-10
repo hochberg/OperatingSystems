@@ -71,6 +71,9 @@ module TSOS {
                       };
 
         public cycle(): void {
+            console.log(_currentPcb.pid);
+            console.log(_currentPcb );
+            console.log(_CPU);
             _Kernel.krnTrace('CPU cycle');
             //FETCH
             var currentCode = this.fetch(this.PC);
@@ -91,6 +94,7 @@ module TSOS {
 
         //get commands 
         public fetch(currentPC){
+            console.log("Fetch =" + (parseInt(_currentPcb.base) + currentPC));
             //fetchs the op code at the current process code in the pcb
             return _MemoryManager.memory.memoryBlocks[currentPC+parseInt(_currentPcb.base)];
         }
@@ -107,8 +111,10 @@ module TSOS {
                     this.incrementPcBy(3);
                     break;
                 case '8D':
+                console.log("PC1 " + this.PC);
                     this.storeAccInMemory();
                     this.incrementPcBy(3);
+                    console.log("PC2 " + this.PC);
                     break;
                 case '6D':
                     this.addsWithCarry();
@@ -175,7 +181,7 @@ module TSOS {
 
         }
 
-
+ 
 
         //converts a num in hex to decimal equivalent
         public hexToDec(hex){
@@ -189,17 +195,20 @@ module TSOS {
 
         //get next byte
         public getNextByte(){
+            console.log("Get next=" + (this.PC + 1 + parseInt(_currentPcb.base)));
             return _MemoryManager.memory.memoryBlocks[this.PC + 1 +parseInt(_currentPcb.base)];
         }
 
         //get next next byte
         public getNextNextByte(){
+            console.log("Get next next=" + (this.PC + 2 + parseInt(_currentPcb.base)));
             return _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
         }
 
         //A9 - LDA
         //Loads accumulater with constant
         public loadAccWithConstant() {
+            console.log("YO"+this.getNextByte());
             //loads acc with the next element in instruction array
             this.Acc = this.getNextByte();
           //  _StdOut.putText("Load acc with constant");
@@ -208,13 +217,17 @@ module TSOS {
 
         //AD - LDA
         //Loads accumulater from memory
+        //HERE
         public loadAccFromMemory() {
             //retrieves memory address (after being translated into "little-endian")
             var address = this.getNextNextByte() + this.getNextByte();
             //changes address from hex to decimal
-            var decAddress = this.hexToDec(address);
+            var decAddress = this.hexToDec(address)+ _currentPcb.base;
             //sets accumulater to content from memory
-            this.Acc = _MemoryManager.memory.memoryBlocks[decAddress+parseInt(_currentPcb.base)];
+            this.Acc = _MemoryManager.memory.memoryBlocks[decAddress
+            //+
+           // parseInt(_currentPcb.base)
+            ];
             //_StdOut.putText("Load acc from memory");
             //_StdOut.advanceLine();
 
@@ -223,12 +236,20 @@ module TSOS {
         //8D - STA
         //Stores accumulater in memory
         public storeAccInMemory() {
+            console.log("current pcb" + _currentPcb.base);
+            var firstBit = _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
+            var nextBit =  _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
             //gets address in memory in little endian
-            var address = this.getNextNextByte() + this.getNextByte();
+            var address = nextBit+firstBit;
+            console.log("ad"+address);
+
+            //_MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
             //translate that address from hex to decimal
-            var decAddress = this.hexToDec(address);
+            var decAddress = (this.hexToDec(address)+ _currentPcb.base);
             //sets contents of that address to accumulater
-            _MemoryManager.memory.memoryBlocks[decAddress+parseInt(_currentPcb.base)] = this.Acc;
+            _MemoryManager.memory.memoryBlocks[decAddress
+           // +parseInt(_currentPcb.base)
+            ] = this.Acc;
            // _StdOut.putText("Store acc in memory");
            // _StdOut.advanceLine();
         }
@@ -262,8 +283,18 @@ module TSOS {
         //AE - LDX
         //Loads the X register from memory
         public loadXFromMemory() {
+            console.log("current pcb" + _currentPcb.base);
+            var firstBit = _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
+            var nextBit =  _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
+            //gets address in memory in little endian
+            var address = nextBit+firstBit;
+            console.log("ad"+address);
+
             //loads content at given address in x register
-            this.Xreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())+parseInt(_currentPcb.base)];
+            this.Xreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)];
+            console.log("xmem" + this.Xreg);
+            //+parseInt(_currentPcb.base)
+            
            // _StdOut.putText("Load X register from memory");
           //  _StdOut.advanceLine();
         }
@@ -280,10 +311,20 @@ module TSOS {
         //AC -LDY
         //Loads the X register from memory
         public loadYFromMemory() {
-            //loads content at given address in y register  f
-            this.Yreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())+parseInt(_currentPcb.base)];
-           // _StdOut.putText("Load Y register from memory");
-           // _StdOut.advanceLine();
+           console.log("current pcb" + _currentPcb.base);
+            var firstBit = _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
+                 var nextBit =  _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
+            //gets address in memory in little endian
+             var address = nextBit+firstBit;
+             console.log("ad"+address);
+
+            //loads content at given address in x register
+            this.Yreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)];
+            console.log("Ymem" + this.Yreg);
+            //+parseInt(_currentPcb.base)
+            
+           // _StdOut.putText("Load X register from memory");
+          //  _StdOut.advanceLine();
 
         }
         //EA - NOP
@@ -348,9 +389,11 @@ module TSOS {
         //if they are equals, sets Z flag to "01", if not sets Z flag to "00"
         public compareMemoryToX() {
             //retrieves the contents at the given address (in hex)
-            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())+parseInt(_currentPcb.base)];
+            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())
+            //+parseInt(_currentPcb.base)
+            ];
             //convert cotent to decimal
-            var decContent = this.hexToDec(content);
+            var decContent = this.hexToDec(content)+ _currentPcb.base;
             // convert content in x register to decimal
             var decXReg = this.hexToDec(this.Xreg);
             //compares two decimal nums for equality
@@ -361,7 +404,8 @@ module TSOS {
                 this.Zflag = 0 ;
             }
         }
-
+        
+        //FIXXXXXXXXXXXXXXXX
         //D0 - BNE
         //Branch n bytes if Z flag = "00"
         public branchNBytes() {
@@ -369,11 +413,13 @@ module TSOS {
             if(this.Zflag.toString() == "0"){
 
             //convert cotent to decimal
-              var decContent = this.hexToDec(this.getNextByte());
+                var decContent = this.hexToDec(this.getNextByte()
+                   // +parseInt(_currentPcb.base)
+                    );
             //jumps current pc to given address + current pc - 256
             //wrap around
-              if ((_CPU.PC + decContent) > 256) {
-                  _CPU.PC = (_CPU.PC + decContent) - 256;
+                if ((_CPU.PC + decContent) > 256 ) {
+                    _CPU.PC = (_CPU.PC + decContent) - 256;
               }else{
                   _CPU.PC = decContent + _CPU.PC;
               } 
@@ -383,12 +429,27 @@ module TSOS {
         //EE - INC
         //Increment the value of a byte at a given address in memory
         public incrementByte() {
+            console.log("current pcb" + _currentPcb.base);
+            var firstBit = _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
+            var nextBit =  _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
+            //gets address in memory in little endian
+            var address = nextBit+firstBit;
+            console.log("ad"+address);
+
+
             //retrieves the contents at the given address (in hex)
-            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())+parseInt(_currentPcb.base)];
+            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)];
+            console.log("Content" + content)
             //change content to decimal and add one
             var incremented = this.hexToDec(content) + 1;
             //convert back to hex and load back into register
-            _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())+parseInt(_currentPcb.base)] = this.decToHex(incremented);
+           // console.log("Content2" + _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())]);
+           _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)]
+            //+
+           // parseInt(_currentPcb.base)
+             = this.decToHex(incremented);
+           console.log("INCREMENTED");
+           console.log(this.decToHex(incremented));
            // _StdOut.putText("Increment Byte");
             //_StdOut.advanceLine();
         }
