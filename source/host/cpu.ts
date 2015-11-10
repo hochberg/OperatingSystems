@@ -217,17 +217,18 @@ module TSOS {
 
         //AD - LDA
         //Loads accumulater from memory
-        //HERE
         public loadAccFromMemory() {
-            //retrieves memory address (after being translated into "little-endian")
-            var address = this.getNextNextByte() + this.getNextByte();
-            //changes address from hex to decimal
-            var decAddress = this.hexToDec(address)+ _currentPcb.base;
+
+            var firstBit = _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
+            var nextBit = _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
+            //gets address in memory in little endian
+            var address = nextBit + firstBit;
+
+            //_MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
+            //translate that address from hex to decimal
+            var decAddress = (this.hexToDec(address) + _currentPcb.base);
             //sets accumulater to content from memory
-            this.Acc = _MemoryManager.memory.memoryBlocks[decAddress
-            //+
-           // parseInt(_currentPcb.base)
-            ];
+            this.Acc = _MemoryManager.memory.memoryBlocks[decAddress];
             //_StdOut.putText("Load acc from memory");
             //_StdOut.advanceLine();
 
@@ -241,7 +242,6 @@ module TSOS {
             var nextBit =  _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
             //gets address in memory in little endian
             var address = nextBit+firstBit;
-            console.log("ad"+address);
 
             //_MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
             //translate that address from hex to decimal
@@ -258,15 +258,22 @@ module TSOS {
         //Adds content of given address to the contents of the accumulater
         //and keeps results in accumulater
         public addsWithCarry() {
+
+            var firstBit = _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
+            var nextBit =  _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
+            //gets address in memory in little endian
+            var address = nextBit+firstBit;
+            var decAddress = (this.hexToDec(address)+ _currentPcb.base);
             //retrieves the contents at the given address (in hex)
-            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())];
-            //retrievs content of accumulater (in hex)
+            var content = _MemoryManager.memory.memoryBlocks[decAddress];
+            //retrieves content of accumulater (in hex)
             var acc = this.Acc; 
             //converts the two num to dec and adds them
             var result = this.hexToDec(content) + this.hexToDec(acc);
             //formats correctly (changes to hex, then to uppercase, and adds "0" if neccessary)
             var formattedResult = this.decToHex(result).toUpperCase();
             if (formattedResult.length < 2){formattedResult= "0"+ formattedResult}
+            console.log("for" + formattedResult);
             //loads results back into accumulater
             this.Acc = formattedResult;
         }
@@ -313,7 +320,7 @@ module TSOS {
         public loadYFromMemory() {
            console.log("current pcb" + _currentPcb.base);
             var firstBit = _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
-                 var nextBit =  _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
+            var nextBit =  _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
             //gets address in memory in little endian
              var address = nextBit+firstBit;
              console.log("ad"+address);
@@ -388,12 +395,15 @@ module TSOS {
         //Compares a byte at a given location in memory to X register
         //if they are equals, sets Z flag to "01", if not sets Z flag to "00"
         public compareMemoryToX() {
+
+            var firstBit = _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
+            var nextBit =  _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
+            //gets address in memory in little endian
+            var address = nextBit+firstBit;
             //retrieves the contents at the given address (in hex)
-            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(this.getNextByte())
-            //+parseInt(_currentPcb.base)
-            ];
+            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)];
             //convert cotent to decimal
-            var decContent = this.hexToDec(content)+ _currentPcb.base;
+            var decContent = this.hexToDec(content);
             // convert content in x register to decimal
             var decXReg = this.hexToDec(this.Xreg);
             //compares two decimal nums for equality
