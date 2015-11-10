@@ -30,6 +30,7 @@ public printMemory(): void {
             //reinitalizes as blank palette
             printMemoryDisplay.innerHTML = "";
             //break lines when memoryBlockes exceeds 8
+            
             for (var i = 0; i < this.memory.memoryBlocks.length; i++) {
                 if (i % 8 == 0) {
                     //creates hex header for each new memory line

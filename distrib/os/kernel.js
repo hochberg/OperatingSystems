@@ -116,25 +116,26 @@ var TSOS;
             }
             else if (_CPU.isExecuting) {
                 //checks to see if round robin is on
+                //Checks for memory of bounds of partition
+                // TSOS.Control.isMemoryOutOfBounds();
                 if (_CPU.isRoundRobin) {
-                    //if so, checks to see if it finished
-                    if (_readyQueue.length == 0) {
-                        //if so, turn round robin off
-                        _CPU.isRoundRobin = false;
+                    // //if so, checks to see if it finished
+                    // if (_readyQueue.length == 0) {
+                    //     //if so, turn round robin off
+                    //     _CPU.isRoundRobin = false
+                    // } else {
+                    //if still going, decrement quantum
+                    this.decrementQuantum();
+                    //if quantum is done
+                    if (_tempQuantum == _quantum) {
+                        //call context switch interrupt
+                        TSOS.Control.rrInterrupt();
                     }
-                    else {
-                        //if still going, decrement quantum
-                        this.decrementQuantum();
-                        //if quantum is done
-                        if (_tempQuantum == _quantum) {
-                            //call context switch interrupt
-                            TSOS.Control.rrInterrupt();
-                        }
-                        //then cycle
-                        _CPU.cycle();
-                    }
+                    //then cycle
+                    _CPU.cycle();
                 }
                 else {
+                    //TODO FIXXXXX
                     //TODO Fix Single Step with Round RObin
                     if (!(_CPU.isSingleStep)) {
                         _CPU.cycle();
@@ -251,6 +252,9 @@ var TSOS;
                 //reset CPU?
                 _CPU.init();
                 _CPU.printCPU();
+                //clearInterval(_hardwareClockID);
+                _StdOut.advanceLine();
+                _OsShell.putPrompt();
             }
         };
         Kernel.prototype.decrementQuantum = function () {

@@ -215,8 +215,15 @@ var TSOS;
             var address = nextBit + firstBit;
             //translate that address from hex to decimal
             var decAddress = (this.hexToDec(address) + _currentPcb.base);
-            //sets contents of that address to accumulater
-            _MemoryManager.memory.memoryBlocks[decAddress] = this.Acc;
+            //TODO not sure this handles every out of bounds case
+            if (decAddress > 255) {
+                _StdOut.putText("Memory out of bounds. Program Killed.");
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(KILL_IRQ, "Kill"));
+            }
+            else {
+                //sets contents of that address to accumulater
+                _MemoryManager.memory.memoryBlocks[decAddress] = this.Acc;
+            }
         };
         //6D - ADC
         //Adds content of given address to the contents of the accumulater

@@ -451,6 +451,11 @@ var TSOS;
             if (userInput == "") {
                 _StdOut.putText("No user input.");
             }
+            else 
+            //checks to see if user input is larger than memory partition
+            if (userInput.length > 256) {
+                _StdOut.putText("Memory out of bounds.");
+            }
             else {
                 //compares hex to user input    
                 for (var i = 0; userInput.length > i; i++) {

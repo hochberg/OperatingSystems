@@ -189,5 +189,15 @@ module TSOS {
         public static rrInterrupt(): void {
         _KernelInterruptQueue.enqueue(new Interrupt(RR_IRQ, "Round Robin"));
         }
+
+        // //checks for memory out of bounds or partiton
+        // public static isMemoryOutOfBounds() {
+         
+        //     if (_CPU.PC> 256){
+        //         _StdOut.putText("Memory out of bounds.");
+        //         _KernelInterruptQueue.enqueue(new Interrupt(KILL_IRQ, "Kill"));
+        //     }
+            
+        }
     }
 }

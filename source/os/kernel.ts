@@ -123,12 +123,17 @@ module TSOS {
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             } else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed. 
                     //checks to see if round robin is on
+                    
+
+                    //Checks for memory of bounds of partition
+                   // TSOS.Control.isMemoryOutOfBounds();
+
                     if (_CPU.isRoundRobin) {
-                        //if so, checks to see if it finished
-                        if (_readyQueue.length == 0) {
-                            //if so, turn round robin off
-                            _CPU.isRoundRobin = false
-                        } else {
+                        // //if so, checks to see if it finished
+                        // if (_readyQueue.length == 0) {
+                        //     //if so, turn round robin off
+                        //     _CPU.isRoundRobin = false
+                        // } else {
                             //if still going, decrement quantum
                             this.decrementQuantum();
                             //if quantum is done
@@ -139,8 +144,9 @@ module TSOS {
                             //then cycle
                             _CPU.cycle();
                             //console.log("RR cycle");
-                        }
+                        //}
                     } else {
+                        //TODO FIXXXXX
                         //TODO Fix Single Step with Round RObin
                         if (!(_CPU.isSingleStep)) {
                         _CPU.cycle();
@@ -271,6 +277,8 @@ module TSOS {
                 _CPU.init();
                 _CPU.printCPU();
                 //clearInterval(_hardwareClockID);
+                _StdOut.advanceLine();
+                _OsShell.putPrompt();
             }
 
         }
@@ -287,6 +295,8 @@ module TSOS {
                 _tempQuantum = _quantum;
             }
         }
+
+
     
 
 
