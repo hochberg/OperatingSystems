@@ -446,13 +446,16 @@ module TSOS {
             var decContent = this.hexToDec(_MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)]);
             //jumps current pc to given address + current pc - 256
             //wrap around
-            console.log("DEC " + decContent);
-                if ((_CPU.PC + decContent) > 256 ) {
-                    _CPU.PC = (_CPU.PC + decContent) - 256;
+            console.log("DEC ");
+            console.log(this.PC);
+            console.log(decContent);
+                if ((this.PC + decContent) > 256 ) {
+                    this.PC = (this.PC + decContent) - 256;
+                    
 
               }else{
-                  _CPU.PC = decContent + _CPU.PC;
-                  console.log(_CPU.PC);
+                  this.PC = decContent + this.PC;
+                 
               } 
             }
         }
