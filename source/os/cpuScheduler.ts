@@ -31,6 +31,7 @@ module TSOS {
                             //then cycyle back to first pcb
                             _currentPcb = _readyQueue[0];
                             //changes cpu to new current pcb 
+                            console.log("1hey " + _currentPcb.pc);
                             this.insertPcbValuesIntoCpu();
                             //and end for loop
                             i = i + 42;

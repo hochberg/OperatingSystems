@@ -72,6 +72,7 @@ module TSOS {
                       };
 
         public cycle(): void {
+            console.log("quantum " + _tempQuantum);
             if(_currentPcb==null){
                 _currentPcb = _readyQueue[0];
              _readyQueue[0].state = "Running";
@@ -225,9 +226,14 @@ module TSOS {
             var address = nextBit + firstBit;
             //translate that address from hex to decimal
             var decAddress = (this.hexToDec(address) + _currentPcb.base);
-            //sets accumulater to content from memory
-            this.Acc = _MemoryManager.memory.memoryBlocks[decAddress];
-
+            //TODO not sure this handles every out of bounds case
+            if (this.hexToDec(address) > 255) {
+                _StdOut.putText("Memory out of bounds. Program Killed.");
+                _KernelInterruptQueue.enqueue(new Interrupt(KILL_IRQ, "Kill"));
+            } else {
+                //sets accumulater to content from memory
+                this.Acc = _MemoryManager.memory.memoryBlocks[decAddress];
+            }
         }
 
         //8D - STA
@@ -241,7 +247,7 @@ module TSOS {
             //translate that address from hex to decimal
             var decAddress = (this.hexToDec(address)+ _currentPcb.base);
             //TODO not sure this handles every out of bounds case
-            if (decAddress > 255) {
+            if (this.hexToDec(address) > 255) {
                 _StdOut.putText("Memory out of bounds. Program Killed.");
                 _KernelInterruptQueue.enqueue(new Interrupt(KILL_IRQ, "Kill"));
             } else {
@@ -257,22 +263,28 @@ module TSOS {
         public addsWithCarry() {
             //get next two bits (taking base into account)
             var firstBit = _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
-            var nextBit =  _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
+            var nextBit = _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
             //gets address in memory in little endian
-            var address = nextBit+firstBit;
-            //get the address in decimal with base added
-            var decAddress = (this.hexToDec(address)+ _currentPcb.base);
-            //retrieves the contents at the given address (in hex)
-            var content = _MemoryManager.memory.memoryBlocks[decAddress];
-            //retrieves content of accumulater (in hex)
-            var acc = this.Acc; 
-            //converts the two num to dec and adds them
-            var result = this.hexToDec(content) + this.hexToDec(acc);
-            //formats correctly (changes to hex, then to uppercase, and adds "0" if neccessary)
-            var formattedResult = this.decToHex(result).toUpperCase();
-            if (formattedResult.length < 2){formattedResult= "0"+ formattedResult}
-            //loads results back into accumulater
-            this.Acc = formattedResult;
+            var address = nextBit + firstBit;
+            //TODO not sure this handles every out of bounds case
+            if (this.hexToDec(address) > 255) {
+                _StdOut.putText("Memory out of bounds. Program Killed.");
+                _KernelInterruptQueue.enqueue(new Interrupt(KILL_IRQ, "Kill"));
+            } else {
+                //get the address in decimal with base added
+                var decAddress = (this.hexToDec(address) + _currentPcb.base);
+                //retrieves the contents at the given address (in hex)
+                var content = _MemoryManager.memory.memoryBlocks[decAddress];
+                //retrieves content of accumulater (in hex)
+                var acc = this.Acc; 
+                //converts the two num to dec and adds them
+                var result = this.hexToDec(content) + this.hexToDec(acc);
+                //formats correctly (changes to hex, then to uppercase, and adds "0" if neccessary)
+                var formattedResult = this.decToHex(result).toUpperCase();
+                if (formattedResult.length < 2) { formattedResult = "0" + formattedResult }
+                //loads results back into accumulater
+                this.Acc = formattedResult;
+            }
         }
 
         //A2 - LDX
@@ -288,13 +300,19 @@ module TSOS {
         public loadXFromMemory() {
             //get next two bits (taking base into account)
             var firstBit = _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
-            var nextBit =  _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
+            var nextBit = _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
             //gets address in memory in little endian
-            var address = nextBit+firstBit;
+            var address = nextBit + firstBit;
+            //TODO not sure this handles every out of bounds case
+            if (this.hexToDec(address) > 255) {
+                _StdOut.putText("Memory out of bounds. Program Killed.");
+                _KernelInterruptQueue.enqueue(new Interrupt(KILL_IRQ, "Kill"));
+            } else {
 
-            //loads content at given address in x register
-            this.Xreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)];
- 
+                //loads content at given address in x register
+                this.Xreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)];
+
+            }
         }
 
         //A0 - LDY
@@ -312,9 +330,14 @@ module TSOS {
             var nextBit =  _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
             //gets address in memory in little endian
              var address = nextBit+firstBit;
-            //loads content at given address in x register
-            this.Yreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)];
-
+             //TODO not sure this handles every out of bounds case
+             if (this.hexToDec(address) > 255) {
+                 _StdOut.putText("Memory out of bounds. Program Killed.");
+                 _KernelInterruptQueue.enqueue(new Interrupt(KILL_IRQ, "Kill"));
+             } else {
+                 //loads content at given address in x register
+                 this.Yreg = _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)];
+             }
         }
         //EA - NOP
         // performs no operation
@@ -334,7 +357,8 @@ module TSOS {
             _currentPcb.zflag = this.Zflag;
             //TODO maybe
             _currentPcb.ir = "00";
-            
+            //TODO
+            _tempQuantum = _quantum;
 
             //if end of ready queue
             if (_readyQueue.length==0) { 
@@ -358,16 +382,23 @@ module TSOS {
                     //stores index of current pcb (to remove from Ready Queue after context switching)
                     var tempPcbIndex;
                     for (var i = 0; _readyQueue.length > i; i++) {
+                        console.log(i);
                         if (_currentPcb.pid == _readyQueue[i].pid) {
-                            i = tempPcbIndex;
-                            console.log(tempPcbIndex);
+                            tempPcbIndex = i;
+                            console.log("TEMP" + tempPcbIndex);
                             i = i + 42;
                         }
                     }
+
+
                     //moves to next process
                     _cpuScheduler.contextSwitch();
+
+                    // //moves to next process
+                    // _cpuScheduler.contextSwitch();
                     //removes finished process form ready queue
                     _readyQueue.splice(tempPcbIndex, 1);
+                    
                 }
                     //prints current pcb 
                     _Display.printFullReadyQueue();
@@ -382,21 +413,27 @@ module TSOS {
         public compareMemoryToX() {
             //get next two bits (taking base into account)
             var firstBit = _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
-            var nextBit =  _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
+            var nextBit = _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
             //gets address in memory in little endian
-            var address = nextBit+firstBit;
-            //retrieves the contents at the given address (in hex)
-            var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)];
-            //convert cotent to decimal
-            var decContent = this.hexToDec(content);
-            // convert content in x register to decimal
-            var decXReg = this.hexToDec(this.Xreg);
-            //compares two decimal nums for equality
-            //if equal. sets z flag to 01
-            if (decContent == decXReg){
-                _CPU.Zflag = 1;
-            }else{//if not equal, set z flag to "00"
-                this.Zflag = 0 ;
+            var address = nextBit + firstBit;
+            //TODO not sure this handles every out of bounds case
+            if (this.hexToDec(address) > 255) {
+                _StdOut.putText("Memory out of bounds. Program Killed.");
+                _KernelInterruptQueue.enqueue(new Interrupt(KILL_IRQ, "Kill"));
+            } else {
+                //retrieves the contents at the given address (in hex)
+                var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)];
+                //convert cotent to decimal
+                var decContent = this.hexToDec(content);
+                // convert content in x register to decimal
+                var decXReg = this.hexToDec(this.Xreg);
+                //compares two decimal nums for equality
+                //if equal. sets z flag to 01
+                if (decContent == decXReg) {
+                    _CPU.Zflag = 1;
+                } else {//if not equal, set z flag to "00"
+                    this.Zflag = 0;
+                }
             }
         }
         
@@ -409,10 +446,13 @@ module TSOS {
             var decContent = this.hexToDec(_MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)]);
             //jumps current pc to given address + current pc - 256
             //wrap around
+            console.log("DEC " + decContent);
                 if ((_CPU.PC + decContent) > 256 ) {
                     _CPU.PC = (_CPU.PC + decContent) - 256;
+
               }else{
                   _CPU.PC = decContent + _CPU.PC;
+                  console.log(_CPU.PC);
               } 
             }
         }
@@ -422,15 +462,21 @@ module TSOS {
         public incrementByte() {
             //get next two bits (taking base into account)
             var firstBit = _MemoryManager.memory.memoryBlocks[this.PC + 1 + parseInt(_currentPcb.base)];
-            var nextBit =  _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
+            var nextBit = _MemoryManager.memory.memoryBlocks[this.PC + 2 + parseInt(_currentPcb.base)];
             //gets address in memory in little endian
-            var address = nextBit+firstBit;
+            var address = nextBit + firstBit;
             //retrieves the contents at the given address (in hex)
             var content = _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)];
             //change content to decimal and add one
             var incremented = this.hexToDec(content) + 1;
-            //convert back to hex and load back into register
-           _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)] = this.decToHex(incremented);
+            //TODO not sure this handles every out of bounds case
+            if (this.hexToDec(address) > 255) {
+                _StdOut.putText("Memory out of bounds. Program Killed.");
+                _KernelInterruptQueue.enqueue(new Interrupt(KILL_IRQ, "Kill"));
+            } else {
+                //convert back to hex and load back into register
+                _MemoryManager.memory.memoryBlocks[this.hexToDec(address) + parseInt(_currentPcb.base)] = this.decToHex(incremented);
+            }
         }
 
         //FF - SYS

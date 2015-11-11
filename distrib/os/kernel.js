@@ -124,6 +124,8 @@ var TSOS;
                     //     //if so, turn round robin off
                     //     _CPU.isRoundRobin = false
                     // } else {
+                    //then cycle
+                    _CPU.cycle();
                     //if still going, decrement quantum
                     this.decrementQuantum();
                     //if quantum is done
@@ -131,8 +133,6 @@ var TSOS;
                         //call context switch interrupt
                         TSOS.Control.rrInterrupt();
                     }
-                    //then cycle
-                    _CPU.cycle();
                 }
                 else {
                     //TODO FIXXXXX

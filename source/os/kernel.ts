@@ -134,6 +134,9 @@ module TSOS {
                         //     //if so, turn round robin off
                         //     _CPU.isRoundRobin = false
                         // } else {
+
+                            //then cycle
+                            _CPU.cycle();
                             //if still going, decrement quantum
                             this.decrementQuantum();
                             //if quantum is done
@@ -141,8 +144,7 @@ module TSOS {
                                 //call context switch interrupt
                                 TSOS.Control.rrInterrupt();
                             }
-                            //then cycle
-                            _CPU.cycle();
+                            
                             //console.log("RR cycle");
                         //}
                     } else {
@@ -295,6 +297,7 @@ module TSOS {
                 _tempQuantum = _quantum;
             }
         }
+
 
 
     
