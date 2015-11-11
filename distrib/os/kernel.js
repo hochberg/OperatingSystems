@@ -179,7 +179,7 @@ var TSOS;
                     this.krnTrapError("BSOD");
                     break;
                 case KILL_IRQ:
-                    this.krnTrapKill();
+                    this.krnTrapKill(params);
                     break;
                 case RR_IRQ:
                     _cpuScheduler.contextSwitch();
@@ -232,9 +232,9 @@ var TSOS;
             _DrawingContext.fillRect(0, 0, _Canvas.width, _Canvas.height);
             clearInterval(_hardwareClockID);
         };
-        Kernel.prototype.krnTrapKill = function () {
+        Kernel.prototype.krnTrapKill = function (index) {
+            console.log("YO" + index);
             TSOS.Control.hostLog("OS KILL PROCESS");
-            _CPU.isExecuting = false;
             //kills memory
             for (var i = _currentPcb.base; i <= _currentPcb.limit; i++) {
                 _Memory.memoryBlocks[i] = '00';
@@ -242,20 +242,25 @@ var TSOS;
             //shows it
             _MemoryManager.printMemory();
             //pops process' pcb from ready queue
-            for (var i = 0; _readyQueue.length > i; i++) {
-                if (_currentPcb.pid == _readyQueue[i].pid) {
-                    _readyQueue.splice(i, 1);
-                    i = i + 42;
-                }
-                //shows it
-                _Display.printFullReadyQueue();
-                //reset CPU?
-                _CPU.init();
-                _CPU.printCPU();
-                //clearInterval(_hardwareClockID);
-                _StdOut.advanceLine();
-                _OsShell.putPrompt();
+            // for (var i = 0; _readyQueue.length > i; i++) {
+            //     if (_currentPcb.pid == _readyQueue[i].pid) {
+            //         _readyQueue.splice(i, 1);
+            //         _currentPcb = _readyQueue[i];
+            //         i = i + 42;
+            //     }
+            _readyQueue.splice(index, 1);
+            if (true) {
+                _cpuScheduler.contextSwitch();
             }
+            //shows it
+            _Display.printFullReadyQueue();
+            //reset CPU?
+            // _CPU.init();
+            // _CPU.printCPU();
+            //clearInterval(_hardwareClockID);
+            //  _StdOut.advanceLine();
+            // _OsShell.putPrompt();
+            //}
         };
         Kernel.prototype.decrementQuantum = function () {
             //using mallable gloabal quantum

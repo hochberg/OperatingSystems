@@ -143,8 +143,8 @@ var TSOS;
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(BSOD_IRQ, "BIG ERROR"));
         };
         //call Kill Interrupt
-        Control.killInterrupt = function () {
-            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(KILL_IRQ, "Kill"));
+        Control.killInterrupt = function (args) {
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(KILL_IRQ, args));
         };
         //call Round Robin Interrupt
         Control.rrInterrupt = function () {

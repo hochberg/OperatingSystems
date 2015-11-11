@@ -196,7 +196,7 @@ module TSOS {
                     this.krnTrapError("BSOD");
                     break;
                 case KILL_IRQ:
-                    this.krnTrapKill();
+                    this.krnTrapKill(params);
                     break;
                 case RR_IRQ:
                     _cpuScheduler.contextSwitch();
@@ -256,9 +256,9 @@ module TSOS {
             clearInterval(_hardwareClockID);
         }
 
-        public krnTrapKill() {
+        public krnTrapKill(index) {
+            console.log("YO" + index);
             Control.hostLog("OS KILL PROCESS");
-            _CPU.isExecuting = false;
 
             //kills memory
             for (var i = _currentPcb.base; i <= _currentPcb.limit; i++) {
@@ -267,21 +267,32 @@ module TSOS {
             //shows it
             _MemoryManager.printMemory();
 
+            
             //pops process' pcb from ready queue
-            for (var i = 0; _readyQueue.length > i; i++) {
-                if (_currentPcb.pid == _readyQueue[i].pid) {
-                    _readyQueue.splice(i, 1);
-                    i = i + 42;
+            // for (var i = 0; _readyQueue.length > i; i++) {
+            //     if (_currentPcb.pid == _readyQueue[i].pid) {
+            //         _readyQueue.splice(i, 1);
+            //         _currentPcb = _readyQueue[i];
+
+            //         i = i + 42;
+            //     }
+
+                
+               
+                _readyQueue.splice(index, 1);
+                if (true) {
+                    _cpuScheduler.contextSwitch();
+
                 }
                 //shows it
                 _Display.printFullReadyQueue();
                 //reset CPU?
-                _CPU.init();
-                _CPU.printCPU();
+               // _CPU.init();
+               // _CPU.printCPU();
                 //clearInterval(_hardwareClockID);
-                _StdOut.advanceLine();
-                _OsShell.putPrompt();
-            }
+              //  _StdOut.advanceLine();
+               // _OsShell.putPrompt();
+            //}
 
         }
 

@@ -720,8 +720,19 @@ module TSOS {
         }
 
         public shellKill(args) {
+            var index;
             //thoughs kill interupt
-            TSOS.Control.killInterrupt();
+
+            for (var i = 0; _readyQueue.length > i; i++) {
+                //once current pcb is found
+                if (args == _readyQueue[i].pid) {
+                        index = i;
+                        //and end for loop
+                        i = i + 42;
+                    }
+                }
+
+            TSOS.Control.killInterrupt(index);
             _StdOut.putText("Process "+args+ " killed.");
         }
 

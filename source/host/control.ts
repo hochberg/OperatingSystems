@@ -181,8 +181,8 @@ module TSOS {
         }
 
         //call Kill Interrupt
-        public static killInterrupt(): void {
-        _KernelInterruptQueue.enqueue(new Interrupt(KILL_IRQ, "Kill"));
+        public static killInterrupt(args): void {
+        _KernelInterruptQueue.enqueue(new Interrupt(KILL_IRQ, args));
         }
 
         //call Round Robin Interrupt
@@ -190,7 +190,7 @@ module TSOS {
         _KernelInterruptQueue.enqueue(new Interrupt(RR_IRQ, "Round Robin"));
         }
 
-        
+
 
         // //checks for memory out of bounds or partiton
         // public static isMemoryOutOfBounds() {
