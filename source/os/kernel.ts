@@ -145,10 +145,9 @@ module TSOS {
                                 TSOS.Control.rrInterrupt();
                             }
                             
-                            //console.log("RR cycle");
-                        //}
+
                     } else {
-                        //TODO FIXXXXX
+
                         //TODO Fix Single Step with Round RObin
                         if (!(_CPU.isSingleStep)) {
                         _CPU.cycle();
@@ -196,7 +195,9 @@ module TSOS {
                     this.krnTrapError("BSOD");
                     break;
                 case KILL_IRQ:
-                    this.krnTrapKill(params);
+                    
+                    _readyQueue.splice(params, 1);
+                    _cpuScheduler.contextSwitch();
                     break;
                 case RR_IRQ:
                     _cpuScheduler.contextSwitch();
@@ -256,50 +257,12 @@ module TSOS {
             clearInterval(_hardwareClockID);
         }
 
-        public krnTrapKill(index) {
-            console.log("YO" + index);
-            Control.hostLog("OS KILL PROCESS");
-
-            //kills memory
-            for (var i = _currentPcb.base; i <= _currentPcb.limit; i++) {
-                _Memory.memoryBlocks[i] = '00';
-            }
-            //shows it
-            _MemoryManager.printMemory();
-
-            
-            //pops process' pcb from ready queue
-            // for (var i = 0; _readyQueue.length > i; i++) {
-            //     if (_currentPcb.pid == _readyQueue[i].pid) {
-            //         _readyQueue.splice(i, 1);
-            //         _currentPcb = _readyQueue[i];
-
-            //         i = i + 42;
-            //     }
-
-                
-               
-                _readyQueue.splice(index, 1);
-                if (true) {
-                    _cpuScheduler.contextSwitch();
-
-                }
-                //shows it
-                _Display.printFullReadyQueue();
-                //reset CPU?
-               // _CPU.init();
-               // _CPU.printCPU();
-                //clearInterval(_hardwareClockID);
-              //  _StdOut.advanceLine();
-               // _OsShell.putPrompt();
-            //}
-
-        }
+       
 
         public decrementQuantum() {
             //using mallable gloabal quantum
             //if not at end of quantum
-            if (_tempQuantum > 0) {
+            if (_tempQuantum > 1) {
                 //subtract 1 from it
                 _tempQuantum = _tempQuantum - 1;
             }else{
