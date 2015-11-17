@@ -622,7 +622,7 @@ var TSOS;
         };
         Shell.prototype.shellKill = function (args) {
             var index;
-            //thoughs kill interupt
+            //thows kill interupt
             for (var i = 0; _readyQueue.length > i; i++) {
                 //once current pcb is found
                 if (args == _readyQueue[i].pid) {

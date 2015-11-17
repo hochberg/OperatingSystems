@@ -77,7 +77,7 @@ module TSOS {
             //decides am or pm
             var dayOrNight = "";
             if (date.getHours() < 12) { dayOrNight = "pm" }
-            else { dayOrNight = "am" };
+                else { dayOrNight = "am" };
             var minutes = date.getMinutes();
             //adds 0 to minutes less than 10
             var possibleZero = "";
@@ -195,9 +195,22 @@ module TSOS {
                     this.krnTrapError("BSOD");
                     break;
                 case KILL_IRQ:
-                    
+                    //TODO
+                    //checks if on current process
+                    //context switch first
+                    console.log(_currentPcb.pid);
+                    console.log(_readyQueue[params].pid);
+                    if(_currentPcb.pid==_readyQueue[params].pid){
+                        _cpuScheduler.contextSwitch();
+                        _readyQueue.splice(params, 1);
+                        
+                    }else{
+
+
+
                     _readyQueue.splice(params, 1);
                     _cpuScheduler.contextSwitch();
+                }
                     break;
                 case RR_IRQ:
                     _cpuScheduler.contextSwitch();

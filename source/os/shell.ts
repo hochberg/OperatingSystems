@@ -721,7 +721,7 @@ module TSOS {
 
         public shellKill(args) {
             var index;
-            //thoughs kill interupt
+            //thows kill interupt
 
             for (var i = 0; _readyQueue.length > i; i++) {
                 //once current pcb is found
