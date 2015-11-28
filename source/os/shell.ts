@@ -158,6 +158,37 @@ module TSOS {
                 "<pid> - Murders specified process.");
             this.commandList[this.commandList.length] = sc;
 
+            // 
+            // create
+            sc = new ShellCommand(this.shellCreate,
+                "create",
+                "<filename> - Create file <filename>.");
+            this.commandList[this.commandList.length] = sc;
+
+            // read
+            sc = new ShellCommand(this.shellRead,
+                "read",
+                "<filename> - Read file <filename>.");
+            this.commandList[this.commandList.length] = sc;
+
+            // write
+            sc = new ShellCommand(this.shellWrite,
+                "write",
+                 "<filename> <data> - Write <data> (in quotes*) to file <filename>.");
+            this.commandList[this.commandList.length] = sc;
+
+            // delete
+            sc = new ShellCommand(this.shellDelete,
+                "delete",
+                 "<filename> - Delete file <filename>.");
+            this.commandList[this.commandList.length] = sc;
+
+            // format
+            sc = new ShellCommand(this.shellFormat,
+                "format",
+                 "- Initializes Hard Drive.");
+            this.commandList[this.commandList.length] = sc;
+
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -406,6 +437,28 @@ module TSOS {
                     case "kill":
                         _StdOut.putText("[kill <pid>] kills an active process, specified by the given PID.");
                         break;
+                    //
+                    //create
+                    case "create":
+                        _StdOut.putText("[create <filename>] creates new file with given name.");
+                        break;
+                    //read
+                    case "read":
+                        _StdOut.putText("[read <filename>] reads file with given name.");
+                        break;
+                    //write
+                    case "write":
+                        _StdOut.putText("[write <filename> <data>] writes data (must be in quotes) to file.");
+                        break;
+                    //delete
+                    case "delete":
+                        _StdOut.putText("[delete <filename>] removes file with given name.");
+                        break;
+                    //format
+                    case "format":
+                        _StdOut.putText("[format] initializes hard drive.");
+                        break;
+
 
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -735,6 +788,38 @@ module TSOS {
             TSOS.Control.killInterrupt(index);
             _StdOut.putText("Process "+args+ " killed.");
         }
+
+        public shellCreate(args) {
+          
+            _StdOut.putText("Yop");
+        }
+
+        public shellRead(args) {
+          
+            _StdOut.putText("Yop");
+        }
+
+        public shellWrite(args) {
+          
+            _StdOut.putText("Yop");
+        }
+
+        public shellDelete(args) {
+          
+            _StdOut.putText("Yop");
+        }
+
+        public shellFormat(args) {
+            //TODO When would this fail
+            if (true) {
+                //initalizes hard drive (all blocks in all sectors in all tracks)
+                _krnFileSystemDriver.init();
+                _StdOut.putText("Successful Format");
+            }else{
+                _StdOut.putText("Format Failed");
+            }
+        }
+
 
 
 

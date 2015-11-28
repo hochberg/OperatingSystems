@@ -19,7 +19,7 @@ var TSOS;
     var DeviceDriverFileSystem = (function (_super) {
         __extends(DeviceDriverFileSystem, _super);
         function DeviceDriverFileSystem(track, sector, block, bytes) {
-            _super.call(this, this.krnFsDriverEntry, this.isrtest);
+            _super.call(this, this.krnFsDriverEntry, this.fsIsr);
             this.track = track;
             this.sector = sector;
             this.block = block;
@@ -28,20 +28,18 @@ var TSOS;
         DeviceDriverFileSystem.prototype.krnFsDriverEntry = function () {
             this.status = "loaded";
             // More?
-            console.log("hey");
             this.init();
         };
-        DeviceDriverFileSystem.prototype.isrtest = function (params) {
-            //this.status = "loaded";
-            // More?
-            console.log("hey2");
+        DeviceDriverFileSystem.prototype.fsIsr = function (params) {
+            console.log("Isr");
         };
         DeviceDriverFileSystem.prototype.init = function () {
-            //initializes hard drive
+            //initializes hard drive property values
             this.track = 4;
             this.sector = 8;
             this.block = 8;
             this.bytes = 64;
+            //initialzies all blocks in all sectors in all tracks
             for (var x = 0; x < this.track; x++) {
                 for (var y = 0; y < this.sector; y++) {
                     for (var z = 0; z < this.block; z++) {
@@ -53,8 +51,36 @@ var TSOS;
                     }
                 }
             }
+            //initializes master boot record
+            var mbr = "001" //next avail file nme
+                + "100"; //next avail data block
+            sessionStorage.setItem("b000", "1000" +
+                //chnage mbr to hex and add trail
+                this.addTrail(this.stringToHex(mbr)));
             //prints...
             _Display.printFullHardDrive();
+            // console.log(this.stringToHex("1111"));
+        };
+        DeviceDriverFileSystem.prototype.stringToHex = function (str) {
+            //inital temp string
+            var tempStr = "";
+            //for length of given string
+            for (var x = 0; x < str.length; x++) {
+                // acquires CharCode of char
+                var charCode = str.charCodeAt(x);
+                var decToHex = charCode.toString(16).toUpperCase();
+                tempStr = tempStr + decToHex;
+            }
+            return tempStr;
+        };
+        DeviceDriverFileSystem.prototype.addTrail = function (str) {
+            //while given string is less than bytes amount
+            while (str.length < this.bytes) {
+                //add trail of "-"
+                str = str + "-";
+            }
+            console.log(str.length);
+            return str;
         };
         return DeviceDriverFileSystem;
     })(TSOS.DeviceDriver);
