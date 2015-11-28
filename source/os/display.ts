@@ -115,31 +115,36 @@ module TSOS {
              for (var i = 1; hdTableLength > i; i++) {
                 hdTable.deleteRow(1);
              }
-                   /////
-                  for (var i = 0; _residentList.length > i; i++) {
-                     this.printOneResidentList(_residentList[i]);
 
-                  }
+             for (var x = 0; x < _krnFileSystemDriver.track; x++) {
+                 for (var y = 0; y < _krnFileSystemDriver.sector; y++) {
+                     for (var z = 0; z < _krnFileSystemDriver.block; z++) {
+
+                   this.printOneHardDrive((x +":"+ y+":" + z),sessionStorage.getItem("b" + x + y + z));
+                       
+                     }
+                 }
+             }
+     
     
 
               };
 
-           public printOneHardDrive(hardDrive): void {
+           public printOneHardDrive(tsb,hdEntry): void {
             //gets table
               var hdTable = document.getElementById("hardDriveTable");
               var hdTableLength = hdTable.getElementsByTagName("tr").length;
-              var hdRow = hdable.insertRow(hdTableLength);
+              var hdRow = hdTable.insertRow(hdTableLength);
 
-              var printTSBCell = pcbRow.insertCell(0);
-              var printMetaCell = pcbRow.insertCell(1);
-              var printDataCell = pcbRow.insertCell(2);
-          
+              var printTSBCell = hdRow.insertCell(0);
+              var printMetaCell = hdRow.insertCell(1);
+              var printDataCell = hdRow.insertCell(2);
 
-              printTSBCell.innerHTML = pcb.pid;
-              printMetaCell.innerHTML = pcb.pc;
-              printDataCell.innerHTML = pcb.ir;
-   
-         
+
+
+              printTSBCell.innerHTML = tsb;
+              printMetaCell.innerHTML = hdEntry.slice(0,3);
+              printDataCell.innerHTML = hdEntry.slice(4,64);
 
 
            };
@@ -147,7 +152,7 @@ module TSOS {
 
 
 
-	
+
 
 
 

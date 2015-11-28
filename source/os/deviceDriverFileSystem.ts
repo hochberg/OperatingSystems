@@ -59,7 +59,7 @@ module TSOS {
             }
 
             //prints...
-            _Display.printFullHardDrive();
+           _Display.printFullHardDrive();
                     }
 
 

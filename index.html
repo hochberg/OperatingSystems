@@ -125,14 +125,14 @@
 </div>
 </div>
 <div class="center">
-<h2 style="color: #a2aab0;"><b>potatOS</b></h2>
+<h2 style="color: #7F0000;"><b>potatOS</b></h2>
 </div>
 <div class="center">
 
 <div style=" float:left; padding-right: 10px;">
 
    <div id="divConsole" style="margin:4px; width:500px; height:500px;   ">
-    <label style="color: #a2aab0;">
+    <label style="color: #7F0000;">
       Console
       <canvas id="display"
               width="500px"
@@ -143,22 +143,24 @@
    </div>
    <br>
 
-  <div class="hardDriveWrapper" ><label><span style="color: #a2aab0;"> Hard Drive</span><br>
+  <div class="hardDriveWrapper" >
+    <label><span style="color: #7F0000;"> Hard Drive</span><br>
+              <div style = "max-height:200px; width: 500px; overflow: auto;">
               <table class="table" 
                      id = "hardDriveTable" 
-                     style="width:500px;
-                            height=200px;
-                            background-color:#E6E6E6;
+                     style="background-color:#E6E6E6;
                             border: 2px solid #663300;">
                   <tr>
-                    <th>T-S-B</th>
+                    <th>T:S:B</th>
                     <th>Meta</th>
                     <th>Data</th> 
                   </tr>
             
               </table>
+            </div>
               </label>
     </div>
+
    </div>
 
  </div>
@@ -167,7 +169,7 @@
 
    <div id="divLog"  >
       <label>
-        <div style="color: #3e3e3b;"> Host Log </div>
+        <div style="color: #7F0000;"> Host Log </div>
          
          <textarea name="taHostLog"
                    id  ="taHostLog"
@@ -181,7 +183,7 @@
 
    <div id="divUserProgramInput" >
       <label>
-        <div style="color: #a2aab0;">
+        <div style="color: #7F0000;">
          User Program Input
        </div>
          <textarea name="taProgramInput"
@@ -202,12 +204,12 @@
 <div style=" float:left; ">
 
 
-<div class="memoryBlockWrapper"  ><label style="color: #3e3e3b;">Memory</label><br>
+<div class="memoryBlockWrapper"  ><label style="color: #7F0000;">Memory</label><br>
    <div class="memoryBlockContainer" id="memoryDisplay" >
    </div>
 </div>
 
-<div class="pcbReadyQueueWrapper" ><label style="color: #a2aab0;">Ready Queue</label><br>
+<div class="pcbReadyQueueWrapper" ><label style="color: #7F0000;">Ready Queue</label><br>
               <table class="table" 
                      id = "pcbReadyQueueTable" 
                      style="width:300px;
@@ -229,7 +231,7 @@
               </table>
     </div>
 
-<div class="pcbResidentListWrapper" ><label style="color: #a2aab0;">Resident List</label><br>
+<div class="pcbResidentListWrapper" ><label style="color: #7F0000;">Resident List</label><br>
               <table class="table" 
                      id = "pcbResidentListTable" 
                      style="width:300px;
@@ -252,7 +254,7 @@
     </div>
 
 
-    <div class="cpuStatusWrapper"  ><label style="color: #a2aab0;">CPU Status</label><br>
+    <div class="cpuStatusWrapper"  ><label style="color: #7F0000;">CPU Status</label><br>
               <table  class="table" 
                       id = "cpuStatusTable" 
                       style="width:300px;
@@ -282,7 +284,7 @@
 
 </div>
 
-
+<!--
 <p class="footerText" style="clear:both;">
    <br>
    Copyright &copy; 2008 - 2015 No Rights Reserved.
@@ -291,5 +293,6 @@
    Ted Codd, Stevie Ray Vaughan, and Ian Fleming.
 </p>
 
+-->
 </body>
 </html>
