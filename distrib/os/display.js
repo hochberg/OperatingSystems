@@ -88,6 +88,32 @@ var TSOS;
             printStateCell.innerHTML = pcb.state;
         };
         ;
+        Display.prototype.printFullHardDrive = function () {
+            var hdTable = document.getElementById("hardDriveTable");
+            var hdTableLength = hdTable.getElementsByTagName("tr").length;
+            //first clear
+            for (var i = 1; hdTableLength > i; i++) {
+                hdTable.deleteRow(1);
+            }
+            /////
+            for (var i = 0; _residentList.length > i; i++) {
+                this.printOneResidentList(_residentList[i]);
+            }
+        };
+        ;
+        Display.prototype.printOneHardDrive = function (hardDrive) {
+            //gets table
+            var hdTable = document.getElementById("hardDriveTable");
+            var hdTableLength = hdTable.getElementsByTagName("tr").length;
+            var hdRow = hdable.insertRow(hdTableLength);
+            var printTSBCell = pcbRow.insertCell(0);
+            var printMetaCell = pcbRow.insertCell(1);
+            var printDataCell = pcbRow.insertCell(2);
+            printTSBCell.innerHTML = pcb.pid;
+            printMetaCell.innerHTML = pcb.pc;
+            printDataCell.innerHTML = pcb.ir;
+        };
+        ;
         return Display;
     })();
     TSOS.Display = Display;

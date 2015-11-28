@@ -34,7 +34,7 @@ var TSOS;
         DeviceDriverFileSystem.prototype.isrtest = function (params) {
             //this.status = "loaded";
             // More?
-            console.log("hey");
+            console.log("hey2");
         };
         DeviceDriverFileSystem.prototype.init = function () {
             //initializes hard drive
@@ -42,8 +42,19 @@ var TSOS;
             this.sector = 8;
             this.block = 8;
             this.bytes = 64;
+            for (var x = 0; x < this.track; x++) {
+                for (var y = 0; y < this.sector; y++) {
+                    for (var z = 0; z < this.block; z++) {
+                        var newBlock = "";
+                        for (var b = 0; b < this.bytes; b++) {
+                            newBlock = newBlock + "-";
+                        }
+                        sessionStorage.setItem("b" + x + y + z, newBlock);
+                    }
+                }
+            }
             //prints...
-            //this.printHardDrive();
+            _Display.printFullHardDrive();
         };
         return DeviceDriverFileSystem;
     })(TSOS.DeviceDriver);
