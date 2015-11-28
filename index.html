@@ -24,6 +24,7 @@
    <script type="text/javascript" src="distrib/os/console.js"></script>
    <script type="text/javascript" src="distrib/os/deviceDriver.js"></script>
    <script type="text/javascript" src="distrib/os/deviceDriverKeyboard.js"></script>
+   <script type="text/javascript" src="distrib/os/deviceDriverFileSystem.js"></script>
    <script type="text/javascript" src="distrib/os/queue.js"></script>
    <script type="text/javascript" src="distrib/os/shell.js"></script>
    <script type="text/javascript" src="distrib/os/shellCommand.js"></script>
@@ -39,9 +40,9 @@
 
    <!-- Other Routines  -->
    <script type="text/javascript" src="distrib/utils.js"></script>
-   <!-- Uncomment this line below to enable GLaDOS testing   --> 
+   <!-- Uncomment this line below to enable GLaDOS testing  
    <script type="text/javascript" src="http://www.labouseur.com/courses/os/projects/glados.js"></script>
-
+ --> 
    <!--Bootstrap -->
    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
@@ -139,6 +140,25 @@
               tabindex="3">
       </canvas>
     </label>
+   </div>
+   <br>
+
+  <div class="hardDriveWrapper" ><label><span style="color: #a2aab0;"> Hard Drive</span><br>
+              <table class="table" 
+                     id = "hardDriveTable" 
+                     style="width:500px;
+                            height=200px;
+                            background-color:#E6E6E6;
+                            border: 2px solid #663300;">
+                  <tr>
+                    <th>T-S-B</th>
+                    <th>Meta</th>
+                    <th>Data</th> 
+                  </tr>
+            
+              </table>
+              </label>
+    </div>
    </div>
 
  </div>
