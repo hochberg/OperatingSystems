@@ -143,7 +143,7 @@ module TSOS {
 
 
               printTSBCell.innerHTML = tsb;
-              printMetaCell.innerHTML = hdEntry.slice(0,3);
+              printMetaCell.innerHTML = hdEntry.slice(0, 4);
               printDataCell.innerHTML = hdEntry.slice(4,64);
 
 

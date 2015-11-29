@@ -113,7 +113,7 @@ var TSOS;
             var printMetaCell = hdRow.insertCell(1);
             var printDataCell = hdRow.insertCell(2);
             printTSBCell.innerHTML = tsb;
-            printMetaCell.innerHTML = hdEntry.slice(0, 3);
+            printMetaCell.innerHTML = hdEntry.slice(0, 4);
             printDataCell.innerHTML = hdEntry.slice(4, 64);
         };
         ;

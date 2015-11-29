@@ -46,8 +46,8 @@ module TSOS {
                 for (var y = 0; y < this.sector; y++) {
                     for (var z = 0; z < this.block; z++) {
 
-                        var newBlock = "";
-                        for (var b = 0; b < this.bytes; b++){
+                        var newBlock = "0";
+                        for (var b = 0; b < this.bytes-1; b++){
                             newBlock = newBlock + "-";
                         }
                         sessionStorage.setItem("b" + x + y + z, newBlock);
@@ -68,7 +68,7 @@ module TSOS {
 
             //prints...
            _Display.printFullHardDrive();
-           console.log(this.createfile("alex"));
+           
 
 
            }
@@ -126,14 +126,88 @@ module TSOS {
 
         }
 
+        public updateMbr(){
+            var nextAvailDir = "";
+            var nextAvailFile = "";
 
-        public createfile(filename){
-            var mbrNoTrail = this.removeTrail(sessionStorage.getItem("b000"));
-            var mbrToString = this.hexToString(mbrNoTrail.slice(4, mbrNoTrail.length));
-                console.log(mbrToString);
-                console.log(this.stringToHex(filename));
+            //finds next available directory
+            dance:
+            for (var y = 0; y < this.sector; y++) {
+                for (var z = 0; z < this.block; z++) {
+                    //if block is not in use it becomes next avil directory
+                    if (sessionStorage.getItem("b0" + y + z).charAt(0)=="0"){
+                        nextAvailDir = "0" + y + "" + z;
+                        //breaks loop
+                        break dance;
+                    }
+            }
+            }
+
+            //finds next available file
+            room:
+            for (var x = 1; x < this.track; x++) {
+                for (var y = 0; y < this.sector; y++) {
+                    for (var z = 0; z < this.block; z++) {
+                        //if block is not in use, it becomes next avil file
+                        if (sessionStorage.getItem("b"+ x + y + z).charAt(0)=="0"){
+                            nextAvailFile = "" + x + y + z;
+                            //breaks loop
+                            break room;
+                        }
+
+                    }
+                }
+            }
+
+            //updates the mbr
+            sessionStorage.setItem("b000", 
+                "1000"+ 
+                this.addTrail(
+                    this.stringToHex(nextAvailDir+nextAvailFile
+                    )));
+            //prints
+            _Display.printFullHardDrive();
+
 
         }
+
+
+        public createFile(filename){
+            //TODO check if dir/file is full or has same name
+
+            //removes trail from mbr
+            var mbrNoTrail = this.removeTrail(sessionStorage.getItem("b000"));
+
+            //retrives decimal value of data
+            var mbrDecData = this.hexToString(mbrNoTrail.slice(4, mbrNoTrail.length));
+
+            //retrievs next avaialbe Directory
+            var nextAvailDir = mbrDecData.slice(0, 3);
+            //retrieves next available File
+            var nextAvailFile = mbrDecData.slice(3, 6);
+
+            //converts file name to hex
+            var hexFileName = this.stringToHex(filename);
+
+            //builds new block
+            //first bit switch to in use (1) + file address + hex file name + trail
+            var newBlock = this.addTrail("1" + nextAvailFile + hexFileName);
+            sessionStorage.setItem("b" + nextAvailDir, newBlock );
+
+            //changes associated file to in use
+            sessionStorage.setItem("b" + nextAvailFile, this.addTrail("1") );
+
+
+            //prints hard drive
+            _Display.printFullHardDrive();
+            //updates mbr
+            this.updateMbr();
+            //success message
+            _StdOut.putText("Successfully Created: " + filename);
+
+        }
+
+
 
 
 

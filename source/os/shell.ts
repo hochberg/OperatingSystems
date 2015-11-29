@@ -790,8 +790,8 @@ module TSOS {
         }
 
         public shellCreate(args) {
-            _krnFileSystemDriver.createFile();
-            _StdOut.putText("Yop");
+            _krnFileSystemDriver.createFile(args[0]);
+            
         }
 
         public shellRead(args) {

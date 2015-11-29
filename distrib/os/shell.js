@@ -672,8 +672,7 @@ var TSOS;
             _StdOut.putText("Process " + args + " killed.");
         };
         Shell.prototype.shellCreate = function (args) {
-            _krnFileSystemDriver.createFile();
-            _StdOut.putText("Yop");
+            _krnFileSystemDriver.createFile(args[0]);
         };
         Shell.prototype.shellRead = function (args) {
             _StdOut.putText("Yop");
