@@ -65,14 +65,13 @@ module TSOS {
                 //chnage mbr to hex and add trail
                 this.addTrail(this.stringToHex(mbr)));
              
-                
-
-
 
             //prints...
            _Display.printFullHardDrive();
-          // console.log(this.stringToHex("1111"));
-                    }
+           console.log(this.createfile("alex"));
+
+
+           }
 
 
            public stringToHex(str){
@@ -83,6 +82,7 @@ module TSOS {
                 // acquires CharCode of char
                 var charCode =  str.charCodeAt(x);
                 var decToHex = charCode.toString(16).toUpperCase();
+
                 tempStr = tempStr + decToHex;
             }
              return tempStr;
@@ -95,8 +95,43 @@ module TSOS {
                 //add trail of "-"
                 str = str + "-";
             }
-            console.log(str.length);
             return str;
+
+        }
+
+        public removeTrail(str){
+            //records inital string length
+            var initStrLength = str.length;
+            for  (var x = 0; x < initStrLength; x++) {
+                //replaces all "-" with ''
+                var removedTrail = str.replace("-", "");
+            }
+
+            return removedTrail;
+
+        }
+
+        public hexToString(hex){
+            //temp string
+            var tempStr = "";
+            //transverses by 2
+            for (var x = 0; x < hex.length; x+=2) {
+                //gets 2 chars from hex, converts to decimal
+               var twoHex = parseInt(hex.charAt(x) + hex.charAt(x + 1), 16);
+               //fins unicode for decimal and adds to tempStr
+               tempStr = tempStr + String.fromCharCode(twoHex);
+
+            }
+            return tempStr;
+
+        }
+
+
+        public createfile(filename){
+            var mbrNoTrail = this.removeTrail(sessionStorage.getItem("b000"));
+            var mbrToString = this.hexToString(mbrNoTrail.slice(4, mbrNoTrail.length));
+                console.log(mbrToString);
+                console.log(this.stringToHex(filename));
 
         }
 
