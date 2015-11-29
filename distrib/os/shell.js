@@ -692,6 +692,9 @@ var TSOS;
         };
         Shell.prototype.shellWrite = function (args) {
             console.log(args);
+            if (args[1].charAt(args[1].length - 1) === '"') {
+                console.log("yo");
+            }
             //checks if a file name is given
             var nullArray = [];
             nullArray.push(args);
@@ -704,6 +707,10 @@ var TSOS;
             }
             else if (!_krnFileSystemDriver.inFileNameArray(args[0])) {
                 _StdOut.putText("File does not exist.");
+            }
+            else if ((!(args[1].charAt(0) === '"'))
+                && (!(args[1].charAt(args[1].length - 1) === '"'))) {
+                _StdOut.putText("You must enter your data in quotes.");
             }
             else {
                 _krnFileSystemDriver.writeToFile(args[0], args[1]);

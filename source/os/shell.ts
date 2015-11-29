@@ -174,19 +174,19 @@ module TSOS {
             // write
             sc = new ShellCommand(this.shellWrite,
                 "write",
-                 "<filename> <data> - Write <data> (in quotes*) to file <filename>.");
+                "<filename> <data> - Write <data> (in quotes*) to file <filename>.");
             this.commandList[this.commandList.length] = sc;
 
             // delete
             sc = new ShellCommand(this.shellDelete,
                 "delete",
-                 "<filename> - Delete file <filename>.");
+                "<filename> - Delete file <filename>.");
             this.commandList[this.commandList.length] = sc;
 
             // format
             sc = new ShellCommand(this.shellFormat,
                 "format",
-                 "- Initializes Hard Drive.");
+                "- Initializes Hard Drive.");
             this.commandList[this.commandList.length] = sc;
 
             //
@@ -258,9 +258,9 @@ module TSOS {
             // ... and finally write the prompt again.
             // ... but does not write prompt if run is called
             // run will handle returning prompt manually after executing
-            if (!(this.currentCommand === "run")){
+            if (!(this.currentCommand === "run")) {
                 this.putPrompt();
-                }
+            }
         }
 
         public parseInput(buffer): UserCommand {
@@ -537,7 +537,7 @@ module TSOS {
         }
 
         public shellHunger(args) {
-         
+
             var foodOptions = ["Blue Doritos",
                 "Red Doritos",
                 "Spicy Doritios",
@@ -556,16 +556,16 @@ module TSOS {
         }
 
         //checks to see if memoryPartitionArray has an empty spot
-        public emptyMemoryPartition(){
+        public emptyMemoryPartition() {
             for (var i = 0; 2 > i; i++) {
-            //    //if one is empty(false)
-                if(!_memoryPartitionArray[i]){
+                //    //if one is empty(false)
+                if (!_memoryPartitionArray[i]) {
                     return true;
                 }
             }
-           return false;
+            return false;
         }
-       
+
 
 
         public shellLoad(args) {
@@ -580,85 +580,85 @@ module TSOS {
             var commands = userInput.split(" ");
             var commandsCount = commands.length;
             //looks for empty memory partition
-             for (var i = 0; 2 >= i; i++) {
+            for (var i = 0; 2 >= i; i++) {
                 //if one is empty(false)
-                 if (!_memoryPartitionArray[i]){
-                     //change to true
-                     isEmptyPartition= true;
-                     //breaks loop
-                     i = i + 42;
-                 }
+                if (!_memoryPartitionArray[i]) {
+                    //change to true
+                    isEmptyPartition = true;
+                    //breaks loop
+                    i = i + 42;
+                }
             }
             //checks to make sure it is nonEmpty
             if (userInput == "") {
                 _StdOut.putText("No user input.");
             } else 
-            //checks to see if user input is larger than memory partition
-            if(commandsCount>256){
-                _StdOut.putText("Memory out of bounds.");
-            }
-                else{
-                //compares hex to user input    
-                for (var i = 0; userInput.length > i; i++) {
-                    //temp array to be filled if char isnt hex
-                    var hexMatch = [];
-                    for (var z = 0; hex.length > z; z++) {
-                        //if a char is hex
-                        if (hex[z] == userInput.substring(0 + i, 1 + i)) {
-                            hexMatch.push("Found");
-                        }
-                    }
-                    //if not hex char 
-                    if (hexMatch.length == 0) {
-                        isHex = false;
-                    }
+                //checks to see if user input is larger than memory partition
+                if (commandsCount > 256) {
+                    _StdOut.putText("Memory out of bounds.");
                 }
-                if (isHex) {
-                    //if empty memory partition
-                    if (isEmptyPartition) {
-                          //pushes new pcb into _residentList and initializes
-                        _residentList.push(new ProcessControlBlock());
-                        _residentList[_residentList.length - 1].init();
-
-                        //memory partition chooser
-                        for (var i = 0; 2 >= i; i++) {
-                            //if partition is empty
-                            if (!_memoryPartitionArray[i]) {
-                                //changes to full
-                                _memoryPartitionArray[i] = true;
-                                //sets base and limit
-                                _residentList[_residentList.length - 1].base = i * 256;
-                                _residentList[_residentList.length - 1].limit = ((i + 1) * 256) - 1;
-                                //breaks loop
-                                i = i + 42;
-                            } 
+                else {
+                    //compares hex to user input    
+                    for (var i = 0; userInput.length > i; i++) {
+                        //temp array to be filled if char isnt hex
+                        var hexMatch = [];
+                        for (var z = 0; hex.length > z; z++) {
+                            //if a char is hex
+                            if (hex[z] == userInput.substring(0 + i, 1 + i)) {
+                                hexMatch.push("Found");
+                            }
                         }
-                        //shows resident list
-                        _Display.printFullResidentList();
-
-                        //makes array of hex code split by spaces
-                        var inputArray = userInput.split(" ");
-                        //TODO FIX WHERE CODE GOES IN MEMORY
-                        //inputs user code into memory manager memory
-                        for (var i = 0; inputArray.length > i; i++) {
-                            _MemoryManager.memory.memoryBlocks[i + parseInt(_residentList[_residentList.length - 1].base)] = inputArray[i];
+                        //if not hex char 
+                        if (hexMatch.length == 0) {
+                            isHex = false;
                         }
-             
-                        //shows memory
-                        _MemoryManager.printMemory();
+                    }
+                    if (isHex) {
+                        //if empty memory partition
+                        if (isEmptyPartition) {
+                            //pushes new pcb into _residentList and initializes
+                            _residentList.push(new ProcessControlBlock());
+                            _residentList[_residentList.length - 1].init();
 
-                        _StdOut.putText("User input: [" + userInput + "] Valid Input");
-                        _StdOut.advanceLine();
-                        _StdOut.putText("Process ID: " + _residentList[_residentList.length - 1].pid);
-                    } else {
-                        _StdOut.putText("No empty Memory Partitions.");
+                            //memory partition chooser
+                            for (var i = 0; 2 >= i; i++) {
+                                //if partition is empty
+                                if (!_memoryPartitionArray[i]) {
+                                    //changes to full
+                                    _memoryPartitionArray[i] = true;
+                                    //sets base and limit
+                                    _residentList[_residentList.length - 1].base = i * 256;
+                                    _residentList[_residentList.length - 1].limit = ((i + 1) * 256) - 1;
+                                    //breaks loop
+                                    i = i + 42;
                                 }
-                } else {
-                    _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
+                            }
+                            //shows resident list
+                            _Display.printFullResidentList();
+
+                            //makes array of hex code split by spaces
+                            var inputArray = userInput.split(" ");
+                            //TODO FIX WHERE CODE GOES IN MEMORY
+                            //inputs user code into memory manager memory
+                            for (var i = 0; inputArray.length > i; i++) {
+                                _MemoryManager.memory.memoryBlocks[i + parseInt(_residentList[_residentList.length - 1].base)] = inputArray[i];
+                            }
+             
+                            //shows memory
+                            _MemoryManager.printMemory();
+
+                            _StdOut.putText("User input: [" + userInput + "] Valid Input");
+                            _StdOut.advanceLine();
+                            _StdOut.putText("Process ID: " + _residentList[_residentList.length - 1].pid);
+                        } else {
+                            _StdOut.putText("No empty Memory Partitions.");
+                        }
+                    } else {
+                        _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
+                    }
+                    //resets
+                    var isHex = true;
                 }
-                //resets
-                var isHex = true;
-            }
 
         }
 
@@ -668,90 +668,90 @@ module TSOS {
             nullArray.push(args);
             if (nullArray[0].length == 0) {
                 _StdOut.putText("Please specifiy a PID");
-            }else 
-            //given pid hasn't been created
-                if(args > _pidCount)
-            {   _StdOut.putText("PID does not exist");
-            }else{
-                //set up currently to only run one program at a time
-                //resets cpu's pc every run
-                //_CPU.PC = 0;
-                //finds pcb within rl using pid
-                for  (var i = 0; _residentList.length > i; i++) {
-                    if (args == _residentList[i].pid) {
-                        //inserts pcb into ready queue
-                        _readyQueue.push(_residentList[i]);
-                        //and removes from resident list
-                        _residentList.splice(i, 1);
+            } else 
+                //given pid hasn't been created
+                if (args > _pidCount) {
+                    _StdOut.putText("PID does not exist");
+                } else {
+                    //set up currently to only run one program at a time
+                    //resets cpu's pc every run
+                    //_CPU.PC = 0;
+                    //finds pcb within rl using pid
+                    for (var i = 0; _residentList.length > i; i++) {
+                        if (args == _residentList[i].pid) {
+                            //inserts pcb into ready queue
+                            _readyQueue.push(_residentList[i]);
+                            //and removes from resident list
+                            _residentList.splice(i, 1);
 
-                        //finds pcb with rq using pid
-                        for (var i = 0; _readyQueue.length > i; i++) {
-                            if (args == _readyQueue[i].pid) {
-                                //makes current pcb
-                                //FIX
-                                //if(_readyQueue.length==1){
+                            //finds pcb with rq using pid
+                            for (var i = 0; _readyQueue.length > i; i++) {
+                                if (args == _readyQueue[i].pid) {
+                                    //makes current pcb
+                                    //FIX
+                                    //if(_readyQueue.length==1){
                                
-                               _currentPcb = _readyQueue[0];
-                               _cpuScheduler.insertPcbValuesIntoCpu();
-                           // }
-                                //changes state to Running
-                                _readyQueue[i].state = "Running";
+                                    _currentPcb = _readyQueue[0];
+                                    _cpuScheduler.insertPcbValuesIntoCpu();
+                                    // }
+                                    //changes state to Running
+                                    _readyQueue[i].state = "Running";
+                                }
                             }
-                        }
 
-                        console.log("this is the ready queue");
-                        console.log(_readyQueue);
-                        //displays rl and rq
-                        _Display.printFullResidentList();
-                        _Display.printFullReadyQueue();
+                            console.log("this is the ready queue");
+                            console.log(_readyQueue);
+                            //displays rl and rq
+                            _Display.printFullResidentList();
+                            _Display.printFullReadyQueue();
+                        }
                     }
+                    //starts executing cycle
+                    _CPU.isExecuting = true;
+                    //_StdOut.putText("Running...");
                 }
-                //starts executing cycle
-                _CPU.isExecuting = true;
-                //_StdOut.putText("Running...");
-            }
         }
 
         public shellClearmem(args) {
             //reinitializes memory and displays
             _Memory.init();
             _MemoryManager.printMemory();
-            _memoryPartitionArray = [ false, false, false];
+            _memoryPartitionArray = [false, false, false];
             _StdOut.putText("Memory has been cleared.");
         }
 
         public shellRunall(args) {
             //checks if any process is in memory
-            if(_residentList.length < 1){
+            if (_residentList.length < 1) {
                 _StdOut.putText("No processes in memory.");
-            }else{
+            } else {
                 //if so records initial resident list length
                 var initialRLLength = _residentList.length;
-             //inserts all processes into resident queue at head
-             //removes all processes from resident list at head
-             for  (var i = 0; initialRLLength > i; i++) {
-            _readyQueue.push(_residentList[0]);
-            _residentList.splice(0, 1);       
-        }
-       //displays rl and rq
-       _Display.printFullResidentList();
-       _Display.printFullReadyQueue();
+                //inserts all processes into resident queue at head
+                //removes all processes from resident list at head
+                for (var i = 0; initialRLLength > i; i++) {
+                    _readyQueue.push(_residentList[0]);
+                    _residentList.splice(0, 1);
+                }
+                //displays rl and rq
+                _Display.printFullResidentList();
+                _Display.printFullReadyQueue();
 
-        //sets first process to current pcb
-        _currentPcb = _readyQueue[0];
+                //sets first process to current pcb
+                _currentPcb = _readyQueue[0];
 
-        //changes round robin and executing to true
+                //changes round robin and executing to true
 
-        _CPU.isExecuting = true;
+                _CPU.isExecuting = true;
             }
         }
 
         public shellQuantum(args) {
             //does not allow change of quantum while processes are executing
-            if (_CPU.isExecuting){
+            if (_CPU.isExecuting) {
                 _StdOut.putText("Can not change quantum while processes are running!");
-            }else{
-            //checks if args is anumber
+            } else {
+                //checks if args is anumber
                 if (isNaN(args)) {
                     _StdOut.putText("Please Enter a Number.");
                 } else {
@@ -765,8 +765,8 @@ module TSOS {
 
         public shellPs(args) {
             var tempString = "";
-           //loops through ready queue (all running processes) and concates to string to display
-            for  (var i = 0; _readyQueue.length > i; i++) {
+            //loops through ready queue (all running processes) and concates to string to display
+            for (var i = 0; _readyQueue.length > i; i++) {
                 tempString = tempString + _readyQueue[i].pid + " ";
             }
             _StdOut.putText("Active Processes' PIDs: " + tempString);
@@ -779,14 +779,14 @@ module TSOS {
             for (var i = 0; _readyQueue.length > i; i++) {
                 //once current pcb is found
                 if (args == _readyQueue[i].pid) {
-                        index = i;
-                        //and end for loop
-                        i = i + 42;
-                    }
+                    index = i;
+                    //and end for loop
+                    i = i + 42;
                 }
+            }
 
             TSOS.Control.killInterrupt(index);
-            _StdOut.putText("Process "+args+ " killed.");
+            _StdOut.putText("Process " + args + " killed.");
         }
 
 
@@ -799,7 +799,7 @@ module TSOS {
                 _StdOut.putText("You must give your file a name.");
             }
             //checks if file name exists
-             else if (_krnFileSystemDriver.inFileNameArray(args[0])) {
+            else if (_krnFileSystemDriver.inFileNameArray(args[0])) {
                 _StdOut.putText("File name already exists.");
             }
             else {
@@ -810,13 +810,16 @@ module TSOS {
         }
 
         public shellRead(args) {
-          
+
             _StdOut.putText("Yop");
         }
 
         public shellWrite(args) {
             console.log(args);
-          //checks if a file name is given
+            if (args[1].charAt(args[1].length-1) === '"'){
+                console.log("yo");
+            }
+            //checks if a file name is given
             var nullArray = [];
             nullArray.push(args);
             console.log(nullArray);
@@ -828,20 +831,23 @@ module TSOS {
                 _StdOut.putText("You must enter data to write.");
             }
             //checks if file is exists
-            else if (!_krnFileSystemDriver.inFileNameArray(args[0]) {
+            else if (!_krnFileSystemDriver.inFileNameArray(args[0])) {
                 _StdOut.putText("File does not exist.");
             }
-            //TODO
             //checks if given data is in quotes
-            // console.log(typeof nullArray[0][1].replace(/"/g, ""));
-            // else if (typeof nullArray[0][1].replace(/"/g,"") !== "string"){
-            //     _StdOut.putText("You must enter your data in quotes.");
-            // }
-                else {
-            _krnFileSystemDriver.writeToFile(args[0], args[1]);
+            //TODO
+            else if ((!(args[1].charAt(0) === '"'))
+             &&  (!(args[1].charAt(args[1].length-1) === '"')))     {
+                _StdOut.putText("You must enter your data in quotes.");
+            }
+            else {
+                _krnFileSystemDriver.writeToFile(args[0], args[1]);
 
+            }
         }
-    }
+        
+
+
 
         public shellDelete(args) {
           
