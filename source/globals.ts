@@ -48,6 +48,7 @@ var _quantum: number = 6;
 var _tempQuantum: number = 6;
 var _Control: TSOS.Control; //Connected for Single Step ease
 var _cpuScheduler: TSOS.cpuScheduler; //creates global instance of CpuSched
+var _fileNameArray: any; //creates an array of all file names
 
 
 

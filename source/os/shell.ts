@@ -26,7 +26,7 @@ module TSOS {
         public commandHistory = []; //yes sir
         public currentCommand = ""; //yes sir
         public commandHistoryIndex = 0; //yes sir
-        
+
  
         constructor() {
         }
@@ -789,9 +789,24 @@ module TSOS {
             _StdOut.putText("Process "+args+ " killed.");
         }
 
+
+
         public shellCreate(args) {
-            _krnFileSystemDriver.createFile(args[0]);
-            
+            //checks if a file name is given
+            var nullArray = [];
+            nullArray.push(args);
+            if (nullArray[0].length == 0) {
+                _StdOut.putText("You must give your file a name.");
+            }
+            //checks if file name exists
+             else if (_krnFileSystemDriver.inFileNameArray(args[0])) {
+                _StdOut.putText("File name already exists.");
+            }
+            else {
+                _krnFileSystemDriver.createFile(args[0]);
+                //pushes filename to _fileNameAray
+                _fileNameArray.push(args[0]);
+            }
         }
 
         public shellRead(args) {
@@ -800,9 +815,33 @@ module TSOS {
         }
 
         public shellWrite(args) {
-          
-            _StdOut.putText("Yop");
+            console.log(args);
+          //checks if a file name is given
+            var nullArray = [];
+            nullArray.push(args);
+            console.log(nullArray);
+            if (nullArray[0].length == 0) {
+                _StdOut.putText("You must choose a file to write to.");
+            }
+            //checks if data is given
+            else if (nullArray[0].length < 2) {
+                _StdOut.putText("You must enter data to write.");
+            }
+            //checks if file is exists
+            else if (!_krnFileSystemDriver.inFileNameArray(args[0]) {
+                _StdOut.putText("File does not exist.");
+            }
+            //TODO
+            //checks if given data is in quotes
+            // console.log(typeof nullArray[0][1].replace(/"/g, ""));
+            // else if (typeof nullArray[0][1].replace(/"/g,"") !== "string"){
+            //     _StdOut.putText("You must enter your data in quotes.");
+            // }
+                else {
+            _krnFileSystemDriver.writeToFile(args[0], args[1]);
+
         }
+    }
 
         public shellDelete(args) {
           

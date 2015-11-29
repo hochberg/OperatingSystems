@@ -37,6 +37,7 @@ var _quantum = 6;
 var _tempQuantum = 6;
 var _Control; //Connected for Single Step ease
 var _cpuScheduler; //creates global instance of CpuSched
+var _fileNameArray; //creates an array of all file names
 var _OSclock = 0; // Page 23.
 var _Mode = 0; // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.
 var _Canvas; // Initialized in Control.hostInit().

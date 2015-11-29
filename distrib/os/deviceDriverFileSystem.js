@@ -159,6 +159,17 @@ var TSOS;
             //success message
             _StdOut.putText("Successfully Created: " + filename);
         };
+        DeviceDriverFileSystem.prototype.writeToFile = function (filename, data) {
+        };
+        DeviceDriverFileSystem.prototype.inFileNameArray = function (filename) {
+            var inArray = false;
+            for (var i = 0; _fileNameArray.length > i; i++) {
+                if (filename == _fileNameArray[i]) {
+                    inArray = true;
+                }
+            }
+            return inArray;
+        };
         return DeviceDriverFileSystem;
     })(TSOS.DeviceDriver);
     TSOS.DeviceDriverFileSystem = DeviceDriverFileSystem;

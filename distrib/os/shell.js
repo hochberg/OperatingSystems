@@ -672,13 +672,42 @@ var TSOS;
             _StdOut.putText("Process " + args + " killed.");
         };
         Shell.prototype.shellCreate = function (args) {
-            _krnFileSystemDriver.createFile(args[0]);
+            //checks if a file name is given
+            var nullArray = [];
+            nullArray.push(args);
+            if (nullArray[0].length == 0) {
+                _StdOut.putText("You must give your file a name.");
+            }
+            else if (_krnFileSystemDriver.inFileNameArray(args[0])) {
+                _StdOut.putText("File name already exists.");
+            }
+            else {
+                _krnFileSystemDriver.createFile(args[0]);
+                //pushes filename to _fileNameAray
+                _fileNameArray.push(args[0]);
+            }
         };
         Shell.prototype.shellRead = function (args) {
             _StdOut.putText("Yop");
         };
         Shell.prototype.shellWrite = function (args) {
-            _StdOut.putText("Yop");
+            console.log(args);
+            //checks if a file name is given
+            var nullArray = [];
+            nullArray.push(args);
+            console.log(nullArray);
+            if (nullArray[0].length == 0) {
+                _StdOut.putText("You must choose a file to write to.");
+            }
+            else if (nullArray[0].length < 2) {
+                _StdOut.putText("You must enter data to write.");
+            }
+            else if (!_krnFileSystemDriver.inFileNameArray(args[0])) {
+                _StdOut.putText("File does not exist.");
+            }
+            else {
+                _krnFileSystemDriver.writeToFile(args[0], args[1]);
+            }
         };
         Shell.prototype.shellDelete = function (args) {
             _StdOut.putText("Yop");

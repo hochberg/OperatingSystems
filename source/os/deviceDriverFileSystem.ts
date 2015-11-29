@@ -207,6 +207,19 @@ module TSOS {
 
         }
 
+        public writeToFile(filename, data){
+
+        }
+
+        public inFileNameArray(filename){
+            var inArray = false;
+            for (var i = 0; _fileNameArray.length > i; i++){
+                if (filename==_fileNameArray[i]){
+                    inArray = true;
+                }
+            }
+            return inArray;
+        }
 
 
 

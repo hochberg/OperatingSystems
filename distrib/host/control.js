@@ -49,6 +49,8 @@ var TSOS;
             //create memory partition array to keep track of what memory partitions are filled/unfilled
             //initializes as three false(unfilled) memory partitions
             _memoryPartitionArray = [false, false, false];
+            //create file name array
+            _fileNameArray = [];
             // Check for our testing and enrichment core, which
             // may be referenced here (from index.html) as function Glados().
             if (typeof Glados === "function") {
