@@ -174,11 +174,9 @@ module TSOS {
 
 
         public createFile(filename){
-
             //removes trail from mbr
             var mbrNoTrail = this.removeTrail(sessionStorage.getItem("b000"));
-            console.log("her");
-            console.log(mbrNoTrail);
+            
             //retrives decimal value of data
             var mbrDecData = this.hexToString(mbrNoTrail.slice(4, mbrNoTrail.length));
 
@@ -238,13 +236,14 @@ module TSOS {
             console.log(sessionStorage.getItem("b" + foundFileMeta));
 
 
-
             //prints hard drive
             _Display.printFullHardDrive();
             //
             //TODO make sure this works
             //updates mbr
             this.updateMbr();
+
+            _StdOut.putText("Successfully Written To:  " + filename);
 
 
 

@@ -138,8 +138,6 @@ var TSOS;
         DeviceDriverFileSystem.prototype.createFile = function (filename) {
             //removes trail from mbr
             var mbrNoTrail = this.removeTrail(sessionStorage.getItem("b000"));
-            console.log("her");
-            console.log(mbrNoTrail);
             //retrives decimal value of data
             var mbrDecData = this.hexToString(mbrNoTrail.slice(4, mbrNoTrail.length));
             //retrievs next avaialbe Directory
@@ -191,6 +189,7 @@ var TSOS;
             //TODO make sure this works
             //updates mbr
             this.updateMbr();
+            _StdOut.putText("Successfully Written To:  " + filename);
         };
         DeviceDriverFileSystem.prototype.inFileNameArray = function (filename) {
             var inArray = false;

@@ -670,7 +670,8 @@ module TSOS {
                 _StdOut.putText("Please specifiy a PID");
             } else 
                 //given pid hasn't been created
-                if (args > _pidCount) {
+                if (args > _pidCount) {
+
                     _StdOut.putText("PID does not exist");
                 } else {
                     //set up currently to only run one program at a time
@@ -815,30 +816,26 @@ module TSOS {
         }
 
         public shellWrite(args) {
-            console.log(args);
-            if (args[1].charAt(args[1].length-1) === '"'){
-                console.log("yo");
-            }
             //checks if a file name is given
             var nullArray = [];
             nullArray.push(args);
-            console.log(nullArray);
+            //checks to see if a filename is given
             if (nullArray[0].length == 0) {
                 _StdOut.putText("You must choose a file to write to.");
-            }
-            //checks if data is given
-            else if (nullArray[0].length < 2) {
-                _StdOut.putText("You must enter data to write.");
             }
             //checks if file is exists
             else if (!_krnFileSystemDriver.inFileNameArray(args[0])) {
                 _StdOut.putText("File does not exist.");
             }
+            //checks if data is given
+            else if (nullArray[0].length < 2) {
+                _StdOut.putText("You must enter data to write.");
+            }
             //checks if given data is in quotes
-            //TODO
             else if ((!(args[1].charAt(0) === '"'))
-             &&  (!(args[1].charAt(args[1].length-1) === '"')))     {
+             ||  (!(args[1].charAt(args[1].length-1) == '"')))     {
                 _StdOut.putText("You must enter your data in quotes.");
+                console.log("here");
             }
             else {
                 _krnFileSystemDriver.writeToFile(args[0], args[1]);
