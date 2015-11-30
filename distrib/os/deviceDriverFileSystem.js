@@ -83,9 +83,10 @@ var TSOS;
         DeviceDriverFileSystem.prototype.removeTrail = function (str) {
             //records inital string length
             var initStrLength = str.length;
+            var removedTrail = str;
             for (var x = 0; x < initStrLength; x++) {
                 //replaces all "-" with ''
-                var removedTrail = str.replace("-", "");
+                removedTrail = removedTrail.replace("-", "");
             }
             return removedTrail;
         };
@@ -135,9 +136,10 @@ var TSOS;
             _Display.printFullHardDrive();
         };
         DeviceDriverFileSystem.prototype.createFile = function (filename) {
-            //TODO check if dir/file is full or has same name
             //removes trail from mbr
             var mbrNoTrail = this.removeTrail(sessionStorage.getItem("b000"));
+            console.log("her");
+            console.log(mbrNoTrail);
             //retrives decimal value of data
             var mbrDecData = this.hexToString(mbrNoTrail.slice(4, mbrNoTrail.length));
             //retrievs next avaialbe Directory
@@ -160,6 +162,35 @@ var TSOS;
             _StdOut.putText("Successfully Created: " + filename);
         };
         DeviceDriverFileSystem.prototype.writeToFile = function (filename, data) {
+            console.log(filename);
+            console.log(data);
+            //loop through all of directory to find filename
+            /////////
+            //finds next available directory
+            var foundFileMeta;
+            dance: for (var y = 0; y < this.sector; y++) {
+                for (var z = 0; z < this.block; z++) {
+                    //if block is not in use it becomes next avil directory
+                    console.log(this.removeTrail(sessionStorage.getItem("b0" + y + z).slice(4, (sessionStorage.getItem("b0" + y + z).length))));
+                    console.log(this.stringToHex(filename));
+                    if (this.removeTrail(sessionStorage.getItem("b0" + y + z).slice(4, (sessionStorage.getItem("b0" + y + z).length)))
+                        == this.stringToHex(filename)) {
+                        foundFileMeta = sessionStorage.getItem("b0" + y + z).slice(1, 4);
+                        console.log(foundFileMeta);
+                        //breaks loop
+                        break dance;
+                    }
+                }
+            }
+            console.log(foundFileMeta);
+            sessionStorage.setItem("b" + foundFileMeta, this.addTrail("1" + foundFileMeta + this.stringToHex(data.slice(1, data.length - 1))));
+            console.log(sessionStorage.getItem("b" + foundFileMeta));
+            //prints hard drive
+            _Display.printFullHardDrive();
+            //
+            //TODO make sure this works
+            //updates mbr
+            this.updateMbr();
         };
         DeviceDriverFileSystem.prototype.inFileNameArray = function (filename) {
             var inArray = false;
