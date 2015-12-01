@@ -180,9 +180,20 @@ var TSOS;
                     }
                 }
             }
-            console.log(foundFileMeta);
-            sessionStorage.setItem("b" + foundFileMeta, this.addTrail("1" + foundFileMeta + this.stringToHex(data.slice(1, data.length - 1))));
-            console.log(sessionStorage.getItem("b" + foundFileMeta));
+            //checks if data will have overflow
+            if (data.length > this.bytes) {
+                for (var x = 0; x < (data.length % this.bytes); x++ * this.bytes) {
+                    console.log(x);
+                }
+            }
+            else {
+                console.log(foundFileMeta);
+                //without quotation marks
+                //sessionStorage.setItem("b" + foundFileMeta, this.addTrail("1" + foundFileMeta + this.stringToHex(data.slice(1, data.length - 1))));
+                //with quotation marks
+                sessionStorage.setItem("b" + foundFileMeta, this.addTrail("1" + foundFileMeta + this.stringToHex(data)));
+                console.log(sessionStorage.getItem("b" + foundFileMeta));
+            }
             //prints hard drive
             _Display.printFullHardDrive();
             //

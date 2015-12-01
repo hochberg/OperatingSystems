@@ -715,34 +715,33 @@ var TSOS;
             }
         };
         Shell.prototype.shellWrite = function (args) {
-            //TODO 
-            //Breaks with spaces on checking for quotes
-            //gonna have to use replace with all spaces 
             //checks if hard drive is formatted
             if (!_formatted) {
                 _StdOut.putText("Hard Drive must be formatted.");
             }
             else {
-                //checks if a file name is given
-                var nullArray = [];
-                nullArray.push(args);
+                //extracts filename from args
+                var argsFilename = args.splice(0, 1);
+                //extracts data
+                var argsData = args;
+                //joins data (if spaces exists)
+                var dataString = argsData.join(" ");
                 //checks to see if a filename is given
-                if (nullArray[0].length == 0) {
+                if (argsFilename.length == 0) {
                     _StdOut.putText("You must choose a file to write to.");
                 }
-                else if (!_krnFileSystemDriver.inFileNameArray(args[0])) {
+                else if (!_krnFileSystemDriver.inFileNameArray(argsFilename)) {
                     _StdOut.putText("File does not exist.");
                 }
-                else if (nullArray[0].length < 2) {
+                else if (argsData[0] == null) {
                     _StdOut.putText("You must enter data to write.");
                 }
-                else if ((!(args[1].charAt(0) === '"'))
-                    || (!(args[1].charAt(args[1].length - 1) == '"'))) {
+                else if ((!(dataString.charAt(0) === '"'))
+                    || (!(dataString.charAt(dataString.length - 1) == '"'))) {
                     _StdOut.putText("You must enter your data in quotes.");
-                    console.log("here");
                 }
                 else {
-                    _krnFileSystemDriver.writeToFile(args[0], args[1]);
+                    _krnFileSystemDriver.writeToFile(argsFilename[0], dataString);
                 }
             }
         };
