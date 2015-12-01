@@ -28,7 +28,7 @@ var TSOS;
         DeviceDriverFileSystem.prototype.krnFsDriverEntry = function () {
             this.status = "loaded";
             // More?
-            this.init();
+            //this.init();
         };
         DeviceDriverFileSystem.prototype.fsIsr = function (params) {
             console.log("Isr");
@@ -189,7 +189,7 @@ var TSOS;
             //TODO make sure this works
             //updates mbr
             this.updateMbr();
-            _StdOut.putText("Successfully Written To:  " + filename);
+            _StdOut.putText("Successfully Written To: " + filename);
         };
         DeviceDriverFileSystem.prototype.inFileNameArray = function (filename) {
             var inArray = false;
@@ -199,6 +199,30 @@ var TSOS;
                 }
             }
             return inArray;
+        };
+        DeviceDriverFileSystem.prototype.readFile = function (filename) {
+            var foundFileMeta;
+            dance: for (var y = 0; y < this.sector; y++) {
+                for (var z = 0; z < this.block; z++) {
+                    //if block is not in use it becomes next avil directory
+                    console.log(this.removeTrail(sessionStorage.getItem("b0" + y + z).slice(4, (sessionStorage.getItem("b0" + y + z).length))));
+                    console.log(this.stringToHex(filename));
+                    if (this.removeTrail(sessionStorage.getItem("b0" + y + z).slice(4, (sessionStorage.getItem("b0" + y + z).length)))
+                        == this.stringToHex(filename)) {
+                        foundFileMeta = sessionStorage.getItem("b0" + y + z).slice(1, 4);
+                        console.log(foundFileMeta);
+                        //breaks loop
+                        break dance;
+                    }
+                }
+            }
+            console.log(foundFileMeta);
+            var dataWithMeta = this.removeTrail(sessionStorage.getItem("b" + foundFileMeta));
+            console.log(dataWithMeta);
+            var data = dataWithMeta.slice(4, dataWithMeta.length);
+            console.log(data);
+            var dataToString = this.hexToString(data);
+            _StdOut.putText(filename + " reads: " + dataToString);
         };
         return DeviceDriverFileSystem;
     })(TSOS.DeviceDriver);

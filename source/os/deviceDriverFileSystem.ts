@@ -25,7 +25,8 @@ module TSOS {
            public krnFsDriverEntry() {
             this.status = "loaded";
             // More?
-            this.init();
+
+            //this.init();
         }
 
            public fsIsr(params) {
@@ -176,7 +177,7 @@ module TSOS {
         public createFile(filename){
             //removes trail from mbr
             var mbrNoTrail = this.removeTrail(sessionStorage.getItem("b000"));
-            
+
             //retrives decimal value of data
             var mbrDecData = this.hexToString(mbrNoTrail.slice(4, mbrNoTrail.length));
 
@@ -243,7 +244,7 @@ module TSOS {
             //updates mbr
             this.updateMbr();
 
-            _StdOut.putText("Successfully Written To:  " + filename);
+            _StdOut.putText("Successfully Written To: " + filename);
 
 
 
@@ -259,6 +260,36 @@ module TSOS {
             }
             return inArray;
         }
+
+        public readFile(filename){
+            var foundFileMeta;
+            dance:
+            for (var y = 0; y < this.sector; y++) {
+                for (var z = 0; z < this.block; z++) {
+                    //if block is not in use it becomes next avil directory
+                    console.log(this.removeTrail(sessionStorage.getItem("b0" + y + z).slice(4, (sessionStorage.getItem("b0" + y + z).length))));
+                    console.log(this.stringToHex(filename));
+                    if (this.removeTrail(sessionStorage.getItem("b0" + y + z).slice(4, (sessionStorage.getItem("b0" + y + z).length)))
+                        == this.stringToHex(filename))
+                    {
+                        foundFileMeta = sessionStorage.getItem("b0" + y + z).slice(1,4);
+                        console.log(foundFileMeta);
+                        //breaks loop
+                        break dance;
+                    }
+            }
+            }
+            console.log(foundFileMeta);
+            var dataWithMeta = this.removeTrail(sessionStorage.getItem("b" + foundFileMeta));
+            console.log(dataWithMeta);
+            var data = dataWithMeta.slice(4, dataWithMeta.length);
+            console.log(data);
+            var dataToString = this.hexToString(data);
+            _StdOut.putText(filename + " reads: " + dataToString );
+            
+        }
+
+
 
 
 

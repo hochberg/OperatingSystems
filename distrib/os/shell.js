@@ -672,45 +672,78 @@ var TSOS;
             _StdOut.putText("Process " + args + " killed.");
         };
         Shell.prototype.shellCreate = function (args) {
-            //checks if a file name is given
-            var nullArray = [];
-            nullArray.push(args);
-            if (nullArray[0].length == 0) {
-                _StdOut.putText("You must give your file a name.");
-            }
-            else if (_krnFileSystemDriver.inFileNameArray(args[0])) {
-                _StdOut.putText("File name already exists.");
+            //checks if hard drive is formatted
+            if (!_formatted) {
+                _StdOut.putText("Hard Drive must be formatted.");
             }
             else {
-                _krnFileSystemDriver.createFile(args[0]);
-                //pushes filename to _fileNameAray
-                _fileNameArray.push(args[0]);
+                //checks if a file name is given
+                var nullArray = [];
+                nullArray.push(args);
+                if (nullArray[0].length == 0) {
+                    _StdOut.putText("You must give your file a name.");
+                }
+                else if (_krnFileSystemDriver.inFileNameArray(args[0])) {
+                    _StdOut.putText("File name already exists.");
+                }
+                else {
+                    _krnFileSystemDriver.createFile(args[0]);
+                    //pushes filename to _fileNameAray
+                    _fileNameArray.push(args[0]);
+                }
             }
         };
         Shell.prototype.shellRead = function (args) {
-            _StdOut.putText("Yop");
-        };
-        Shell.prototype.shellWrite = function (args) {
-            //checks if a file name is given
-            var nullArray = [];
-            nullArray.push(args);
-            //checks to see if a filename is given
-            if (nullArray[0].length == 0) {
-                _StdOut.putText("You must choose a file to write to.");
-            }
-            else if (!_krnFileSystemDriver.inFileNameArray(args[0])) {
-                _StdOut.putText("File does not exist.");
-            }
-            else if (nullArray[0].length < 2) {
-                _StdOut.putText("You must enter data to write.");
-            }
-            else if ((!(args[1].charAt(0) === '"'))
-                || (!(args[1].charAt(args[1].length - 1) == '"'))) {
-                _StdOut.putText("You must enter your data in quotes.");
-                console.log("here");
+            //checks if hard drive is formatted
+            if (!_formatted) {
+                _StdOut.putText("Hard Drive must be formatted.");
             }
             else {
-                _krnFileSystemDriver.writeToFile(args[0], args[1]);
+                //checks if a file name is given
+                var nullArray = [];
+                nullArray.push(args);
+                //checks to see if a filename is given
+                if (nullArray[0].length == 0) {
+                    _StdOut.putText("You must choose a file to write to.");
+                }
+                else if (!_krnFileSystemDriver.inFileNameArray(args[0])) {
+                    _StdOut.putText("File does not exist.");
+                }
+                else {
+                    _krnFileSystemDriver.readFile(args[0]);
+                }
+            }
+        };
+        Shell.prototype.shellWrite = function (args) {
+            //TODO 
+            //Breaks with spaces on checking for quotes
+            //gonna have to use replace with all spaces 
+            //checks if hard drive is formatted
+            if (!_formatted) {
+                _StdOut.putText("Hard Drive must be formatted.");
+            }
+            else {
+                //checks if a file name is given
+                var nullArray = [];
+                nullArray.push(args);
+                //checks to see if a filename is given
+                if (nullArray[0].length == 0) {
+                    _StdOut.putText("You must choose a file to write to.");
+                }
+                else if (!_krnFileSystemDriver.inFileNameArray(args[0])) {
+                    _StdOut.putText("File does not exist.");
+                }
+                else if (nullArray[0].length < 2) {
+                    _StdOut.putText("You must enter data to write.");
+                }
+                else if ((!(args[1].charAt(0) === '"'))
+                    || (!(args[1].charAt(args[1].length - 1) == '"'))) {
+                    _StdOut.putText("You must enter your data in quotes.");
+                    console.log("here");
+                }
+                else {
+                    _krnFileSystemDriver.writeToFile(args[0], args[1]);
+                }
             }
         };
         Shell.prototype.shellDelete = function (args) {
@@ -721,6 +754,7 @@ var TSOS;
             if (true) {
                 //initalizes hard drive (all blocks in all sectors in all tracks)
                 _krnFileSystemDriver.init();
+                _formatted = true;
                 _StdOut.putText("Successful Format");
             }
             else {

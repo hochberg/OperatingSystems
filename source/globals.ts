@@ -49,6 +49,7 @@ var _tempQuantum: number = 6;
 var _Control: TSOS.Control; //Connected for Single Step ease
 var _cpuScheduler: TSOS.cpuScheduler; //creates global instance of CpuSched
 var _fileNameArray: any; //creates an array of all file names
+var _formatted: boolean = false;//creates boolean to determine if hard drive is formatted
 
 
 
