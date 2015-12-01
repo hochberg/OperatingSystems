@@ -59,6 +59,8 @@ var TSOS;
                 this.addTrail(this.stringToHex(mbr)));
             //prints...
             _Display.printFullHardDrive();
+            console.log(this.getNextAvailableDir());
+            console.log(this.getNextAvailableFile());
         };
         DeviceDriverFileSystem.prototype.stringToHex = function (str) {
             //inital temp string
@@ -135,6 +137,17 @@ var TSOS;
             //prints
             _Display.printFullHardDrive();
         };
+        DeviceDriverFileSystem.prototype.getNextAvailableDir = function () {
+            var mbr = this.hexToString(sessionStorage.getItem("b000"));
+            console.log(mbr);
+            var dir = mbr.slice(2, 5);
+            return dir;
+        };
+        DeviceDriverFileSystem.prototype.getNextAvailableFile = function () {
+            var mbr = this.hexToString(sessionStorage.getItem("b000"));
+            var file = mbr.slice(5, 8);
+            return file;
+        };
         DeviceDriverFileSystem.prototype.createFile = function (filename) {
             //removes trail from mbr
             var mbrNoTrail = this.removeTrail(sessionStorage.getItem("b000"));
@@ -198,17 +211,32 @@ var TSOS;
             console.log(foundFileMeta);
             //without quotation marks
             //sessionStorage.setItem("b" + foundFileMeta, this.addTrail("1" + foundFileMeta + this.stringToHex(data.slice(1, data.length - 1))));
-            //TODO NOT 64 BYTES
-            //with quotation marks
             console.log(this.addTrail("1" + foundFileMeta + dataArray[0]).length);
-            sessionStorage.setItem("b" + foundFileMeta, this.addTrail("1" + foundFileMeta + dataArray[0]));
+            var meta = "---";
+            //if overflow
+            if (!(dataArray[1] == null)) {
+                meta = this.getNextAvailableFile();
+            }
+            //TODO
+            //dont add found meta data, but instead the next available dir
+            sessionStorage.setItem("b" + foundFileMeta, this.addTrail("1" + meta + dataArray[0]));
             console.log(dataArray);
             dataArray.shift();
             console.log(dataArray);
             console.log(this.hexToString(sessionStorage.getItem("b" + foundFileMeta)));
             console.log(this.hexToString(sessionStorage.getItem("b" + foundFileMeta)).length);
             if (!(dataArray[0] == null)) {
-                console.log("oh yes");
+                for (var x = 0; x < dataArray.length; x) {
+                    this.updateMbr();
+                    var nextMeta = "---";
+                    console.log(dataArray);
+                    if (!(dataArray[1] == null)) {
+                        nextMeta = this.getNextAvailableFile();
+                    }
+                    sessionStorage.setItem("b" + meta, this.addTrail("1" + nextMeta + dataArray[0]));
+                    dataArray.shift();
+                    meta = nextMeta;
+                }
             }
             // }
             //prints hard drive
