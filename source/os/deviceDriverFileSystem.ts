@@ -232,24 +232,46 @@ module TSOS {
             }
             }
             //checks if data will have overflow
-            if(data.length > this.bytes){
-                for (var x = 0; x < (data.length % this.bytes); x++ * this.bytes) {
-                    console.log(x);
+            console.log(data.length);
+         //   if(data.length > this.bytes){
+
+                var dataArray = [];
+                var hexData = this.stringToHex(data);
+                for (var x = 0; x < hexData.length; x){
+                    var firstDataSeg = hexData.slice(x, (x + (this.bytes - 4)));
+
+                    dataArray.push(firstDataSeg);
+                    console.log(hexData);
+                    console.log(dataArray);
+                    x = x + (this.bytes - 4);
                 }
 
-            }
+
+
+
+           // }
             //if data doesn't have overflow
-            else{
+          //  else{
 
             console.log(foundFileMeta);
             //without quotation marks
             //sessionStorage.setItem("b" + foundFileMeta, this.addTrail("1" + foundFileMeta + this.stringToHex(data.slice(1, data.length - 1))));
 
+            //TODO NOT 64 BYTES
             //with quotation marks
-            sessionStorage.setItem("b" + foundFileMeta, this.addTrail("1" + foundFileMeta + this.stringToHex(data)));
+            console.log(this.addTrail("1" + foundFileMeta + dataArray[0]).length);
+            sessionStorage.setItem("b" + foundFileMeta, this.addTrail("1" + foundFileMeta + dataArray[0]));
+            console.log(dataArray);
+            dataArray.shift();
+            console.log(dataArray);
 
-            console.log(sessionStorage.getItem("b" + foundFileMeta));
-        }
+            console.log(this.hexToString(sessionStorage.getItem("b" + foundFileMeta)));
+            console.log(this.hexToString(sessionStorage.getItem("b" + foundFileMeta)).length);
+
+            if(!(dataArray[0] == null)) {
+                console.log("oh yes");
+            }
+       // }
 
             //prints hard drive
             _Display.printFullHardDrive();
