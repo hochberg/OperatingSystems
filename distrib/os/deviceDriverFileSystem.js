@@ -196,6 +196,7 @@ var TSOS;
             for (var x = 0; x < hexData.length; x) {
                 var firstDataSeg = hexData.slice(x, (x + (this.bytes - 4)));
                 dataArray.push(firstDataSeg);
+                console.log(this.hexToString(firstDataSeg));
                 x = x + (this.bytes - 4);
             }
             //if no overflow, meta data doesn't change
@@ -207,6 +208,7 @@ var TSOS;
             //sets data file in storage
             //of first file (in case of overflow)
             sessionStorage.setItem("b" + foundFileMeta, this.addTrail("1" + meta + dataArray[0]));
+            console.log(this.hexToString(dataArray[0]));
             //takes first elements off of array
             dataArray.shift();
             //if ther are more elements in data array ( overflow )
@@ -217,10 +219,16 @@ var TSOS;
                     this.updateMbr();
                     //initalizes next meta if no more overflow
                     var nextMeta = "---";
+                    //
+                    sessionStorage.setItem("b" + meta, this.addTrail("1"));
+                    this.updateMbr();
                     //if there is more overflow, finds next avail file for meta
                     if (!(dataArray[1] == null)) {
                         nextMeta = this.getNextAvailableFile();
                     }
+                    console.log(this.hexToString(dataArray[0]));
+                    console.log(meta);
+                    console.log(nextMeta);
                     //sets next chunk of data in storage
                     sessionStorage.setItem("b" + meta, this.addTrail("1" + nextMeta + dataArray[0]));
                     //pulls first ele from data array
@@ -264,6 +272,20 @@ var TSOS;
             console.log(foundFileMeta);
             var rawData = sessionStorage.getItem("b" + foundFileMeta);
             console.log(rawData.slice(1, 4));
+            var dataString = "";
+            //there exists overflow
+            while (!(rawData.slice(1, 4) === "---")) {
+                var stringChunck = this.hexToString(rawData.slice(4, rawData.length));
+                console.log(stringChunck);
+                dataString = dataString + stringChunck;
+                console.log(dataString);
+                var nextMeta = rawData.slice(1, 4);
+                console.log(nextMeta);
+                rawData = sessionStorage.getItem("b" + nextMeta);
+                console.log(rawData);
+                console.log("do you work?");
+            }
+            //no overflow
             if (rawData.slice(1, 4) === "---") {
                 console.log("word");
                 var dataWithMeta = this.removeTrail(rawData);
@@ -271,11 +293,22 @@ var TSOS;
                 var data = dataWithMeta.slice(1, dataWithMeta.length);
                 console.log(data);
                 var dataToString = this.hexToString(data);
-                _StdOut.putText(filename + " reads: " + dataToString);
+                var fullData = dataString + dataToString;
+                _StdOut.putText(filename + " reads: " + fullData);
             }
-            else {
-                console.log("overflow");
-            }
+            // else{
+            //     //TODO check overlfow first!!! and make string
+            //    //overflow
+            //   console.log("overflow");
+            //   var metaForNext = rawData.slice(1, 4);
+            //   console.log(metaForNext);
+            //   var dataWithMeta = this.removeTrail(rawData);
+            //   console.log(dataWithMeta);
+            //   var data = dataWithMeta.slice(4, dataWithMeta.length);
+            //   console.log(data);
+            //   var dataToString = this.hexToString(data);
+            //   _StdOut.putText(filename + " reads: " + dataToString );
+            // }
         };
         return DeviceDriverFileSystem;
     })(TSOS.DeviceDriver);
