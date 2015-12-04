@@ -325,6 +325,18 @@ module TSOS {
             return inArray;
         }
 
+        public removeFromFileNameArray(filename){
+            console.log(_fileNameArray);
+            for (var i = 0; _fileNameArray.length > i; i++){
+
+                if (filename==_fileNameArray[i]){
+                    _fileNameArray.splice(i, 1);
+                    console.log(_fileNameArray)
+                }
+            }
+
+        }
+
         public readFile(filename){
             var foundFileMeta;
             dance:
@@ -397,6 +409,59 @@ module TSOS {
 
               // }
             
+        }
+
+        public deleteFile(filename){
+            var foundFileMeta;
+            var foundFileLoc;
+            dance:
+            for (var y = 0; y < this.sector; y++) {
+                for (var z = 0; z < this.block; z++) {
+                    //if block is not in use it becomes next avail directory
+                    console.log(this.removeTrail(sessionStorage.getItem("b0" + y + z).slice(4, (sessionStorage.getItem("b0" + y + z).length))));
+                    console.log(this.stringToHex(filename));
+                    if (this.removeTrail(sessionStorage.getItem("b0" + y + z).slice(4, (sessionStorage.getItem("b0" + y + z).length)))
+                        == this.stringToHex(filename))
+                    {
+                        foundFileLoc = "b0" + y + z;
+                        foundFileMeta = sessionStorage.getItem("b0" + y + z).slice(1,4);
+
+                        console.log(foundFileMeta);
+                        //breaks loop
+                        break dance;
+                    }
+                }
+            }
+            console.log(foundFileMeta);
+
+            var nextMeta = sessionStorage.getItem("b" + foundFileMeta).slice(1,4);
+
+            while(!(nextMeta ===  "---")){
+                sessionStorage.setItem("b" + foundFileMeta, this.addTrail("0"));
+                foundFileMeta = nextMeta;
+                nextMeta = sessionStorage.getItem("b" + foundFileMeta).slice(1,4);
+                this.updateMbr();
+            }
+            console.log("Meta");
+            console.log(foundFileMeta);
+            sessionStorage.setItem("b" + foundFileMeta, this.addTrail("0"));
+
+            console.log(foundFileLoc);
+            sessionStorage.setItem(foundFileLoc, this.addTrail("0"));
+            this.updateMbr();
+
+
+            this.removeFromFileNameArray(filename);
+
+
+
+
+            _StdOut.putText("Successfully deleted: " +filename);
+
+
+
+
+
         }
 
 

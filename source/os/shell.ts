@@ -803,6 +803,12 @@ module TSOS {
                 if (nullArray[0].length == 0) {
                     _StdOut.putText("You must give your file a name.");
                 }
+                //checks if file is too long
+
+                else if (_krnFileSystemDriver.stringToHex(args[0]).length > _krnFileSystemDriver.bytes) {
+
+                    _StdOut.putText("File name is too long.");
+                }
                 //checks if file name exists
                 else if (_krnFileSystemDriver.inFileNameArray(args[0])) {
                     _StdOut.putText("File name already exists.");
@@ -876,8 +882,27 @@ module TSOS {
 
 
         public shellDelete(args) {
-          
-            _StdOut.putText("Yop");
+          //checks if hard drive is formatted
+          if (!_formatted) {
+              _StdOut.putText("Hard Drive must be formatted.");
+          } else {
+              //extracts filename from args
+              var argsFilename = args.splice(0, 1);
+
+              //checks to see if a filename is given
+              if (argsFilename.length == 0) {
+                  _StdOut.putText("You must choose a file to delete.");
+              }
+              //checks if file is exists
+              else if (!_krnFileSystemDriver.inFileNameArray(argsFilename)) {
+                  _StdOut.putText("File does not exist.");
+              }
+              
+              else {
+                  _krnFileSystemDriver.deleteFile(argsFilename[0]);
+
+              }
+          }
         }
 
         public shellFormat(args) {
