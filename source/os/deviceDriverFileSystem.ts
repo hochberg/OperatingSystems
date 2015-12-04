@@ -269,8 +269,6 @@ module TSOS {
                 //sets data file in storage
                 //of first file (in case of overflow)
                 sessionStorage.setItem("b" + foundFileMeta, this.addTrail("1" + meta + dataArray[0]));
-                
-                 console.log(this.hexToString(dataArray[0]));
 
                 //takes first elements off of array
                 dataArray.shift();
@@ -284,16 +282,14 @@ module TSOS {
                     this.updateMbr();
                     //initalizes next meta if no more overflow
                     var nextMeta = "---";
-                    //
+                    //sets current file to being used
                     sessionStorage.setItem("b" + meta, this.addTrail("1" ));
+                    //updates mbr
                     this.updateMbr();
                     //if there is more overflow, finds next avail file for meta
                     if (!(dataArray[1] == null)){
                        nextMeta = this.getNextAvailableFile();
                     }
-                    console.log(this.hexToString(dataArray[0]));
-                    console.log(meta);
-                    console.log(nextMeta);
                     //sets next chunk of data in storage
                     sessionStorage.setItem("b" + meta, this.addTrail("1" + nextMeta + dataArray[0]));
                     //pulls first ele from data array
@@ -315,6 +311,7 @@ module TSOS {
 
         }
 
+        //loops through global file array to check if specified filename is within
         public inFileNameArray(filename){
             var inArray = false;
             for (var i = 0; _fileNameArray.length > i; i++){
@@ -325,150 +322,121 @@ module TSOS {
             return inArray;
         }
 
+        //removes given filename from gloabl filename array
         public removeFromFileNameArray(filename){
-            console.log(_fileNameArray);
             for (var i = 0; _fileNameArray.length > i; i++){
-
                 if (filename==_fileNameArray[i]){
                     _fileNameArray.splice(i, 1);
-                    console.log(_fileNameArray)
                 }
             }
-
         }
 
         public readFile(filename){
+            //initializes variable to be set to the file's meta
             var foundFileMeta;
+            //loops through block and sector to find specified filename
             dance:
             for (var y = 0; y < this.sector; y++) {
                 for (var z = 0; z < this.block; z++) {
                     //if block is not in use it becomes next avil directory
-                    console.log(this.removeTrail(sessionStorage.getItem("b0" + y + z).slice(4, (sessionStorage.getItem("b0" + y + z).length))));
-                    console.log(this.stringToHex(filename));
                     if (this.removeTrail(sessionStorage.getItem("b0" + y + z).slice(4, (sessionStorage.getItem("b0" + y + z).length)))
                         == this.stringToHex(filename))
                     {
+                        //when found, records meta data of file
                         foundFileMeta = sessionStorage.getItem("b0" + y + z).slice(1,4);
-                        console.log(foundFileMeta);
-                        //breaks loop
-                        break dance;
-                    }
-            }
-            }
-            console.log(foundFileMeta);
-            var rawData = sessionStorage.getItem("b" + foundFileMeta);
-
-            console.log(rawData.slice(1, 4));
-
-            var dataString = "";
-            //there exists overflow
-              while(!(rawData.slice(1, 4)==="---")){
-                  var stringChunck = this.hexToString(rawData.slice(4, rawData.length));
-                  console.log(stringChunck);
-                  dataString = dataString + stringChunck ;
-                  console.log(dataString);
-                  var nextMeta = rawData.slice(1, 4);
-                  console.log(nextMeta);
-                  rawData = sessionStorage.getItem("b" + nextMeta);
-                  console.log(rawData);
-                  console.log("do you work?");
-             }
-
-
-            //no overflow
-            if (rawData.slice(1, 4)==="---"){
-                console.log("word")
-
-            var dataWithMeta = this.removeTrail(rawData);
-            console.log(dataWithMeta);
-            var data = dataWithMeta.slice(1, dataWithMeta.length);
-            console.log(data);
-            var dataToString = this.hexToString(data);
-            var fullData = dataString + dataToString;
-            _StdOut.putText(filename + " reads: " + fullData);
-              }
-              // else{
-              //     //TODO check overlfow first!!! and make string
-              //    //overflow
-              //   console.log("overflow");
-
-              //   var metaForNext = rawData.slice(1, 4);
-              //   console.log(metaForNext);
-
-              //   var dataWithMeta = this.removeTrail(rawData);
-              //   console.log(dataWithMeta);
-              //   var data = dataWithMeta.slice(4, dataWithMeta.length);
-              //   console.log(data);
-              //   var dataToString = this.hexToString(data);
-
-                
-              //   _StdOut.putText(filename + " reads: " + dataToString );
-
-
-
-
-              // }
-            
-        }
-
-        public deleteFile(filename){
-            var foundFileMeta;
-            var foundFileLoc;
-            dance:
-            for (var y = 0; y < this.sector; y++) {
-                for (var z = 0; z < this.block; z++) {
-                    //if block is not in use it becomes next avail directory
-                    console.log(this.removeTrail(sessionStorage.getItem("b0" + y + z).slice(4, (sessionStorage.getItem("b0" + y + z).length))));
-                    console.log(this.stringToHex(filename));
-                    if (this.removeTrail(sessionStorage.getItem("b0" + y + z).slice(4, (sessionStorage.getItem("b0" + y + z).length)))
-                        == this.stringToHex(filename))
-                    {
-                        foundFileLoc = "b0" + y + z;
-                        foundFileMeta = sessionStorage.getItem("b0" + y + z).slice(1,4);
-
-                        console.log(foundFileMeta);
                         //breaks loop
                         break dance;
                     }
                 }
             }
-            console.log(foundFileMeta);
+            //retrieves the data (unformatted) from the specfied file
+            var rawData = sessionStorage.getItem("b" + foundFileMeta);
 
-            var nextMeta = sessionStorage.getItem("b" + foundFileMeta).slice(1,4);
-
-            while(!(nextMeta ===  "---")){
-                sessionStorage.setItem("b" + foundFileMeta, this.addTrail("0"));
-                foundFileMeta = nextMeta;
-                nextMeta = sessionStorage.getItem("b" + foundFileMeta).slice(1,4);
-                this.updateMbr();
-            }
-            console.log("Meta");
-            console.log(foundFileMeta);
-            sessionStorage.setItem("b" + foundFileMeta, this.addTrail("0"));
-
-            console.log(foundFileLoc);
-            sessionStorage.setItem(foundFileLoc, this.addTrail("0"));
-            this.updateMbr();
-
-
-            this.removeFromFileNameArray(filename);
+            //initalizes string to hole data
+            var dataString = "";
+            //while there exists overflow
+              while(!(rawData.slice(1, 4)==="---")){
+                  //connvert current file's data to hex
+                  var stringChunck = this.hexToString(rawData.slice(4, rawData.length));
+                  //tack it onto the datastring (back of)
+                  dataString = dataString + stringChunck ;
+                  //record the meta to point to the next file
+                  var nextMeta = rawData.slice(1, 4);
+                  //continues by setting rawdata to next file's data
+                  rawData = sessionStorage.getItem("b" + nextMeta);
+             }
 
 
+            //when there no longer exists overflow
+            if (rawData.slice(1, 4)==="---"){
+                //remove trail of last data
+                var dataWithMeta = this.removeTrail(rawData);
+                //remove meta
+                var data = dataWithMeta.slice(1, dataWithMeta.length);
+                //convert to string
+                var dataStringCaboose = this.hexToString(data);
+                //tack onto end of dataString
+                var fullData = dataString + dataStringCaboose;
+                
+                //print to console
+                _StdOut.putText(filename + " reads: " + fullData);
+              }
 
-
-            _StdOut.putText("Successfully deleted: " +filename);
-
-
-
-
-
+            
         }
 
+        public deleteFile(filename){
+            //initializes variable to be set to locate of file name
+            var foundFileLoc;
+            //initalizes that files meta 
+            var foundFileMeta;
+            
+            //transverses sectors and blocks to find matching filename
+            dance:
+            for (var y = 0; y < this.sector; y++) {
+                for (var z = 0; z < this.block; z++) {
+                    //if block is not in use it becomes next avail directory
+                    if (this.removeTrail(sessionStorage.getItem("b0" + y + z).slice(4, (sessionStorage.getItem("b0" + y + z).length)))
+                        == this.stringToHex(filename))
+                    {
+                        //sets file loc
+                        foundFileLoc = "b0" + y + z;
+                        //sets file meta
+                        foundFileMeta = sessionStorage.getItem("b0" + y + z).slice(1,4);
+                        //breaks loop
+                        break dance;
+                    }
+                }
+            }
 
+            //initializes the files next meta
+            var nextMeta = sessionStorage.getItem("b" + foundFileMeta).slice(1,4);
 
+            //while the next meta is not the last
+            while(!(nextMeta ===  "---")){
+                //clears current file
+                sessionStorage.setItem("b" + foundFileMeta, this.addTrail("0"));
+                //sets current to next meta
+                foundFileMeta = nextMeta;
+                //finds next meta
+                nextMeta = sessionStorage.getItem("b" + foundFileMeta).slice(1,4);
+                //updates mbr
+                this.updateMbr();
+            }
 
+            //deletes final file in file sys
+            sessionStorage.setItem("b" + foundFileMeta, this.addTrail("0"));
+            //deletes filename in dir
+            sessionStorage.setItem(foundFileLoc, this.addTrail("0"));
 
+            //updates mbr (also prints to hard drive display)
+            this.updateMbr();
+            //removes filename from filename array
+            this.removeFromFileNameArray(filename);
+            //prints success message
+            _StdOut.putText("Successfully deleted: " +filename);
 
+        }
 
 
 
