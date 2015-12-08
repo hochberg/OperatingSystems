@@ -154,7 +154,6 @@ module TSOS {
                     break;
                  case '00':
                      this.break();
-
                     break;
                 case 'EC':
                     this.compareMemoryToX();

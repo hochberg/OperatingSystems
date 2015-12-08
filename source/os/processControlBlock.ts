@@ -23,7 +23,8 @@ module TSOS {
 						  public ir = null,
 						  public base = null,
 						  public limit = null,
-						  public state = null
+						  public state = null,
+						  public priority = null
 		) {
 
 		}
@@ -39,7 +40,9 @@ public init(): void {
 		this.ir = "";
 		this.base = 0;
 		this.limit = 0;
-		this.state = "New"
+		this.state = "New";
+		//initalized to 5
+		this.priority = 5;
 			  };
 
 

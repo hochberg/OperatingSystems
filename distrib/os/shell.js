@@ -549,6 +549,27 @@ var TSOS;
                                 i = i + 42;
                             }
                         }
+                        console.log(args);
+                        //if priority is specified, set it
+                        if (args.length > 0) {
+                            var priority = args.slice(0, 1)[0];
+                            console.log("yo");
+                            console.log(priority);
+                            //checks if input is a number, larger than 100, or smaller than 1
+                            if ((isNaN(priority)) || (priority > 100) || (priority < 1)) {
+                                _StdOut.putText("Priority input is not a number between 1 and 100.");
+                                _StdOut.advanceLine();
+                                _StdOut.putText("Priority set to default: 5");
+                                _StdOut.advanceLine();
+                            }
+                            else {
+                                //set priority to given num
+                                _residentList[_residentList.length - 1].priority = priority;
+                                //display
+                                _StdOut.putText("Priority set to: " + priority);
+                                _StdOut.advanceLine();
+                            }
+                        }
                         //shows resident list
                         _Display.printFullResidentList();
                         //makes array of hex code split by spaces

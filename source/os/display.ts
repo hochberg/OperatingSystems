@@ -45,6 +45,7 @@ module TSOS {
    			  var printBaseCell = pcbRow.insertCell(7);
    			  var printLimitCell = pcbRow.insertCell(8);
    			  var printStateCell = pcbRow.insertCell(9);
+          var printPriorityCell = pcbRow.insertCell(10);
 
    			  printPidCell.innerHTML = pcb.pid;
    			  printPcCell.innerHTML = pcb.pc;
@@ -56,6 +57,7 @@ module TSOS {
    			  printBaseCell.innerHTML = pcb.base;
    			  printLimitCell.innerHTML = pcb.limit;
    			  printStateCell.innerHTML = pcb.state;
+          printPriorityCell.innerHTML = pcb.priority;
    			 
    			  	  };
    		
@@ -92,6 +94,7 @@ module TSOS {
    			  var printBaseCell = pcbRow.insertCell(7);
    			  var printLimitCell = pcbRow.insertCell(8);
    			  var printStateCell = pcbRow.insertCell(9);
+          var printPriorityCell = pcbRow.insertCell(10);
 
    			  printPidCell.innerHTML = pcb.pid;
    			  printPcCell.innerHTML = pcb.pc;
@@ -103,6 +106,7 @@ module TSOS {
    			  printBaseCell.innerHTML = pcb.base;
    			  printLimitCell.innerHTML = pcb.limit;
    			  printStateCell.innerHTML = pcb.state;
+          printPriorityCell.innerHTML = pcb.priority;
    		
 
 
