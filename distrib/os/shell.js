@@ -105,6 +105,15 @@ var TSOS;
             // format
             sc = new TSOS.ShellCommand(this.shellFormat, "format", "- Initializes Hard Drive.");
             this.commandList[this.commandList.length] = sc;
+            // ls
+            sc = new TSOS.ShellCommand(this.shellLs, "ls", " - Lists the files currently on disk.");
+            this.commandList[this.commandList.length] = sc;
+            // setschedule
+            sc = new TSOS.ShellCommand(this.shellSetschedule, "setschedule", "[rr, fcfs, priority] - Sets CPU scheduling algorithm.");
+            this.commandList[this.commandList.length] = sc;
+            // getschedule
+            sc = new TSOS.ShellCommand(this.shellGetschedule, "getschedule", "- Returns the currently selected CPU scheduling algorithm.");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -355,6 +364,18 @@ var TSOS;
                     //format
                     case "format":
                         _StdOut.putText("[format] initializes hard drive.");
+                        break;
+                    //ls
+                    case "ls":
+                        _StdOut.putText("[ls] returns all the files currently on disk.");
+                        break;
+                    //setschedule
+                    case "setschedule":
+                        _StdOut.putText("[setschedule [rr, fcfs, priority]] sets the selected CPU scheduling algoirthm.");
+                        break;
+                    //getschedule
+                    case "getschedule":
+                        _StdOut.putText("[getschedule] returns the current CPU scheduling algorithm.");
                         break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
@@ -779,6 +800,27 @@ var TSOS;
             else {
                 _StdOut.putText("Format Failed");
             }
+        };
+        Shell.prototype.shellLs = function (args) {
+            //if no files are on disk
+            if (_fileNameArray.length == 0) {
+                _StdOut.putText("There are no files on disk.");
+            }
+            else {
+                //lists all files on disk from _fileNameArray
+                _StdOut.putText("Files on disk: ");
+                _StdOut.advanceLine();
+                for (var x = 0; _fileNameArray.length > x; x++) {
+                    _StdOut.putText(_fileNameArray[x]);
+                    _StdOut.advanceLine();
+                }
+            }
+        };
+        Shell.prototype.shellSetschedule = function (args) {
+            _StdOut.putText("SS");
+        };
+        Shell.prototype.shellGetschedule = function (args) {
+            _StdOut.putText("GS");
         };
         return Shell;
     })();
