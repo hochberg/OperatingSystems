@@ -17,7 +17,7 @@
 var TSOS;
 (function (TSOS) {
     var Cpu = (function () {
-        function Cpu(PC, Acc, Xreg, Yreg, Zflag, IR, isExecuting, isSingleStep, isRoundRobin) {
+        function Cpu(PC, Acc, Xreg, Yreg, Zflag, IR, isExecuting, isSingleStep, isRoundRobin, isFCFS, isPriority) {
             if (PC === void 0) { PC = 0; }
             if (Acc === void 0) { Acc = 0; }
             if (Xreg === void 0) { Xreg = 0; }
@@ -27,6 +27,8 @@ var TSOS;
             if (isExecuting === void 0) { isExecuting = false; }
             if (isSingleStep === void 0) { isSingleStep = false; }
             if (isRoundRobin === void 0) { isRoundRobin = false; }
+            if (isFCFS === void 0) { isFCFS = false; }
+            if (isPriority === void 0) { isPriority = false; }
             this.PC = PC;
             this.Acc = Acc;
             this.Xreg = Xreg;
@@ -36,6 +38,8 @@ var TSOS;
             this.isExecuting = isExecuting;
             this.isSingleStep = isSingleStep;
             this.isRoundRobin = isRoundRobin;
+            this.isFCFS = isFCFS;
+            this.isPriority = isPriority;
         }
         Cpu.prototype.init = function () {
             this.PC = 0;
@@ -46,8 +50,10 @@ var TSOS;
             this.IR = 0;
             this.isExecuting = false;
             this.isSingleStep = false;
-            //set Round Robin for all to be true
+            //initializes CPU scheduling algorithm as Round Robin
             this.isRoundRobin = true;
+            this.isFCFS = false;
+            this.isPriority = false;
             //  this.scCount = 0;
         };
         //moved to control

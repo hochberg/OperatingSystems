@@ -817,10 +817,52 @@ var TSOS;
             }
         };
         Shell.prototype.shellSetschedule = function (args) {
-            _StdOut.putText("SS");
+            //Round Robin setting
+            if (args == "rr") {
+                //_CPU.isRoundRobin is turned on, all others turned off
+                _CPU.isRoundRobin = true;
+                _CPU.isFCFS = false;
+                _CPU.isPriority = false;
+                _StdOut.putText("CPU scheduling algorithm set to Round Robin.");
+            }
+            else 
+            //FCFS setting
+            if (args == "fcfs") {
+                //_CPU.isFCFS is turned on, all others turned off
+                _CPU.isRoundRobin = false;
+                _CPU.isFCFS = true;
+                _CPU.isPriority = false;
+                _StdOut.putText("CPU scheduling algorithm set to First Come First Serve.");
+            }
+            else 
+            //Priority setting
+            if (args == "priority") {
+                //_CPU.isPriority is turned on, all others turned off
+                _CPU.isRoundRobin = false;
+                _CPU.isFCFS = false;
+                _CPU.isPriority = true;
+                _StdOut.putText("CPU scheduling algorithm set to Priority.");
+            }
+            else {
+                _StdOut.putText("Input not reconginized. Please enter one of: [ rr , fcfs , priority ].");
+            }
         };
         Shell.prototype.shellGetschedule = function (args) {
-            _StdOut.putText("GS");
+            _StdOut.putText("CPU scheduling algorithm is set to: ");
+            //checks to see if Round Robin is on (DEFAULT)
+            if (_CPU.isRoundRobin) {
+                _StdOut.putText("Round Robin.");
+            }
+            else 
+            //checks to see if Round Robin is on (DEFAULT)
+            if (_CPU.isFCFS) {
+                _StdOut.putText("First Come First Serve.");
+            }
+            else 
+            //checks to see if Round Robin is on (DEFAULT)
+            if (_CPU.isPriority) {
+                _StdOut.putText("Priority.");
+            }
         };
         return Shell;
     })();

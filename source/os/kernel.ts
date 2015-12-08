@@ -128,19 +128,9 @@ module TSOS {
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             } else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed. 
-                    //checks to see if round robin is on
-                    
 
-                    //Checks for memory of bounds of partition
-                   // TSOS.Control.isMemoryOutOfBounds();
-
+                    //checks to see if round robin is on (DEFAULT)
                     if (_CPU.isRoundRobin) {
-                        // //if so, checks to see if it finished
-                        // if (_readyQueue.length == 0) {
-                        //     //if so, turn round robin off
-                        //     _CPU.isRoundRobin = false
-                        // } else {
-
                             //then cycle
                             _CPU.cycle();
                             //if still going, decrement quantum
@@ -150,14 +140,21 @@ module TSOS {
                                 //call context switch interrupt
                                 TSOS.Control.rrInterrupt();
                             }
-                            
-
-                    } else {
-
-                        //TODO Fix Single Step with Round RObin
+                    //checks to see if FCFS is on
+                    } else if (_CPU.isFCFS){
+                        //checks to see if Single Step is on
                         if (!(_CPU.isSingleStep)) {
+                         //then cycle normally
                         _CPU.cycle();
-                        //console.log("cycle");
+                    }
+                //checks to see if priority is on
+                } else if (_CPU.isPriority){
+                    //TODO
+                        console.log("priority");
+                        //checks to see if Single Step is on
+                        if (!(_CPU.isSingleStep)) {
+                         //then cycle normally
+                        _CPU.cycle();
                     }
                 }
             } else { // If there are no interrupts and there is nothing being executed then just be idle. 
@@ -201,11 +198,8 @@ module TSOS {
                     this.krnTrapError("BSOD");
                     break;
                 case KILL_IRQ:
-                    //TODO
                     //checks if on current process
                     //context switch first
-                    console.log(_currentPcb.pid);
-                    console.log(_readyQueue[params].pid);
                     if(_currentPcb.pid==_readyQueue[params].pid){
                         _cpuScheduler.contextSwitch();
                         _readyQueue.splice(params, 1);

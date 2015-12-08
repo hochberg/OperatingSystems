@@ -28,7 +28,9 @@ module TSOS {
                     public IR: number = 0,
                     public isExecuting: boolean = false,
                     public isSingleStep: boolean = false,
-                    public isRoundRobin: boolean = false
+                    public isRoundRobin: boolean = false,
+                    public isFCFS: boolean = false,
+                    public isPriority: boolean = false
                     //,
                     //   public scCount: number = 0 //used to next line only once more,
                                                    //regardless of how many system calls are executed TEST
@@ -46,12 +48,15 @@ module TSOS {
             this.IR = 0;
             this.isExecuting = false;
             this.isSingleStep = false;
-            //set Round Robin for all to be true
+            //initializes CPU scheduling algorithm as Round Robin
             this.isRoundRobin = true;
+            this.isFCFS = false;
+            this.isPriority = false;
+
           //  this.scCount = 0;
         }
 
-//moved to control
+        //moved to control
         public printCPU(): void {
 
             //retrieve ids of pcb display
