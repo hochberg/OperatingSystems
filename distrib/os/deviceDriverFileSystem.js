@@ -249,6 +249,8 @@ var TSOS;
         DeviceDriverFileSystem.prototype.inFileNameArray = function (filename) {
             var inArray = false;
             for (var i = 0; _fileNameArray.length > i; i++) {
+                console.log(filename);
+                console.log(_fileNameArray[i]);
                 if (filename[0] === _fileNameArray[i].toLowerCase()) {
                     inArray = true;
                 }
@@ -264,6 +266,7 @@ var TSOS;
             }
         };
         DeviceDriverFileSystem.prototype.readFile = function (filename) {
+            console.log(filename);
             //initializes variable to be set to the file's meta
             var foundFileMeta;
             //loops through block and sector to find specified filename
@@ -306,8 +309,10 @@ var TSOS;
                 //tack onto end of dataString
                 var fullData = dataString + dataStringCaboose;
                 //TODO
-                if (_currentPcb.ondisk) {
-                    return fullData;
+                if (!(_currentPcb == null)) {
+                    if (_currentPcb.ondisk) {
+                        return fullData;
+                    }
                 }
                 else {
                     //print to console

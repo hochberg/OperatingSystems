@@ -757,7 +757,7 @@ var TSOS;
                 else if (_krnFileSystemDriver.stringToHex(args[0]).length > _krnFileSystemDriver.bytes) {
                     _StdOut.putText("File name is too long.");
                 }
-                else if (_krnFileSystemDriver.inFileNameArray(args[0])) {
+                else if (_krnFileSystemDriver.inFileNameArray(args)) {
                     _StdOut.putText("File name already exists.");
                 }
                 else {
@@ -778,9 +778,10 @@ var TSOS;
                 nullArray.push(args);
                 //checks to see if a filename is given
                 if (nullArray[0].length == 0) {
-                    _StdOut.putText("You must choose a file to write to.");
+                    _StdOut.putText("You must choose a file to read.");
                 }
-                else if (!_krnFileSystemDriver.inFileNameArray(args[0])) {
+                else if (!_krnFileSystemDriver.inFileNameArray(nullArray[0])) {
+                    console.log(args[0]);
                     _StdOut.putText("File does not exist.");
                 }
                 else {
@@ -805,6 +806,7 @@ var TSOS;
                     _StdOut.putText("You must choose a file to write to.");
                 }
                 else if (!_krnFileSystemDriver.inFileNameArray(argsFilename)) {
+                    console.log(argsFilename);
                     _StdOut.putText("File does not exist.");
                 }
                 else if (argsData[0] == null) {
