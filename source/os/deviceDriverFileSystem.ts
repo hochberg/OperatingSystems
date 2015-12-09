@@ -449,7 +449,9 @@ module TSOS {
             //removes filename from filename array
             this.removeFromFileNameArray(filename);
             //prints success message
-            _StdOut.putText("Successfully deleted: " +filename);
+            if (!(_loadWithoutDisplay)) {
+                _StdOut.putText("Successfully deleted: " + filename);
+            }
 
         }
         public swapper() {
@@ -468,9 +470,11 @@ module TSOS {
             }
             console.log(swappedOutPID);
             console.log("swap");
+            //WILL HAVE TO FIX
             // file name 
-            var filename = "process" + _currentPcb.pid;
+            //var filename = "process" + _currentPcb.pid;
 
+            var filename = "process3";
             //retrives data from storage
             var data = _krnFileSystemDriver.readFile(filename);
             console.log(data);
@@ -509,6 +513,7 @@ module TSOS {
 
             //write swapped out data to disk
             _loadWithoutDisplay = true;
+            _krnFileSystemDriver.deleteFile(filename);
             _krnFileSystemDriver.writeToFile(filename, savedMemory);
 
 

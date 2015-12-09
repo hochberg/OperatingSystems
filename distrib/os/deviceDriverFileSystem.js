@@ -363,7 +363,9 @@ var TSOS;
             //removes filename from filename array
             this.removeFromFileNameArray(filename);
             //prints success message
-            _StdOut.putText("Successfully deleted: " + filename);
+            if (!(_loadWithoutDisplay)) {
+                _StdOut.putText("Successfully deleted: " + filename);
+            }
         };
         DeviceDriverFileSystem.prototype.swapper = function () {
             console.log(_currentPcb);
@@ -379,8 +381,10 @@ var TSOS;
             }
             console.log(swappedOutPID);
             console.log("swap");
+            //WILL HAVE TO FIX
             // file name 
-            var filename = "process" + _currentPcb.pid;
+            //var filename = "process" + _currentPcb.pid;
+            var filename = "process3";
             //retrives data from storage
             var data = _krnFileSystemDriver.readFile(filename);
             console.log(data);
@@ -412,6 +416,7 @@ var TSOS;
             }
             //write swapped out data to disk
             _loadWithoutDisplay = true;
+            _krnFileSystemDriver.deleteFile(filename);
             _krnFileSystemDriver.writeToFile(filename, savedMemory);
             console.log(savedMemory);
             //change ondisk of swapped out memory
