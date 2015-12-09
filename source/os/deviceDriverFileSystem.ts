@@ -340,6 +340,7 @@ module TSOS {
         }
 
         public readFile(filename){
+            console.log(filename);
             //initializes variable to be set to the file's meta
             var foundFileMeta;
             //loops through block and sector to find specified filename
@@ -357,9 +358,11 @@ module TSOS {
                     }
                 }
             }
+            console.log(foundFileMeta);
             //retrieves the data (unformatted) from the specfied file
             var rawData = sessionStorage.getItem("b" + foundFileMeta);
 
+            console.log(rawData);
             //initalizes string to hole data
             var dataString = "";
             //while there exists overflow
@@ -450,11 +453,15 @@ module TSOS {
 
         }
         public swapper() {
+
+            console.log(_currentPcb);
             //
-            var swappedOutPID;
+            var swappedOutPID = 0;
             //retrieve pid of first partitioned memory
             for (var x = 0; _readyQueue.length > x; x++){
+                console.log(_readyQueue[x]);
                 if ((_readyQueue[x].base == 0) && (!_readyQueue[x].ondisk)){
+                    console.log("worked");
                     swappedOutPID = _readyQueue[x].pid;
 
                 }
@@ -471,6 +478,7 @@ module TSOS {
             //replaces all "-" with ''
             data = data.replace('"', "");
                           }
+            console.log("data");
             console.log(data);
 
             //initalizes holder for swapped out data
@@ -482,17 +490,20 @@ module TSOS {
                 _Memory.memoryBlocks[i] = '00';
             }
 
-            for (var x = 0; x < savedMemory.length; x++) {
-            //replaces all "0" with ''
-            savedMemory = savedMemory.replace('0', "");
-                          }
+            // for (var x = 0; x < savedMemory.length; x++) {
+            // //replaces all "0" with ''
+            // savedMemory = savedMemory.replace('0', "");
+            //               }
 
 
             //makes array of hex code split by spaces
             var inputArray = data.split(" ");
 
+            console.log("inputArray");
+            console.log(inputArray);
             //write swapped in data to memory
             for (var i = 0; inputArray.length > i; i++) {
+               
                 _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
             }
 
@@ -506,8 +517,11 @@ module TSOS {
 
              //change ondisk of swapped out memory
              for (var x = 0; _readyQueue.length > x; x++){
-                 if ((_readyQueue[x].pid == swappedOutPID){
+                 console.log(_readyQueue[x].pid);
+                 console.log(swappedOutPID);
+                 if (_readyQueue[x].pid == swappedOutPID){
                      _readyQueue[x].ondisk = true;
+                     console.log("does this happen?");
 
                  }
              }

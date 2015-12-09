@@ -75,14 +75,15 @@ var TSOS;
         };
         ;
         Cpu.prototype.cycle = function () {
-            console.log("quantum " + _tempQuantum);
+            //console.log(_currentPcb.pid);
+            // console.log("quantum " + _tempQuantum);
             if (_currentPcb == null) {
                 _currentPcb = _readyQueue[0];
                 _readyQueue[0].state = "Running";
             }
-            console.log(_currentPcb.pid);
-            console.log(_currentPcb);
-            console.log(_CPU);
+            // console.log(_currentPcb.pid);
+            // console.log(_currentPcb );
+            // console.log(_CPU);
             _Kernel.krnTrace('CPU cycle');
             //FETCH
             var currentCode = this.fetch(this.PC);
@@ -100,10 +101,11 @@ var TSOS;
         };
         //get commands 
         Cpu.prototype.fetch = function (currentPC) {
+            // console.log(_currentPcb);
             if (_currentPcb.ondisk) {
                 _krnFileSystemDriver.swapper();
             }
-            console.log("Fetch =" + (parseInt(_currentPcb.base) + currentPC));
+            //  console.log("Fetch =" + (parseInt(_currentPcb.base) + currentPC));
             //fetchs the op code at the current process code in the pcb
             return _MemoryManager.memory.memoryBlocks[currentPC + parseInt(_currentPcb.base)];
         };

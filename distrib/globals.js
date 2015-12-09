@@ -19,7 +19,8 @@ var TIMER_IRQ = 0; // Pages 23 (timer), 9 (interrupts), and 561 (interrupt prior
 var KEYBOARD_IRQ = 1;
 var BSOD_IRQ = 2; //bsod interrupt
 var KILL_IRQ = 3; //kill interrupt
-var RR_IRQ = 4; //round robin calls context switch on each CPU pulse
+var RR_IRQ = 5; //round robin calls context switch on each CPU pulse
+var SWAP_IRQ = 4; //swaper interrupt
 //
 // Global Variables
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.

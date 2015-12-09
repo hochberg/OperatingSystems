@@ -193,6 +193,11 @@ module TSOS {
         _KernelInterruptQueue.enqueue(new Interrupt(RR_IRQ, "Round Robin"));
         }
 
+        //call Swapper Interrupt
+        public static swapInterrupt(): void {
+        _KernelInterruptQueue.enqueue(new Interrupt(SWAP_IRQ, "Swapper"));
+        }
+
         }
     }
 

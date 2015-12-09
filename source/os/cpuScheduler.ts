@@ -20,6 +20,7 @@ module TSOS {
         public contextSwitchRR(): void {
             
             var readyQueueLength = _readyQueue.length;
+           // console.log(_readyQueue);
             //checks to see if only one pcb is in ready queue
             if (readyQueueLength > 1) {
                 //if more than one
@@ -39,6 +40,7 @@ module TSOS {
                         } else {
                             //then move to next pcb
                             _currentPcb = _readyQueue[i + 1];
+                           // console.log(_currentPcb);
                             //changes cpu to new current pcb 
                             this.insertPcbValuesIntoCpu();
                             //and end for loop
@@ -50,7 +52,6 @@ module TSOS {
         }
 
         public contextSwitchPriority(): void {
-            console.log("hey");
             //finds length of readyQueue
             var readyQueueLength = _readyQueue.length;
 
@@ -75,6 +76,7 @@ module TSOS {
         }
 
         public insertPcbValuesIntoCpu(): void {
+            //console.log(_currentPcb);
             _CPU.PC = _currentPcb.pc;
             _CPU.Acc = _currentPcb.acc;
             _CPU.Xreg = _currentPcb.xreg;

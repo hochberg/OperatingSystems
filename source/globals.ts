@@ -26,9 +26,9 @@ const BSOD_IRQ: number = 2; //bsod interrupt
 
 const KILL_IRQ: number = 3; //kill interrupt
 
-const RR_IRQ: number = 4; //round robin calls context switch on each CPU pulse
+const RR_IRQ: number = 5; //round robin calls context switch on each CPU pulse
 
-
+const SWAP_IRQ: number = 4; //swaper interrupt
 
 
 //

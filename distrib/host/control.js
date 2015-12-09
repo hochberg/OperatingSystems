@@ -152,6 +152,10 @@ var TSOS;
         Control.rrInterrupt = function () {
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(RR_IRQ, "Round Robin"));
         };
+        //call Swapper Interrupt
+        Control.swapInterrupt = function () {
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(SWAP_IRQ, "Swapper"));
+        };
         return Control;
     })();
     TSOS.Control = Control;

@@ -213,6 +213,9 @@ module TSOS {
                 case RR_IRQ:
                     _cpuScheduler.contextSwitchRR();
                     break;
+                case SWAP_IRQ:
+                    _krnFileSystemDriver.swapper();
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }

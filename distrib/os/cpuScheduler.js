@@ -15,6 +15,7 @@ var TSOS;
         }
         cpuScheduler.prototype.contextSwitchRR = function () {
             var readyQueueLength = _readyQueue.length;
+            // console.log(_readyQueue);
             //checks to see if only one pcb is in ready queue
             if (readyQueueLength > 1) {
                 //if more than one
@@ -33,6 +34,7 @@ var TSOS;
                         else {
                             //then move to next pcb
                             _currentPcb = _readyQueue[i + 1];
+                            // console.log(_currentPcb);
                             //changes cpu to new current pcb 
                             this.insertPcbValuesIntoCpu();
                             //and end for loop
@@ -43,7 +45,6 @@ var TSOS;
             }
         };
         cpuScheduler.prototype.contextSwitchPriority = function () {
-            console.log("hey");
             //finds length of readyQueue
             var readyQueueLength = _readyQueue.length;
             //builds temp array to sort pcbs
@@ -60,6 +61,7 @@ var TSOS;
             this.insertPcbValuesIntoCpu();
         };
         cpuScheduler.prototype.insertPcbValuesIntoCpu = function () {
+            //console.log(_currentPcb);
             _CPU.PC = _currentPcb.pc;
             _CPU.Acc = _currentPcb.acc;
             _CPU.Xreg = _currentPcb.xreg;
