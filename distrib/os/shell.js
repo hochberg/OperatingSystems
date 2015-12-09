@@ -586,6 +586,7 @@ var TSOS;
                         console.log("Throw me in memory");
                         _residentList[_residentList.length - 1].base = 0;
                         _residentList[_residentList.length - 1].limit = 256;
+                        _residentList[_residentList.length - 1].ondisk = true;
                         //shows resident list
                         _Display.printFullResidentList();
                         //set loadWithoutDisplay to true
@@ -596,7 +597,7 @@ var TSOS;
                             _OsShell.shellFormat();
                         }
                         //create filename
-                        var filename = ("PROCESS" + _residentList[_residentList.length - 1].pid);
+                        var filename = ("process" + _residentList[_residentList.length - 1].pid);
                         //create file
                         _OsShell.shellCreate([filename]);
                         //TODO

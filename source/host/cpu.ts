@@ -107,6 +107,9 @@ module TSOS {
 
         //get commands 
         public fetch(currentPC){
+            if(_currentPcb.ondisk){
+                _krnFileSystemDriver.swapper();
+            }
             console.log("Fetch =" + (parseInt(_currentPcb.base) + currentPC));
             //fetchs the op code at the current process code in the pcb
             return _MemoryManager.memory.memoryBlocks[currentPC+parseInt(_currentPcb.base)];

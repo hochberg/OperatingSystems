@@ -308,8 +308,14 @@ var TSOS;
                 var dataStringCaboose = this.hexToString(data);
                 //tack onto end of dataString
                 var fullData = dataString + dataStringCaboose;
-                //print to console
-                _StdOut.putText(filename + " reads: " + fullData);
+                //TODO
+                if (_currentPcb.ondisk) {
+                    return fullData;
+                }
+                else {
+                    //print to console
+                    _StdOut.putText(filename + " reads: " + fullData);
+                }
             }
         };
         DeviceDriverFileSystem.prototype.deleteFile = function (filename) {
@@ -355,6 +361,61 @@ var TSOS;
             this.removeFromFileNameArray(filename);
             //prints success message
             _StdOut.putText("Successfully deleted: " + filename);
+        };
+        DeviceDriverFileSystem.prototype.swapper = function () {
+            //
+            var swappedOutPID;
+            //retrieve pid of first partitioned memory
+            for (var x = 0; _readyQueue.length > x; x++) {
+                if ((_readyQueue[x].base == 0) && (!_readyQueue[x].ondisk)) {
+                    swappedOutPID = _readyQueue[x].pid;
+                }
+            }
+            console.log(swappedOutPID);
+            console.log("swap");
+            // file name 
+            var filename = "process" + _currentPcb.pid;
+            //retrives data from storage
+            var data = _krnFileSystemDriver.readFile(filename);
+            console.log(data);
+            for (var x = 0; x < data.length; x++) {
+                //replaces all "-" with ''
+                data = data.replace('"', "");
+            }
+            console.log(data);
+            //initalizes holder for swapped out data
+            var savedMemory = "";
+            //save op code in memory and then
+            //clear mem of partition 1
+            for (var i = 0; i < 256; i++) {
+                savedMemory = savedMemory + _Memory.memoryBlocks[i] + " ";
+                _Memory.memoryBlocks[i] = '00';
+            }
+            for (var x = 0; x < savedMemory.length; x++) {
+                //replaces all "0" with ''
+                savedMemory = savedMemory.replace('0', "");
+            }
+            //makes array of hex code split by spaces
+            var inputArray = data.split(" ");
+            //write swapped in data to memory
+            for (var i = 0; inputArray.length > i; i++) {
+                _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
+            }
+            //write swapped out data to disk
+            _loadWithoutDisplay = true;
+            _krnFileSystemDriver.writeToFile(filename, savedMemory);
+            console.log(savedMemory);
+            //change ondisk of swapped out memory
+            for (var x = 0; _readyQueue.length > x; x++) {
+                if (function (_readyQueue) {
+                    if (_readyQueue === void 0) { _readyQueue = [x].pid == swappedOutPID; }
+                    _readyQueue[x].ondisk = true;
+                })
+                    ;
+            }
+            _MemoryManager.printMemory();
+            _currentPcb.ondisk = false;
+            _loadWithoutDisplay = false;
         };
         return DeviceDriverFileSystem;
     })(TSOS.DeviceDriver);
