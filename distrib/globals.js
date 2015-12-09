@@ -39,6 +39,7 @@ var _Control; //Connected for Single Step ease
 var _cpuScheduler; //creates global instance of CpuSched
 var _fileNameArray; //creates an array of all file names
 var _formatted = false; //creates boolean to determine if hard drive is formatted
+var _loadWithoutDisplay = false; //boolean value if youtodo   FS work without displays
 var _OSclock = 0; // Page 23.
 var _Mode = 0; // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.
 var _Canvas; // Initialized in Control.hostInit().

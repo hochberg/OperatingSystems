@@ -222,8 +222,11 @@ module TSOS {
             _Display.printFullHardDrive();
             //updates mbr
             this.updateMbr();
-            //success message
-            _StdOut.putText("Successfully Created: " + filename);
+            //if loadwithoutdisplay = false
+            if (!(_loadWithoutDisplay)) {
+                //success message
+                _StdOut.putText("Successfully Created: " + filename);
+            }
 
         }
 
@@ -306,16 +309,21 @@ module TSOS {
             //updates mbr
             this.updateMbr();
 
-            //prints success message to console
-            _StdOut.putText("Successfully Written To: " + filename);
+            //if loadwithoutdisplay = false
+            if (!(_loadWithoutDisplay)) {
+                //prints success message to console
+                _StdOut.putText("Successfully Written To: " + filename);
 
+            }
         }
 
         //loops through global file array to check if specified filename is within
         public inFileNameArray(filename){
             var inArray = false;
             for (var i = 0; _fileNameArray.length > i; i++){
-                if (filename==_fileNameArray[i]){
+                console.log(filename);
+                console.log(_fileNameArray[i]);
+                if (filename[0] === _fileNameArray[i].toLowerCase()){
                     inArray = true;
                 }
             }

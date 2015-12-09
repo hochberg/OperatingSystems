@@ -643,26 +643,11 @@ module TSOS {
                         }
                     }
                     if (isHex) {
-                        //if empty memory partition
-                        if (isEmptyPartition) {
+                    
                             //pushes new pcb into _residentList and initializes
                             _residentList.push(new ProcessControlBlock());
                             _residentList[_residentList.length - 1].init();
 
-                            //memory partition chooser
-                            for (var i = 0; 2 >= i; i++) {
-                                //if partition is empty
-                                if (!_memoryPartitionArray[i]) {
-                                    //changes to full
-                                    _memoryPartitionArray[i] = true;
-                                    //sets base and limit
-                                    _residentList[_residentList.length - 1].base = i * 256;
-                                    _residentList[_residentList.length - 1].limit = ((i + 1) * 256) - 1;
-                                    //breaks loop
-                                    i = i + 42;
-                                }
-                            }
-                            console.log(args);
                             //if priority is specified, set it
                             if (args.length > 0) {
                                 var priority = args.slice(0,1)[0];
@@ -685,26 +670,84 @@ module TSOS {
                                 }
                             }
 
-                            //shows resident list
-                            _Display.printFullResidentList();
+                            //if empty memory partition
+                            if (isEmptyPartition) {
+                                //memory partition chooser
+                                for (var i = 0; 2 >= i; i++) {
+                                    //if partition is empty
+                                    if (!_memoryPartitionArray[i]) {
+                                        //changes to full
+                                        _memoryPartitionArray[i] = true;
+                                        //sets base and limit
+                                        _residentList[_residentList.length - 1].base = i * 256;
+                                        _residentList[_residentList.length - 1].limit = ((i + 1) * 256) - 1;
+                                        //breaks loop
+                                        i = i + 42;
+                                    }
+                                }
 
-                            //makes array of hex code split by spaces
-                            var inputArray = userInput.split(" ");
-                            //TODO FIX WHERE CODE GOES IN MEMORY
-                            //inputs user code into memory manager memory
-                            for (var i = 0; inputArray.length > i; i++) {
-                                _MemoryManager.memory.memoryBlocks[i + parseInt(_residentList[_residentList.length - 1].base)] = inputArray[i];
+                                //shows resident list
+                                _Display.printFullResidentList();
+
+                                //makes array of hex code split by spaces
+                                var inputArray = userInput.split(" ");
+                                //TODO FIX WHERE CODE GOES IN MEMORY
+                                //inputs user code into memory manager memory
+                                for (var i = 0; inputArray.length > i; i++) {
+                                    _MemoryManager.memory.memoryBlocks[i + parseInt(_residentList[_residentList.length - 1].base)] = inputArray[i];
+                                }
+                                
+                                //shows memory
+                                _MemoryManager.printMemory();
+
+                            } else {
+                                //if memory partitions are full
+                                console.log("Throw me in memory");
+                                _residentList[_residentList.length - 1].base = 0;
+                                _residentList[_residentList.length - 1].limit = 256;
+
+                                //shows resident list
+                                _Display.printFullResidentList();
+
+                                //set loadWithoutDisplay to true
+                                _loadWithoutDisplay = true;
+                                //hard drive must be formatted
+                                //auto-format (is this cool?)
+                                if (!_formatted) {
+                                    _OsShell.shellFormat();
+                                }
+
+                                //create filename
+                                var filename = ("PROCESS" + _residentList[_residentList.length - 1].pid);
+
+                                //create file
+                                _OsShell.shellCreate([filename]);
+
+                         
+                                //TODO
+                                //write to file
+                               // _OsShell.shellWrite([fileNoArray, '"' + userInput + '"']);
+
+                                _krnFileSystemDriver.writeToFile(filename, '"' + userInput + '"');
+
+                                //test
+                                //_krnFileSystemDriver.readFile(filename);
+
+
+                                //set loadWithoutDisplay to false
+                                _loadWithoutDisplay = false;
+
+
                             }
-             
-                            //shows memory
-                            _MemoryManager.printMemory();
+                        
+
+
+
 
                             _StdOut.putText("User input: [" + userInput + "] Valid Input");
                             _StdOut.advanceLine();
                             _StdOut.putText("Process ID: " + _residentList[_residentList.length - 1].pid);
-                        } else {
-                            _StdOut.putText("No empty Memory Partitions.");
-                        }
+                  
                     } else {
                         _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
                     }
@@ -903,6 +946,8 @@ module TSOS {
         }
 
         public shellWrite(args) {
+            console.log("made it!");
+            console.log(args);
             //checks if hard drive is formatted
             if (!_formatted) {
                 _StdOut.putText("Hard Drive must be formatted.");
@@ -932,6 +977,9 @@ module TSOS {
                     _StdOut.putText("You must enter your data in quotes.");
                 }
                 else {
+                    console.log(args);
+                    console.log(argsFilename[0]);
+                    console.log(dataString);
                     _krnFileSystemDriver.writeToFile(argsFilename[0], dataString);
 
                 }
@@ -971,7 +1019,10 @@ module TSOS {
                 //initalizes hard drive (all blocks in all sectors in all tracks)
                 _krnFileSystemDriver.init();
                 _formatted = true;
+                //if loadwithoutdisplay = false
+                if (!(_loadWithoutDisplay)) {
                 _StdOut.putText("Successful Format");
+            }
             }else{
                 _StdOut.putText("Format Failed");
                // _formatted = false;

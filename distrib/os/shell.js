@@ -531,11 +531,31 @@ var TSOS;
                     }
                 }
                 if (isHex) {
+                    //pushes new pcb into _residentList and initializes
+                    _residentList.push(new TSOS.ProcessControlBlock());
+                    _residentList[_residentList.length - 1].init();
+                    //if priority is specified, set it
+                    if (args.length > 0) {
+                        var priority = args.slice(0, 1)[0];
+                        console.log("yo");
+                        console.log(priority);
+                        //checks if input is a number, larger than 100, or smaller than 1
+                        if ((isNaN(priority)) || (priority > 100) || (priority < 1)) {
+                            _StdOut.putText("Priority input is not a number between 1 and 100.");
+                            _StdOut.advanceLine();
+                            _StdOut.putText("Priority set to default: 5");
+                            _StdOut.advanceLine();
+                        }
+                        else {
+                            //set priority to given num
+                            _residentList[_residentList.length - 1].priority = priority;
+                            //display
+                            _StdOut.putText("Priority set to: " + priority);
+                            _StdOut.advanceLine();
+                        }
+                    }
                     //if empty memory partition
                     if (isEmptyPartition) {
-                        //pushes new pcb into _residentList and initializes
-                        _residentList.push(new TSOS.ProcessControlBlock());
-                        _residentList[_residentList.length - 1].init();
                         //memory partition chooser
                         for (var i = 0; 2 >= i; i++) {
                             //if partition is empty
@@ -549,27 +569,6 @@ var TSOS;
                                 i = i + 42;
                             }
                         }
-                        console.log(args);
-                        //if priority is specified, set it
-                        if (args.length > 0) {
-                            var priority = args.slice(0, 1)[0];
-                            console.log("yo");
-                            console.log(priority);
-                            //checks if input is a number, larger than 100, or smaller than 1
-                            if ((isNaN(priority)) || (priority > 100) || (priority < 1)) {
-                                _StdOut.putText("Priority input is not a number between 1 and 100.");
-                                _StdOut.advanceLine();
-                                _StdOut.putText("Priority set to default: 5");
-                                _StdOut.advanceLine();
-                            }
-                            else {
-                                //set priority to given num
-                                _residentList[_residentList.length - 1].priority = priority;
-                                //display
-                                _StdOut.putText("Priority set to: " + priority);
-                                _StdOut.advanceLine();
-                            }
-                        }
                         //shows resident list
                         _Display.printFullResidentList();
                         //makes array of hex code split by spaces
@@ -581,13 +580,37 @@ var TSOS;
                         }
                         //shows memory
                         _MemoryManager.printMemory();
-                        _StdOut.putText("User input: [" + userInput + "] Valid Input");
-                        _StdOut.advanceLine();
-                        _StdOut.putText("Process ID: " + _residentList[_residentList.length - 1].pid);
                     }
                     else {
-                        _StdOut.putText("No empty Memory Partitions.");
+                        //if memory partitions are full
+                        console.log("Throw me in memory");
+                        _residentList[_residentList.length - 1].base = 0;
+                        _residentList[_residentList.length - 1].limit = 256;
+                        //shows resident list
+                        _Display.printFullResidentList();
+                        //set loadWithoutDisplay to true
+                        _loadWithoutDisplay = true;
+                        //hard drive must be formatted
+                        //auto-format (is this cool?)
+                        if (!_formatted) {
+                            _OsShell.shellFormat();
+                        }
+                        //create filename
+                        var filename = ("PROCESS" + _residentList[_residentList.length - 1].pid);
+                        //create file
+                        _OsShell.shellCreate([filename]);
+                        //TODO
+                        //write to file
+                        // _OsShell.shellWrite([fileNoArray, '"' + userInput + '"']);
+                        _krnFileSystemDriver.writeToFile(filename, '"' + userInput + '"');
+                        //test
+                        //_krnFileSystemDriver.readFile(filename);
+                        //set loadWithoutDisplay to false
+                        _loadWithoutDisplay = false;
                     }
+                    _StdOut.putText("User input: [" + userInput + "] Valid Input");
+                    _StdOut.advanceLine();
+                    _StdOut.putText("Process ID: " + _residentList[_residentList.length - 1].pid);
                 }
                 else {
                     _StdOut.putText("User input: [" + userInput + "] Invalid Input. Not Hex Digits.");
@@ -770,6 +793,8 @@ var TSOS;
             }
         };
         Shell.prototype.shellWrite = function (args) {
+            console.log("made it!");
+            console.log(args);
             //checks if hard drive is formatted
             if (!_formatted) {
                 _StdOut.putText("Hard Drive must be formatted.");
@@ -796,6 +821,9 @@ var TSOS;
                     _StdOut.putText("You must enter your data in quotes.");
                 }
                 else {
+                    console.log(args);
+                    console.log(argsFilename[0]);
+                    console.log(dataString);
                     _krnFileSystemDriver.writeToFile(argsFilename[0], dataString);
                 }
             }
@@ -826,7 +854,10 @@ var TSOS;
                 //initalizes hard drive (all blocks in all sectors in all tracks)
                 _krnFileSystemDriver.init();
                 _formatted = true;
-                _StdOut.putText("Successful Format");
+                //if loadwithoutdisplay = false
+                if (!(_loadWithoutDisplay)) {
+                    _StdOut.putText("Successful Format");
+                }
             }
             else {
                 _StdOut.putText("Format Failed");
