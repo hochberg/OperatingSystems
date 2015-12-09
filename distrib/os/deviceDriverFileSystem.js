@@ -313,6 +313,9 @@ var TSOS;
                     if (_currentPcb.ondisk) {
                         return fullData;
                     }
+                    else {
+                        _StdOut.putText(filename + " reads: " + fullData);
+                    }
                 }
                 else {
                     //print to console

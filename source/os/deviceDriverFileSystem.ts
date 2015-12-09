@@ -388,6 +388,8 @@ module TSOS {
                 if (!(_currentPcb == null)) {
                     if (_currentPcb.ondisk) {
                         return fullData;
+                    }else{
+                       _StdOut.putText(filename + " reads: " + fullData);
                     }
                 }else {
                     //print to console

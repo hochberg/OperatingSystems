@@ -669,6 +669,7 @@ var TSOS;
             //reinitializes memory and displays
             _Memory.init();
             _MemoryManager.printMemory();
+            _currentPcb = null;
             _memoryPartitionArray = [false, false, false];
             _StdOut.putText("Memory has been cleared.");
         };
