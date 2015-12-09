@@ -720,19 +720,14 @@ module TSOS {
 
                                 //create filename
                                 var filename = ("process" + _residentList[_residentList.length - 1].pid);
+                                //
+                                _residentList[_residentList.length - 1].writtento = filename;
 
                                 //create file
                                 _OsShell.shellCreate([filename]);
 
-                         
-                                //TODO
                                 //write to file
-                               // _OsShell.shellWrite([fileNoArray, '"' + userInput + '"']);
-
                                 _krnFileSystemDriver.writeToFile(filename, '"' + userInput + '"');
-
-                                //test
-                                //_krnFileSystemDriver.readFile(filename);
 
 
                                 //set loadWithoutDisplay to false

@@ -369,7 +369,7 @@ var TSOS;
         };
         DeviceDriverFileSystem.prototype.swapper = function () {
             //initializes the pid of the swapped out process
-            var swappedOutPID = 0;
+            var swappedOutPID;
             //????????????
             //retrieve pid of first partitioned memory
             for (var x = 0; _readyQueue.length > x; x++) {
@@ -383,7 +383,10 @@ var TSOS;
             //WILL HAVE TO FIX
             // file name 
             //var filename = "process" + _currentPcb.pid;
-            var filename = "process3";
+            // var filename = "process3";
+            console.log(_currentPcb);
+            console.log(_currentPcb.writtento);
+            var filename = _currentPcb.writtento;
             //retrives data from storage
             var data = _krnFileSystemDriver.readFile(filename);
             //removes quotes of data
@@ -408,6 +411,7 @@ var TSOS;
             //write swapped out data to disk
             _loadWithoutDisplay = true;
             _krnFileSystemDriver.deleteFile(filename);
+            _krnFileSystemDriver.createFile(filename);
             _krnFileSystemDriver.writeToFile(filename, savedMemory);
             //change ondisk of swapped out memory
             for (var x = 0; _readyQueue.length > x; x++) {
@@ -415,6 +419,9 @@ var TSOS;
                 console.log(swappedOutPID);
                 if (_readyQueue[x].pid == swappedOutPID) {
                     _readyQueue[x].ondisk = true;
+                    _readyQueue[x].writtento = filename;
+                    console.log(_readyQueue[x].writtento);
+                    console.log(_readyQueue[x]);
                 }
             }
             _MemoryManager.printMemory();
