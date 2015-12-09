@@ -894,7 +894,7 @@ module TSOS {
                     _StdOut.putText("File name is too long.");
                 }
                 //checks if file name exists
-                else if (_krnFileSystemDriver.inFileNameArray(args[0])) {
+                else if (_krnFileSystemDriver.inFileNameArray(args)) {
                     _StdOut.putText("File name already exists.");
                 }
                 else {
@@ -906,6 +906,7 @@ module TSOS {
         }
 
         public shellRead(args) {
+           
             //checks if hard drive is formatted
             if (!_formatted) {
                 _StdOut.putText("Hard Drive must be formatted.");
@@ -915,10 +916,11 @@ module TSOS {
                 nullArray.push(args);
                 //checks to see if a filename is given
                 if (nullArray[0].length == 0) {
-                    _StdOut.putText("You must choose a file to write to.");
+                    _StdOut.putText("You must choose a file to read.");
                 }
                 //checks if file is exists
-                else if (!_krnFileSystemDriver.inFileNameArray(args[0])) {
+                else if (!_krnFileSystemDriver.inFileNameArray(nullArray[0])) {
+                    console.log(args[0]);
                     _StdOut.putText("File does not exist.");
                 } else {
                     _krnFileSystemDriver.readFile(args[0]);
@@ -943,7 +945,9 @@ module TSOS {
                     _StdOut.putText("You must choose a file to write to.");
                 }
                 //checks if file is exists
+
                 else if (!_krnFileSystemDriver.inFileNameArray(argsFilename)) {
+                    console.log(argsFilename);
                     _StdOut.putText("File does not exist.");
                 }
                 //checks if data is given
