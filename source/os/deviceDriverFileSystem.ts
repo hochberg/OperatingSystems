@@ -69,11 +69,6 @@ module TSOS {
 
             //prints...
            _Display.printFullHardDrive();
-           
-           console.log(this.getNextAvailableDir());
-           console.log(this.getNextAvailableFile());
-
-
            }
 
 
@@ -321,8 +316,6 @@ module TSOS {
         public inFileNameArray(filename){
             var inArray = false;
             for (var i = 0; _fileNameArray.length > i; i++){
-                console.log(filename);
-                console.log(_fileNameArray[i]);
                 if (filename[0] === _fileNameArray[i].toLowerCase()){
                     inArray = true;
                 }
@@ -340,7 +333,6 @@ module TSOS {
         }
 
         public readFile(filename){
-            console.log(filename);
             //initializes variable to be set to the file's meta
             var foundFileMeta;
             //loops through block and sector to find specified filename
@@ -358,7 +350,6 @@ module TSOS {
                     }
                 }
             }
-            console.log(foundFileMeta);
             //retrieves the data (unformatted) from the specfied file
             var rawData = sessionStorage.getItem("b" + foundFileMeta);
 
@@ -457,34 +448,23 @@ module TSOS {
         public swapper() {
             //initializes the pid of the swapped out process
             var swappedOutPID;
-            //????????????
+
             //retrieve pid of first partitioned memory
             for (var x = 0; _readyQueue.length > x; x++){
                 console.log(_readyQueue[x]);
                 if ((_readyQueue[x].base == 0) && (!_readyQueue[x].ondisk)){
-                    console.log("worked");
                     swappedOutPID = _readyQueue[x].pid;
-
                 }
             }
-
-            //TODO
-            //WILL HAVE TO FIX
-            // file name 
-            //var filename = "process" + _currentPcb.pid;
-            // var filename = "process3";
-            console.log(_currentPcb);
-            console.log(_currentPcb.writtento);
+            //records where swapped in process was written to 
             var filename = _currentPcb.writtento;
             //retrives data from storage
             var data = _krnFileSystemDriver.readFile(filename);
-
             //removes quotes of data
             for (var x = 0; x < data.length; x++) {
             //replaces all '"' with ''
             data = data.replace('"', "");
             }
-
             //initalizes holder for swapped out data
             var savedMemory = "";
             //save op code in memory and then
@@ -493,45 +473,36 @@ module TSOS {
                  savedMemory = savedMemory + _Memory.memoryBlocks[i] + " ";
                 _Memory.memoryBlocks[i] = '00';
             }
-
             //makes array of hex code split by spaces
             var inputArray = data.split(" ");
-
-
             //write swapped in data to memory
-            for (var i = 0; inputArray.length > i; i++) {
-               
+            for (var i = 0; inputArray.length > i; i++) { 
                 _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
             }
-
-            //write swapped out data to disk
+            //sets load without display to true, to call FS functions without console displys
             _loadWithoutDisplay = true;
+            //clears the current file on disk
             _krnFileSystemDriver.deleteFile(filename);
+            //creates new file on disk
             _krnFileSystemDriver.createFile(filename);
+            //writes swapped out process to this file
             _krnFileSystemDriver.writeToFile(filename, savedMemory);
 
-             //change ondisk of swapped out memory
+             //change ondisk and writtento of swapped out memory
+             //to record where the swapped out memory will be written to
              for (var x = 0; _readyQueue.length > x; x++){
-                 console.log(_readyQueue[x].pid);
-                 console.log(swappedOutPID);
                  if (_readyQueue[x].pid == swappedOutPID){
                      _readyQueue[x].ondisk = true;
                      _readyQueue[x].writtento = filename;
-                     console.log(_readyQueue[x].writtento);
-                     console.log(_readyQueue[x]);
-
                  }
              }
-
-
+             //display
              _MemoryManager.printMemory();
 
-
+             //sets swapped out pcb to not on disk
             _currentPcb.ondisk = false;
-            _loadWithoutDisplay = false;
-               
-
-           
+            //turn of load without display
+            _loadWithoutDisplay = false;     
 
         }
 

@@ -583,7 +583,7 @@ var TSOS;
                     }
                     else {
                         //if memory partitions are full
-                        console.log("Throw me in memory");
+                        //writes process to disk with first partition base/limit and ondisk = true
                         _residentList[_residentList.length - 1].base = 0;
                         _residentList[_residentList.length - 1].limit = 256;
                         _residentList[_residentList.length - 1].ondisk = true;
@@ -592,13 +592,14 @@ var TSOS;
                         //set loadWithoutDisplay to true
                         _loadWithoutDisplay = true;
                         //hard drive must be formatted
-                        //auto-format (is this cool?)
+                        //so auto-format if not formatted
                         if (!_formatted) {
                             _OsShell.shellFormat();
                         }
-                        //create filename
+                        //create filename with process + pid
+                        //if user deletes this,USER ERROR
                         var filename = ("process" + _residentList[_residentList.length - 1].pid);
-                        //
+                        //records file name as pcb's writtento
                         _residentList[_residentList.length - 1].writtento = filename;
                         //create file
                         _OsShell.shellCreate([filename]);
@@ -647,9 +648,7 @@ var TSOS;
                         //finds pcb with rq using pid
                         for (var i = 0; _readyQueue.length > i; i++) {
                             if (args == _readyQueue[i].pid) {
-                                //makes current pcb
-                                //FIX
-                                //if(_readyQueue.length==1){
+                                //makes current pcb                               
                                 _currentPcb = _readyQueue[0];
                                 _cpuScheduler.insertPcbValuesIntoCpu();
                                 // }
@@ -657,8 +656,6 @@ var TSOS;
                                 _readyQueue[i].state = "Running";
                             }
                         }
-                        console.log("this is the ready queue");
-                        console.log(_readyQueue);
                         //displays rl and rq
                         _Display.printFullResidentList();
                         _Display.printFullReadyQueue();
@@ -792,8 +789,6 @@ var TSOS;
             }
         };
         Shell.prototype.shellWrite = function (args) {
-            console.log("made it!");
-            console.log(args);
             //checks if hard drive is formatted
             if (!_formatted) {
                 _StdOut.putText("Hard Drive must be formatted.");
@@ -820,9 +815,6 @@ var TSOS;
                     _StdOut.putText("You must enter your data in quotes.");
                 }
                 else {
-                    console.log(args);
-                    console.log(argsFilename[0]);
-                    console.log(dataString);
                     _krnFileSystemDriver.writeToFile(argsFilename[0], dataString);
                 }
             }

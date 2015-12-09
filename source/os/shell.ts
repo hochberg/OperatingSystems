@@ -696,13 +696,13 @@ module TSOS {
                                 for (var i = 0; inputArray.length > i; i++) {
                                     _MemoryManager.memory.memoryBlocks[i + parseInt(_residentList[_residentList.length - 1].base)] = inputArray[i];
                                 }
-                                
+                               
                                 //shows memory
                                 _MemoryManager.printMemory();
 
                             } else {
                                 //if memory partitions are full
-                                console.log("Throw me in memory");
+                                //writes process to disk with first partition base/limit and ondisk = true
                                 _residentList[_residentList.length - 1].base = 0;
                                 _residentList[_residentList.length - 1].limit = 256;
                                 _residentList[_residentList.length - 1].ondisk = true;
@@ -713,33 +713,24 @@ module TSOS {
                                 //set loadWithoutDisplay to true
                                 _loadWithoutDisplay = true;
                                 //hard drive must be formatted
-                                //auto-format (is this cool?)
+                                //so auto-format if not formatted
                                 if (!_formatted) {
                                     _OsShell.shellFormat();
                                 }
 
-                                //create filename
+                                //create filename with process + pid
+                                //if user deletes this,USER ERROR
                                 var filename = ("process" + _residentList[_residentList.length - 1].pid);
-                                //
+                                //records file name as pcb's writtento
                                 _residentList[_residentList.length - 1].writtento = filename;
-
                                 //create file
                                 _OsShell.shellCreate([filename]);
-
                                 //write to file
                                 _krnFileSystemDriver.writeToFile(filename, '"' + userInput + '"');
-
-
                                 //set loadWithoutDisplay to false
                                 _loadWithoutDisplay = false;
-
-
                             }
                         
-
-
-
-
                             _StdOut.putText("User input: [" + userInput + "] Valid Input");
                             _StdOut.advanceLine();
                             _StdOut.putText("Process ID: " + _residentList[_residentList.length - 1].pid);
@@ -783,10 +774,7 @@ module TSOS {
                             //finds pcb with rq using pid
                             for (var i = 0; _readyQueue.length > i; i++) {
                                 if (args == _readyQueue[i].pid) {
-                                    //makes current pcb
-                                    //FIX
-                                    //if(_readyQueue.length==1){
-                               
+                                    //makes current pcb                               
                                     _currentPcb = _readyQueue[0];
                                     _cpuScheduler.insertPcbValuesIntoCpu();
                                     // }
@@ -795,8 +783,6 @@ module TSOS {
                                 }
                             }
 
-                            console.log("this is the ready queue");
-                            console.log(_readyQueue);
                             //displays rl and rq
                             _Display.printFullResidentList();
                             _Display.printFullReadyQueue();
@@ -841,7 +827,6 @@ module TSOS {
                     _currentPcb = _readyQueue[0];
                 }
                 //changes executing to true
-
                 _CPU.isExecuting = true;
             }
         }
@@ -942,8 +927,6 @@ module TSOS {
         }
 
         public shellWrite(args) {
-            console.log("made it!");
-            console.log(args);
             //checks if hard drive is formatted
             if (!_formatted) {
                 _StdOut.putText("Hard Drive must be formatted.");
@@ -973,9 +956,6 @@ module TSOS {
                     _StdOut.putText("You must enter your data in quotes.");
                 }
                 else {
-                    console.log(args);
-                    console.log(argsFilename[0]);
-                    console.log(dataString);
                     _krnFileSystemDriver.writeToFile(argsFilename[0], dataString);
 
                 }
@@ -1021,7 +1001,7 @@ module TSOS {
             }
             }else{
                 _StdOut.putText("Format Failed");
-               // _formatted = false;
+
             }
         }
 

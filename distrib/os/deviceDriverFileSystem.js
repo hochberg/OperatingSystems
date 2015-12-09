@@ -59,8 +59,6 @@ var TSOS;
                 this.addTrail(this.stringToHex(mbr)));
             //prints...
             _Display.printFullHardDrive();
-            console.log(this.getNextAvailableDir());
-            console.log(this.getNextAvailableFile());
         };
         DeviceDriverFileSystem.prototype.stringToHex = function (str) {
             //inital temp string
@@ -251,8 +249,6 @@ var TSOS;
         DeviceDriverFileSystem.prototype.inFileNameArray = function (filename) {
             var inArray = false;
             for (var i = 0; _fileNameArray.length > i; i++) {
-                console.log(filename);
-                console.log(_fileNameArray[i]);
                 if (filename[0] === _fileNameArray[i].toLowerCase()) {
                     inArray = true;
                 }
@@ -268,7 +264,6 @@ var TSOS;
             }
         };
         DeviceDriverFileSystem.prototype.readFile = function (filename) {
-            console.log(filename);
             //initializes variable to be set to the file's meta
             var foundFileMeta;
             //loops through block and sector to find specified filename
@@ -284,7 +279,6 @@ var TSOS;
                     }
                 }
             }
-            console.log(foundFileMeta);
             //retrieves the data (unformatted) from the specfied file
             var rawData = sessionStorage.getItem("b" + foundFileMeta);
             console.log(rawData);
@@ -370,22 +364,14 @@ var TSOS;
         DeviceDriverFileSystem.prototype.swapper = function () {
             //initializes the pid of the swapped out process
             var swappedOutPID;
-            //????????????
             //retrieve pid of first partitioned memory
             for (var x = 0; _readyQueue.length > x; x++) {
                 console.log(_readyQueue[x]);
                 if ((_readyQueue[x].base == 0) && (!_readyQueue[x].ondisk)) {
-                    console.log("worked");
                     swappedOutPID = _readyQueue[x].pid;
                 }
             }
-            //TODO
-            //WILL HAVE TO FIX
-            // file name 
-            //var filename = "process" + _currentPcb.pid;
-            // var filename = "process3";
-            console.log(_currentPcb);
-            console.log(_currentPcb.writtento);
+            //records where swapped in process was written to 
             var filename = _currentPcb.writtento;
             //retrives data from storage
             var data = _krnFileSystemDriver.readFile(filename);
@@ -408,24 +394,27 @@ var TSOS;
             for (var i = 0; inputArray.length > i; i++) {
                 _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
             }
-            //write swapped out data to disk
+            //sets load without display to true, to call FS functions without console displys
             _loadWithoutDisplay = true;
+            //clears the current file on disk
             _krnFileSystemDriver.deleteFile(filename);
+            //creates new file on disk
             _krnFileSystemDriver.createFile(filename);
+            //writes swapped out process to this file
             _krnFileSystemDriver.writeToFile(filename, savedMemory);
-            //change ondisk of swapped out memory
+            //change ondisk and writtento of swapped out memory
+            //to record where the swapped out memory will be written to
             for (var x = 0; _readyQueue.length > x; x++) {
-                console.log(_readyQueue[x].pid);
-                console.log(swappedOutPID);
                 if (_readyQueue[x].pid == swappedOutPID) {
                     _readyQueue[x].ondisk = true;
                     _readyQueue[x].writtento = filename;
-                    console.log(_readyQueue[x].writtento);
-                    console.log(_readyQueue[x]);
                 }
             }
+            //display
             _MemoryManager.printMemory();
+            //sets swapped out pcb to not on disk
             _currentPcb.ondisk = false;
+            //turn of load without display
             _loadWithoutDisplay = false;
         };
         return DeviceDriverFileSystem;
