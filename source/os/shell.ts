@@ -710,7 +710,11 @@ module TSOS {
                     }
                     //resets
                     var isHex = true;
+
                 }
+                //test
+            // console.log("hey");
+            // _cpuScheduler.contextSwitchPriority();
 
         }
 
@@ -789,11 +793,15 @@ module TSOS {
                 //displays rl and rq
                 _Display.printFullResidentList();
                 _Display.printFullReadyQueue();
-
-                //sets first process to current pcb
-                _currentPcb = _readyQueue[0];
-
-                //changes round robin and executing to true
+                //if priority scheduling is set, 
+                if (_CPU.isPriority) {
+                //make highest priority first process to run
+                    _cpuScheduler.contextSwitchPriority();
+                } else {
+                    //sets first process to current pcb
+                    _currentPcb = _readyQueue[0];
+                }
+                //changes executing to true
 
                 _CPU.isExecuting = true;
             }

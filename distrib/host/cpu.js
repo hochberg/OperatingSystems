@@ -351,7 +351,7 @@ var TSOS;
                     _CPU.PC = 0;
                 }
             }
-            else {
+            else if (this.isRoundRobin) {
                 //checks if all processes have finished
                 if (_readyQueue.length == 0) {
                     _CPU.isExecuting = false;
@@ -368,11 +368,41 @@ var TSOS;
                         }
                     }
                     //moves to next process
-                    _cpuScheduler.contextSwitch();
+                    _cpuScheduler.contextSwitchRR();
                     // //moves to next process
-                    // _cpuScheduler.contextSwitch();
+                    // _cpuScheduler.contextSwitchRR();
                     //removes finished process form ready queue
                     _readyQueue.splice(tempPcbIndex, 1);
+                }
+                //prints current pcb 
+                _Display.printFullReadyQueue();
+            }
+            else if (this.isPriority) {
+                //checks if all processes have finished
+                if (_readyQueue.length == 0) {
+                    _CPU.isExecuting = false;
+                }
+                else {
+                    //finds index of current pcb and removes
+                    var tempPcbIndex;
+                    for (var i = 0; _readyQueue.length > i; i++) {
+                        console.log(i);
+                        if (_currentPcb.pid == _readyQueue[i].pid) {
+                            tempPcbIndex = i;
+                            console.log("TEMP" + tempPcbIndex);
+                            i = i + 42;
+                        }
+                    }
+                    //removes finished process form ready queue
+                    _readyQueue.splice(tempPcbIndex, 1);
+                    //checks if all processes have finished again
+                    if (_readyQueue.length == 0) {
+                        _CPU.isExecuting = false;
+                    }
+                    else {
+                        //moves to next process with highest
+                        _cpuScheduler.contextSwitchPriority();
+                    }
                 }
                 //prints current pcb 
                 _Display.printFullReadyQueue();

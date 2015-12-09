@@ -376,8 +376,9 @@ module TSOS {
                     //reset PC
                     _CPU.PC = 0;
                 }
+
                 //in Round Robin
-            } else {
+            } else if (this.isRoundRobin){
                 //checks if all processes have finished
                 if (_readyQueue.length == 0) {
                     _CPU.isExecuting = false;
@@ -396,10 +397,10 @@ module TSOS {
 
 
                     //moves to next process
-                    _cpuScheduler.contextSwitch();
+                    _cpuScheduler.contextSwitchRR();
 
                     // //moves to next process
-                    // _cpuScheduler.contextSwitch();
+                    // _cpuScheduler.contextSwitchRR();
                     //removes finished process form ready queue
                     _readyQueue.splice(tempPcbIndex, 1);
                     
@@ -408,6 +409,40 @@ module TSOS {
                     _Display.printFullReadyQueue();
 
             }
+            //if priority
+            else if (this.isPriority){
+                    //checks if all processes have finished
+                    if (_readyQueue.length == 0) {
+                      _CPU.isExecuting = false;
+                     //if not
+                     } else {
+                     //finds index of current pcb and removes
+                      var tempPcbIndex;
+                      for (var i = 0; _readyQueue.length > i; i++) {
+                        console.log(i);
+                         if (_currentPcb.pid == _readyQueue[i].pid) {
+                             tempPcbIndex = i;
+                              console.log("TEMP" + tempPcbIndex);
+                              i = i + 42;
+                                 }
+                           }
+                                //removes finished process form ready queue
+                                _readyQueue.splice(tempPcbIndex, 1);
+
+                                //checks if all processes have finished again
+                                if (_readyQueue.length == 0) {
+                                    _CPU.isExecuting = false;
+                                }else{
+                                    //moves to next process with highest
+                                    _cpuScheduler.contextSwitchPriority();
+                                }
+                                
+                            }
+                                //prints current pcb 
+                                _Display.printFullReadyQueue();
+
+                        }
+
             }
         
 

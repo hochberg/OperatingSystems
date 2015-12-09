@@ -17,7 +17,7 @@ module TSOS {
     export class cpuScheduler {
           
 
-        public contextSwitch(): void {
+        public contextSwitchRR(): void {
             
             var readyQueueLength = _readyQueue.length;
             //checks to see if only one pcb is in ready queue
@@ -49,6 +49,30 @@ module TSOS {
             }
         }
 
+        public contextSwitchPriority(): void {
+            console.log("hey");
+            //finds length of readyQueue
+            var readyQueueLength = _readyQueue.length;
+
+                //builds temp array to sort pcbs
+                var tempSortedArray = [];
+
+                //pushes each elemnt of readyqueue to temp
+                for (var i = 0; readyQueueLength > i; i++) {
+                    tempSortedArray.push(_readyQueue[i]);
+                }
+
+                //sort all processes in readyqueue based on priority
+                tempSortedArray.sort(function(a, b) { return a.priority - b.priority });
+
+                //sets current pcb to the one with highest priority
+                _currentPcb = tempSortedArray[0];
+
+                //changes cpu to new current pcb 
+                this.insertPcbValuesIntoCpu();
+
+            
+        }
 
         public insertPcbValuesIntoCpu(): void {
             _CPU.PC = _currentPcb.pc;

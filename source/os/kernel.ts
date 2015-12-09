@@ -201,19 +201,17 @@ module TSOS {
                     //checks if on current process
                     //context switch first
                     if(_currentPcb.pid==_readyQueue[params].pid){
-                        _cpuScheduler.contextSwitch();
+                        _cpuScheduler.contextSwitchRR();
                         _readyQueue.splice(params, 1);
                         
                     }else{
 
-
-
                     _readyQueue.splice(params, 1);
-                    _cpuScheduler.contextSwitch();
+                    _cpuScheduler.contextSwitchRR();
                 }
                     break;
                 case RR_IRQ:
-                    _cpuScheduler.contextSwitch();
+                    _cpuScheduler.contextSwitchRR();
                     break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
