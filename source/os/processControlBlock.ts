@@ -25,7 +25,8 @@ module TSOS {
 						  public limit = null,
 						  public state = null,
 						  public priority = null,
-						  public ondisk = null
+						  public ondisk = null,
+						  public writtento = null
 		) {
 
 		}
@@ -45,6 +46,7 @@ public init(): void {
 		//initalized to 5
 		this.priority = 5;
 		this.ondisk = false;
+		this.writtento = "";
 			  };
 
 

@@ -368,9 +368,9 @@ var TSOS;
             }
         };
         DeviceDriverFileSystem.prototype.swapper = function () {
-            console.log(_currentPcb);
-            //
+            //initializes the pid of the swapped out process
             var swappedOutPID = 0;
+            //????????????
             //retrieve pid of first partitioned memory
             for (var x = 0; _readyQueue.length > x; x++) {
                 console.log(_readyQueue[x]);
@@ -379,37 +379,28 @@ var TSOS;
                     swappedOutPID = _readyQueue[x].pid;
                 }
             }
-            console.log(swappedOutPID);
-            console.log("swap");
+            //TODO
             //WILL HAVE TO FIX
             // file name 
             //var filename = "process" + _currentPcb.pid;
             var filename = "process3";
             //retrives data from storage
             var data = _krnFileSystemDriver.readFile(filename);
-            console.log(data);
+            //removes quotes of data
             for (var x = 0; x < data.length; x++) {
-                //replaces all "-" with ''
+                //replaces all '"' with ''
                 data = data.replace('"', "");
             }
-            console.log("data");
-            console.log(data);
             //initalizes holder for swapped out data
             var savedMemory = "";
             //save op code in memory and then
             //clear mem of partition 1
-            for (var i = 0; i < 256; i++) {
+            for (var i = 0; i < 255; i++) {
                 savedMemory = savedMemory + _Memory.memoryBlocks[i] + " ";
                 _Memory.memoryBlocks[i] = '00';
             }
-            // for (var x = 0; x < savedMemory.length; x++) {
-            // //replaces all "0" with ''
-            // savedMemory = savedMemory.replace('0', "");
-            //               }
             //makes array of hex code split by spaces
             var inputArray = data.split(" ");
-            console.log("inputArray");
-            console.log(inputArray);
             //write swapped in data to memory
             for (var i = 0; inputArray.length > i; i++) {
                 _MemoryManager.memory.memoryBlocks[i] = inputArray[i];
@@ -418,14 +409,12 @@ var TSOS;
             _loadWithoutDisplay = true;
             _krnFileSystemDriver.deleteFile(filename);
             _krnFileSystemDriver.writeToFile(filename, savedMemory);
-            console.log(savedMemory);
             //change ondisk of swapped out memory
             for (var x = 0; _readyQueue.length > x; x++) {
                 console.log(_readyQueue[x].pid);
                 console.log(swappedOutPID);
                 if (_readyQueue[x].pid == swappedOutPID) {
                     _readyQueue[x].ondisk = true;
-                    console.log("does this happen?");
                 }
             }
             _MemoryManager.printMemory();

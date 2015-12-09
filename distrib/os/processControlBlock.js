@@ -10,7 +10,7 @@
 var TSOS;
 (function (TSOS) {
     var ProcessControlBlock = (function () {
-        function ProcessControlBlock(pid, pc, acc, xreg, yreg, zflag, ir, base, limit, state, priority, ondisk) {
+        function ProcessControlBlock(pid, pc, acc, xreg, yreg, zflag, ir, base, limit, state, priority, ondisk, writtento) {
             if (pid === void 0) { pid = null; }
             if (pc === void 0) { pc = null; }
             if (acc === void 0) { acc = null; }
@@ -23,6 +23,7 @@ var TSOS;
             if (state === void 0) { state = null; }
             if (priority === void 0) { priority = null; }
             if (ondisk === void 0) { ondisk = null; }
+            if (writtento === void 0) { writtento = null; }
             this.pid = pid;
             this.pc = pc;
             this.acc = acc;
@@ -35,6 +36,7 @@ var TSOS;
             this.state = state;
             this.priority = priority;
             this.ondisk = ondisk;
+            this.writtento = writtento;
         }
         ProcessControlBlock.prototype.init = function () {
             //initializes instance of PCB with CPU values
@@ -51,6 +53,7 @@ var TSOS;
             //initalized to 5
             this.priority = 5;
             this.ondisk = false;
+            this.writtento = "";
         };
         ;
         return ProcessControlBlock;
