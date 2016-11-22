@@ -35,14 +35,14 @@
    <script type="text/javascript" src="distrib/os/cpuScheduler.js"></script>
    <script type="text/javascript" src="distrib/os/display.js"></script>
 
- 
-  
+
+
 
    <!-- Other Routines  -->
    <script type="text/javascript" src="distrib/utils.js"></script>
-   <!-- Uncomment this line below to enable GLaDOS testing  -->
+   <!-- Uncomment this line below to enable GLaDOS testing
    <script type="text/javascript" src="http://www.labouseur.com/courses/os/projects/glados.js"></script>
-
+   -->
    <!--Bootstrap -->
    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
@@ -92,7 +92,7 @@
              tabindex="2"
              onclick="TSOS.Control.hostBtnSingleStepStart_click(this);">
 
-     <button type="button" 
+     <button type="button"
              class="btn btn-default btn-lg navbar-left"
              id = "btnSingleStepNext"
              disabled="disabled"
@@ -101,24 +101,24 @@
              aria-hidden="true"></span>
       </button>
 
-      <button type="button" 
+      <button type="button"
               class="btn btn-default btn-lg navbar-left"
               id = "btnSingleStepStop"
               disabled="disabled"
               onclick="TSOS.Control.hostBtnSingleStepStop_click(this);">
-        <span class="glyphicon glyphicon-stop" 
+        <span class="glyphicon glyphicon-stop"
               aria-hidden="true"></span>
       </button>
 
        <div style=" float:right; padding-right: 18px;">
-         <p class="navbar-text "><b>Status:</b></p> 
-      <p class="navbar-text navbar-right"  id="userStatus"></p> 
+         <p class="navbar-text "><b>Status:</b></p>
+      <p class="navbar-text navbar-right"  id="userStatus"></p>
     </div>
 
       <div style=" float:right; padding-right: 18px;">
-         <p class="navbar-text "><b>Date:</b></p> 
+         <p class="navbar-text "><b>Date:</b></p>
       <p class="navbar-text navbar-right" id="kernalDateAndTime">
-      </p> 
+      </p>
     </div>
 
     </nav>
@@ -146,16 +146,16 @@
   <div class="hardDriveWrapper" >
     <label><span style="color: #7F0000;"> Hard Drive</span><br>
               <div style = "max-height:200px; width: 500px; overflow: auto;">
-              <table class="table" 
-                     id = "hardDriveTable" 
+              <table class="table"
+                     id = "hardDriveTable"
                      style="background-color:#E6E6E6;
                             border: 2px solid #663300;">
                   <tr>
                     <th>T:S:B</th>
                     <th>Meta</th>
-                    <th>Data</th> 
+                    <th>Data</th>
                   </tr>
-            
+
               </table>
             </div>
               </label>
@@ -170,7 +170,7 @@
    <div id="divLog"  >
       <label>
         <div style="color: #7F0000;"> Host Log </div>
-         
+
          <textarea name="taHostLog"
                    id  ="taHostLog"
                    rows="26"
@@ -210,8 +210,8 @@
 </div>
 
 <div class="pcbReadyQueueWrapper" ><label style="color: #7F0000;">Ready Queue</label><br>
-              <table class="table" 
-                     id = "pcbReadyQueueTable" 
+              <table class="table"
+                     id = "pcbReadyQueueTable"
                      style="width:300px;
                             background-color:#E6E6E6;
                             border: 2px solid #663300;">
@@ -228,13 +228,13 @@
                     <th>State</th>
                     <th>Priority</th>
                   </tr>
-            
+
               </table>
     </div>
 
 <div class="pcbResidentListWrapper" ><label style="color: #7F0000;">Resident List</label><br>
-              <table class="table" 
-                     id = "pcbResidentListTable" 
+              <table class="table"
+                     id = "pcbResidentListTable"
                      style="width:300px;
                             background-color:#E6E6E6;
                             border: 2px solid #663300;">
@@ -251,14 +251,14 @@
                     <th>State</th>
                     <th>Priority</th>
                   </tr>
-            
+
               </table>
     </div>
 
 
     <div class="cpuStatusWrapper"  ><label style="color: #7F0000;">CPU Status</label><br>
-              <table  class="table" 
-                      id = "cpuStatusTable" 
+              <table  class="table"
+                      id = "cpuStatusTable"
                       style="width:300px;
                             background-color:#E6E6E6;
                             border: 2px solid #663300;">
@@ -269,7 +269,7 @@
                     <th>X</th>
                     <th>Y</th>
                     <th>Z</th>
-                    
+
                   </tr>
                   <tr>
                     <td id="pcCPUDisplay">&nbsp;</td>
